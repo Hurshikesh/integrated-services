@@ -1,9 +1,11 @@
-"use client"
+'use client'
 import React, { useState } from 'react';
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { data: session } = useSession();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ const Login = () => {
           <h2 className="text-2xl font-bold text-white mb-6 text-center">Or</h2>
           <div className="flex flex-col space-y-4">
             <button
-            //   onClick={() => window.location.href = '/auth/google'}
+            onClick={() => {signIn("google")}}
               className="py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Login with Google
