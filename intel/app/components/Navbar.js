@@ -12,8 +12,13 @@ const Navbar = () => {
     setMounted(true);
 
     if (session) {
-      router.push('/services');
-    } 
+      const hasRedirected = localStorage.getItem('hasRedirected');
+
+      if (!hasRedirected) {
+        localStorage.setItem('hasRedirected', 'true');
+        router.push('/services');
+      }
+    }
   }, [session, router]);
 
   if (!mounted) return null; // Render nothing initially
@@ -29,12 +34,13 @@ const Navbar = () => {
           {session ? (
             <>
               <span className="text-white text-l">Welcome, {session.user.name}</span>
-              <button onClick={() => signOut()} className="text-white text-l hover:text-gray-400">Sign out</button>
+              <button onClick={() => {
+                localStorage.removeItem('hasRedirected');
+                signOut();
+              }} className="text-white text-l hover:text-gray-400">Sign out</button>
             </>
           ) : (
-            <a href="/login" className="text-white text-l hover:text-gray-400">
-                  Login
-                </a>
+            <a href="/login" className="text-white text-l hover:text-gray-400">Login</a>
           )}
         </div>
       </div>
@@ -42,6 +48,4 @@ const Navbar = () => {
   );
 };
 
-
-
-export default Navbar
+export default Navbar;
