@@ -10,7 +10,7 @@ const services = [
   {
     category: 'Health',
     description: 'Find hospitals, doctors, pharmacies, and emergency services.',
-    link: '/health',
+    link: '/services/Health',
     icon: faHospital,
   },
   {

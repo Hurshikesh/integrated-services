@@ -3,10 +3,10 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-[87vh] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
+    <div className="min-h-[87vh]  bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
       <header className="bg-cover bg-center h-64" style={{ backgroundImage: "url('/header-bg.jpg')" }}>
-        <div className="flex items-center justify-center h-full bg-black bg-opacity-70">
-          <h1 className="text-4xl font-bold text-white">Welcome to Integrated Services</h1>
+        <div className="flex items-center justify-center h-full  bg-opacity-70">
+          <h1 className="text-6xl font-bold text-blue-600">Welcome to Integrated Services</h1>
         </div>
       </header>
 
