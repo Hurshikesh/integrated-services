@@ -23,14 +23,14 @@ const FindHospitalPage = () => {
   const fetchUserCoords = async (address) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+        `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const data = await response.json();
-      if (data.length > 0) {
+      if (data.items.length > 0) {
         setErrorMessage(''); // Clear previous error message
-        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+        return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
-        setErrorMessage('Address not found please try again with some other address');
+        setErrorMessage('Address not found. Please try again with another address.');
       }
     } catch (error) {
       console.error('Error fetching user coordinates:', error);
@@ -43,13 +43,13 @@ const FindHospitalPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=hospital+near+${userCoordinates.lat},${userCoordinates.lon}`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=hospital&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const data = await response.json();
-      const hospitalsWithDistances = data.map(hospital => ({
+      const hospitalsWithDistances = data.items.map(hospital => ({
         ...hospital,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, parseFloat(hospital.lat), parseFloat(hospital.lon)),
-        travelTime: calculateTravelTime(userCoordinates, { lat: parseFloat(hospital.lat), lon: parseFloat(hospital.lon) })
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, hospital.position.lat, hospital.position.lng),
+        travelTime: calculateTravelTime(userCoordinates, { lat: hospital.position.lat, lon: hospital.position.lng })
       }));
       
       hospitalsWithDistances.sort((a, b) => a.distance - b.distance);
@@ -135,10 +135,10 @@ const FindHospitalPage = () => {
             <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Hospitals Near You</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {hospitals.map((hospital) => (
-                <div key={hospital.place_id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div key={hospital.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">{hospital.name ? hospital.name : 'Name not available'}</h3>
-                    <p className="text-gray-600 mb-4">{hospital.display_name ? hospital.display_name : 'Address not available'}</p>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">{hospital.title}</h3>
+                    <p className="text-gray-600 mb-4">{hospital.address.label}</p>
                     {hospital.distance && (
                       <p className="text-gray-800 mb-2 text-xl">{`Distance: ${hospital.distance.toFixed(2)} km`}</p>
                     )}
