@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking, faPhone, faClock,faStar } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faClock, faStar } from '@fortawesome/free-solid-svg-icons';
 
 const FindDoctorPage = () => {
   const [location, setLocation] = useState('');
@@ -52,7 +52,8 @@ const FindDoctorPage = () => {
         travelTime: calculateTravelTime(userCoordinates, { lat: doctor.position.lat, lon: doctor.position.lng }),
         rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
         reviews: Math.floor(Math.random() * 1000) + 1,
-        isOpenNow: checkIfOpenNow(doctor.openingHours)
+        isOpenNow: checkIfOpenNow(),
+        formattedOpeningHours: '10:00 - 22:00' // Fixed opening hours
       }));
       
       doctorsWithDistances.sort((a, b) => a.distance - b.distance);
@@ -65,28 +66,13 @@ const FindDoctorPage = () => {
     setLoading(false);
   };
 
-  const checkIfOpenNow = (openingHours) => {
-    if (!openingHours || !openingHours[0] || !openingHours[0].structured) {
-      return false;
-    }
+  const checkIfOpenNow = () => {
     const now = new Date();
-    const currentDay = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase().slice(0, 2);
     const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
+    const openingTime = '1000';
+    const closingTime = '2200';
 
-    for (const time of openingHours[0].structured) {
-      if (time.recurrence.includes(currentDay)) {
-        const [startHour, startMinute] = time.start.slice(1).split('H');
-        const endHour = parseInt(startHour) + parseInt(time.duration.slice(2, 4));
-        const endMinute = parseInt(startMinute) + parseInt(time.duration.slice(6, 8));
-        const startTime = `${startHour}${startMinute}`;
-        const endTime = `${endHour.toString().padStart(2, '0')}${endMinute.toString().padStart(2, '0')}`;
-        
-        if (currentTime >= startTime && currentTime <= endTime) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return currentTime >= openingTime && currentTime <= closingTime;
   };
 
   const handleSearch = async (e) => {
@@ -190,11 +176,9 @@ const FindDoctorPage = () => {
                       ))}
                         <span className="ml-2 text-gray-700">({doctor.reviews} reviews)</span>
                       </div>
-                    {doctor.openingHours && (
-                      <div className="text-gray-600 mb-2">
-                        <FontAwesomeIcon icon={faClock} /> {` ${doctor.openingHours[0].text.join(', ')}`}
-                      </div>
-                    )}
+                    <div className="text-gray-600 mb-2">
+                      <FontAwesomeIcon icon={faClock} /> {doctor.formattedOpeningHours}
+                    </div>
                     <p className={`text-lg font-bold ${doctor.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
                       {doctor.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                     </p>
