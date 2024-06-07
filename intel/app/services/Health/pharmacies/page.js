@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faStar } from '@fortawesome/free-solid-svg-icons';
 
 const FindPharmaciesPage = () => {
   const [location, setLocation] = useState('');
@@ -49,7 +49,9 @@ const FindPharmaciesPage = () => {
       const pharmaciesWithDistances = data.items.map(pharmacy => ({
         ...pharmacy,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, pharmacy.position.lat, pharmacy.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: pharmacy.position.lat, lon: pharmacy.position.lng })
+        travelTime: calculateTravelTime(userCoordinates, { lat: pharmacy.position.lat, lon: pharmacy.position.lng }),
+        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+        reviews: Math.floor(Math.random() * 1000) + 1
       }));
       
       pharmaciesWithDistances.sort((a, b) => a.distance - b.distance);
@@ -149,6 +151,15 @@ const FindPharmaciesPage = () => {
                         <span><FontAwesomeIcon icon={faWalking} /> {` ${pharmacy.travelTime.walk.toFixed(0)} min`}</span>
                       </div>
                     )}
+                    <div className="flex items-center">
+                      {[...Array(pharmacy.rating)].map((_, i) => (
+                        <FontAwesomeIcon key={i} icon={faStar} className="text-yellow-500 mr-1" />
+                      ))}
+                      {[...Array(5 - pharmacy.rating)].map((_, i) => (
+                        <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
+                      ))}
+                        <span className="ml-2 text-gray-700">({pharmacy.reviews} reviews)</span>
+                    </div>
                   </div>
                 </div>
               ))}

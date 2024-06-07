@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking ,faStar } from '@fortawesome/free-solid-svg-icons';
 
 const FindHospitalPage = () => {
   const [location, setLocation] = useState('');
@@ -49,7 +49,9 @@ const FindHospitalPage = () => {
       const hospitalsWithDistances = data.items.map(hospital => ({
         ...hospital,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, hospital.position.lat, hospital.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: hospital.position.lat, lon: hospital.position.lng })
+        travelTime: calculateTravelTime(userCoordinates, { lat: hospital.position.lat, lon: hospital.position.lng }),
+        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+        reviews: Math.floor(Math.random() * 1000) + 1
       }));
       
       hospitalsWithDistances.sort((a, b) => a.distance - b.distance);
@@ -149,6 +151,15 @@ const FindHospitalPage = () => {
                         <span><FontAwesomeIcon icon={faWalking} /> {` ${hospital.travelTime.walk.toFixed(0)} min`}</span>
                       </div>
                     )}
+                    <div className="flex items-center">
+                      {[...Array(hospital.rating)].map((_, i) => (
+                        <FontAwesomeIcon key={i} icon={faStar} className="text-yellow-500 mr-1" />
+                      ))}
+                      {[...Array(5 - hospital.rating)].map((_, i) => (
+                        <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
+                      ))}
+                        <span className="ml-2 text-gray-700">({hospital.reviews} reviews)</span>
+                    </div>
                   </div>
                 </div>
               ))}

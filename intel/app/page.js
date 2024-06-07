@@ -1,11 +1,18 @@
-import Image from "next/image";
-import Link from "next/link";
+'use client'
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+
+const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
 export default function Home() {
   return (
-    <div className="min-h-[87vh]  bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
+    <div className="min-h-[87vh] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
       <header className="bg-cover bg-center h-64" style={{ backgroundImage: "url('/header-bg.jpg')" }}>
-        <div className="flex items-center justify-center h-full  bg-opacity-70">
+        <div className="flex items-center justify-center h-full bg-opacity-70">
           <h1 className="text-6xl font-bold text-blue-600">Welcome to Integrated Services</h1>
         </div>
       </header>
@@ -52,6 +59,15 @@ export default function Home() {
             <textarea placeholder="Message" className="border border-gray-300 p-3 rounded-lg w-full mt-4 h-32 bg-gray-700 text-white"></textarea>
             <button type="submit" className="bg-indigo-600 text-white p-3 rounded-lg mt-4">Send Message</button>
           </form>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-4">Access Premium Services</h2>
+          <div className="bg-gray-800 shadow-md rounded-lg p-6">
+            <Elements stripe={stripePromise}>
+              
+            </Elements>
+          </div>
         </section>
       </main>
     </div>

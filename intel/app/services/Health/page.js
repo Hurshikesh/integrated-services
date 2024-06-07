@@ -73,7 +73,7 @@ const healthServices = [
     title: "Elder Care",
     description: "Find contact details for elder care and nurse services nearby.",
     image: "https://via.placeholder.com/400x300?text=Elder+Care",
-    link: "/services/Health/elder-care"
+    link: "/services/Health/ElderCare"
   },
   {
     title: "Diagnostic Centers",
