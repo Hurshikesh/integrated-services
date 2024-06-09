@@ -142,7 +142,7 @@ const SchoolDetailsPage = () => {
                 <div className="space-y-8">
                   {schools.map((school) => (
                     <div key={school.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="school.webp" alt="School" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="School" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {school.title}
