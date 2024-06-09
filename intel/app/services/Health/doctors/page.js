@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking, faPhone, faClock, faStar,faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt,faMap } from '@fortawesome/free-solid-svg-icons';
 
 const FindDoctorPage = () => {
   const [location, setLocation] = useState('');
@@ -150,18 +150,17 @@ const FindDoctorPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <main className="container mx-auto px-4 py-8 ">
+      <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Doctors Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
-              <label htmlFor="location" className=" text-gray-700 font-bold mb-2 flex items-center">
+              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
                 <span className="mr-2">
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
                 </span>
                 Enter your location (detailed address):
               </label>
-
               <input
                 type="text"
                 id="location"
@@ -180,7 +179,7 @@ const FindDoctorPage = () => {
 
         {showResults && (
           <div>
-            <section className="mb-12 absolute top-80"> 
+            <section className="mb-12 absolute top-80">
               <div className="max-w-lg mx-auto flex justify-between items-center">
                 <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
                 <div className="relative">
@@ -208,7 +207,7 @@ const FindDoctorPage = () => {
                 <div className="space-y-8">
                   {doctors.map((doctor) => (
                     <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://banner2.cleanpng.com/20180420/jfq/kisspng-general-practitioner-general-surgery-medicine-phys-dr-hat-5ad9e4ae2ae713.3363921815242292941757.jpg" alt="Doctor" className="w-48 h-auto object-cover" />
+                      <img src="doctor.webp" alt="Doctor" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {doctor.title}
@@ -255,6 +254,12 @@ const FindDoctorPage = () => {
                             ))}
                           </ul>
                         </div>
+                        <button
+                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${doctor.position.lat},${doctor.position.lng}`, '_blank')}
+                            className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"> {/* Enhanced button style */}
+                            <FontAwesomeIcon icon={faMap} className="mr-2" />
+                            View in Map
+                          </button>
                       </div>
                     </div>
                   ))}
