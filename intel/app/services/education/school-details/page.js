@@ -1,15 +1,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSchool, faBicycle,faCar,faWalking, faPhone, faClock, faStar, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
 
-const FindSchoolPage = () => {
+const SchoolDetailsPage = () => {
   const [location, setLocation] = useState('');
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
-  const [sortOption, setSortOption] = useState('distance'); // Default sort option
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
@@ -52,43 +51,15 @@ const FindSchoolPage = () => {
         ...school,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, school.position.lat, school.position.lng),
         travelTime: calculateTravelTime(userCoordinates, { lat: school.position.lat, lon: school.position.lng }),
-        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
-        reviews: Math.floor(Math.random() * 1000) + 1,
-        isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '08:00 - 15:00', // Fixed opening hours
-        // Selecting 3 random features for each school
-        features: Array.from(new Set(Array.from({ length: 3 }, () => `Feature ${Math.floor(Math.random() * 10) + 1}`)))
       }));
 
-      setSchools(sortSchools(schoolsWithDistances, sortOption));
+      setSchools(schoolsWithDistances);
       setShowResults(true); // Display results after fetching
     } catch (error) {
       console.error('Error fetching schools:', error);
       setErrorMessage('Error fetching schools.');
     }
     setLoading(false);
-  };
-
-  const sortSchools = (schools, option) => {
-    switch (option) {
-      case 'distance':
-        return schools.sort((a, b) => a.distance - b.distance);
-      case 'rating':
-        return schools.sort((a, b) => b.rating - a.rating);
-      case 'open':
-        return schools.sort((a, b) => b.isOpenNow - a.isOpenNow);
-      default:
-        return schools;
-    }
-  };
-
-  const checkIfOpenNow = () => {
-    const now = new Date();
-    const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
-    const openingTime = '0800';
-    const closingTime = '1500';
-
-    return currentTime >= openingTime && currentTime <= closingTime;
   };
 
   const handleSearch = async (e) => {
@@ -100,12 +71,6 @@ const FindSchoolPage = () => {
     } else {
       setSchools([]); // Clear previous school data
     }
-  };
-
-  const handleSortChange = (e) => {
-    const newSortOption = e.target.value;
-    setSortOption(newSortOption);
-    setSchools(sortSchools([...schools], newSortOption));
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -150,7 +115,6 @@ const FindSchoolPage = () => {
                 </span>
                 Enter your location (detailed address):
               </label>
-
               <input
                 type="text"
                 id="location"
@@ -169,24 +133,6 @@ const FindSchoolPage = () => {
 
         {showResults && (
           <div>
-            <section className="mb-12">
-              <div className="max-w-lg mx-auto flex justify-between items-center">
-                <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
-                <div className="relative">
-                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none">
-                    <option value="distance">Distance</option>
-                    <option value="rating">Rating</option>
-                    <option value="open">Open Now</option>
-                  </select>
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-                    <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </section>
-
             {loading ? (
               <div className="text-center">Loading...</div>
             ) : errorMessage ? (
@@ -196,7 +142,7 @@ const FindSchoolPage = () => {
                 <div className="space-y-8">
                   {schools.map((school) => (
                     <div key={school.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://example.com/school-image.jpg" alt="School" className="w-48 h-auto object-cover" />
+                      <img src="school.webp" alt="School" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {school.title}
@@ -217,29 +163,27 @@ const FindSchoolPage = () => {
                             <span><FontAwesomeIcon icon={faWalking} /> {` ${school.travelTime.walk.toFixed(0)} min`}</span>
                           </div>
                         )}
-                        <div className="flex items-center text-yellow-500 mb-2">
-                          {[...Array(school.rating)].map((_, i) => (
-                            <FontAwesomeIcon key={i} icon={faStar} className="mr-1" />
-                          ))}
-                          {[...Array(5 - school.rating)].map((_, i) => (
-                            <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
-                          ))}
-                          <span className="ml-2 text-gray-700">({school.reviews} reviews)</span>
-                        </div>
-                        <div className="text-gray-600 mb-2">
-                          <FontAwesomeIcon icon={faClock} /> {school.formattedOpeningHours}
-                        </div>
-                        <p className={`text-lg font-bold ${school.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
-                          {school.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
-                        </p>
-                        <div className="mt-4">
-                          <h4 className="text-lg font-semibold text-gray-800 mb-2">Features:</h4>
-                          <ul className="list-disc list-inside">
-                            {school.features.map((feature, index) => (
-                              <li key={index} className="text-gray-600">{feature}</li>
-                            ))}
-                          </ul>
-                        </div>
+                        {school.openingHours && school.openingHours[0] && (
+                          <div className="text-gray-600 mb-2">
+                            <FontAwesomeIcon icon={faClock} /> {school.openingHours[0].text.join(', ')}
+                          </div>
+                        )}
+                        {school.contacts && school.contacts[0].www && school.contacts[0].www[0].value ? (
+                          <p className="text-gray-800 mb-2 text-xl">
+                            <a href={school.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                              {school.contacts[0].www[0].value}
+                            </a>
+                          </p>
+                        ) : (
+                          <p className="text-gray-800 mb-2 text-xl">Website not provided</p>
+                        )}
+                        <button
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${school.position.lat},${school.position.lng}`, '_blank')}
+                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
+                        >
+                          <FontAwesomeIcon icon={faMap} className="mr-2" />
+                          View on Google Maps
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -253,4 +197,4 @@ const FindSchoolPage = () => {
   );
 };
 
-export default FindSchoolPage;
+export default SchoolDetailsPage;
