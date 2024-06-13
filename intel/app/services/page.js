@@ -28,7 +28,7 @@ const services = [
   {
     category: 'Finance',
     description: 'Banking, tax, insurance details, and financial services.',
-    link: '/services/finance',
+    link: '/services/FinancePage',
     icon: faMoneyBillWave,
   },
   {

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import FinancePage from './services/FinancePage/FinancePage';
 
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
@@ -97,7 +98,8 @@ const services = [
     title: "Finance Services",
     description: "Find information on banking, tax, and insurance services.",
     image: "/finance.jpg",
-    link: "/services/finance"
+    //<FinancePage />
+    link: "/services/FinancePage"
   },
   {
     title: "Government Services",
