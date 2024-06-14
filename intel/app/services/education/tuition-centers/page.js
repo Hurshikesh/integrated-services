@@ -1,15 +1,14 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
 
-const FindServicesPage = () => {
+const TuitionAndClassesPage = () => {
   const [location, setLocation] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
-  const [sortOption, setSortOption] = useState('distance');
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
@@ -29,7 +28,7 @@ const FindServicesPage = () => {
       );
       const data = await response.json();
       if (data.items.length > 0) {
-        setErrorMessage('');
+        setErrorMessage(''); // Clear previous error message
         return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
         setErrorMessage('Address not found. Please try again with another address.');
@@ -41,74 +40,44 @@ const FindServicesPage = () => {
     return null;
   };
 
-  const fetchServices = async (userCoordinates) => {
+  const fetchTuitionsAndClasses = async (userCoordinates) => {
     setLoading(true);
     try {
-      const [tuitionResponse, classesResponse] = await Promise.all([
-        fetch(`https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=tuition&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`),
-        fetch(`https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=classes&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`)
-      ]);
+      const tuitionResponse = await fetch(
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=tuition&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+      );
+      const tuitionData = await tuitionResponse.json();
 
-      const [tuitionData, classesData] = await Promise.all([
-        tuitionResponse.json(),
-        classesResponse.json()
-      ]);
+      const classResponse = await fetch(
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=classes&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+      );
+      const classData = await classResponse.json();
 
-      const combinedResults = [...tuitionData.items, ...classesData.items].map(service => ({
-        ...service,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, service.position.lat, service.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: service.position.lat, lon: service.position.lng }),
-        rating: Math.floor(Math.random() * 5) + 1,
-        reviews: Math.floor(Math.random() * 1000) + 1,
-        isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '10:00 - 22:00',
-        isFavorite: Math.random() < 0.5,
-        patientsTellUs: getRandomPatientTellUsStatements(),
-        address: service.vicinity // Assuming 'vicinity' contains the address details
+      const allResults = [...tuitionData.items, ...classData.items];
+
+      const resultsWithDistances = allResults.map(result => ({
+        ...result,
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, result.position.lat, result.position.lng),
+        travelTime: calculateTravelTime(userCoordinates, { lat: result.position.lat, lon: result.position.lng }),
       }));
 
-      setResults(sortResults(combinedResults, sortOption));
-      setShowResults(true);
+      // Sort results: those with websites first, then by distance
+      const sortedResults = resultsWithDistances.sort((a, b) => {
+        const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
+        const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
+
+        if (aHasWebsite && !bHasWebsite) return -1;
+        if (!aHasWebsite && bHasWebsite) return 1;
+        return a.distance - b.distance;
+      });
+
+      setResults(sortedResults);
+      setShowResults(true); // Display results after fetching
     } catch (error) {
-      console.error('Error fetching services:', error);
-      setErrorMessage('Error fetching services.');
+      console.error('Error fetching tuitions and classes:', error);
+      setErrorMessage('Error fetching tuitions and classes.');
     }
     setLoading(false);
-  };
-
-  const getRandomPatientTellUsStatements = () => {
-    const options = [
-      "Offers Telehealth",
-      "Easy scheduling",
-      "Employs friendly staff",
-      "Accepts walk-ins",
-      "Provides online prescription refill",
-      "Friendly bedside manner"
-    ];
-    return Array.from(new Set(Array.from({ length: 3 }, () => options[Math.floor(Math.random() * options.length)])));
-  };
-
-  const sortResults = (results, option) => {
-    switch (option) {
-      case 'distance':
-        return results.sort((a, b) => a.distance - b.distance);
-      case 'rating':
-        return results.sort((a, b) => b.rating - a.rating);
-      case 'open':
-        return results.sort((a, b) => b.isOpenNow - a.isOpenNow);
-      case 'patientFavorite':
-        return results.sort((a, b) => b.isFavorite - a.isFavorite);
-      default:
-        return results;
-    }
-  };
-
-  const checkIfOpenNow = () => {
-    const now = new Date();
-    const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
-    const openingTime = '1000';
-    const closingTime = '2200';
-    return currentTime >= openingTime && currentTime <= closingTime;
   };
 
   const handleSearch = async (e) => {
@@ -116,16 +85,10 @@ const FindServicesPage = () => {
     const userCoordinates = await fetchUserCoords(location);
     if (userCoordinates) {
       setUserCoords(userCoordinates);
-      fetchServices(userCoordinates);
+      fetchTuitionsAndClasses(userCoordinates);
     } else {
-      setResults([]);
+      setResults([]); // Clear previous result data
     }
-  };
-
-  const handleSortChange = (e) => {
-    const newSortOption = e.target.value;
-    setSortOption(newSortOption);
-    setResults(sortResults([...results], newSortOption));
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -137,7 +100,7 @@ const FindServicesPage = () => {
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
+    const distance = R * c; // Distance in km
     return distance;
   };
 
@@ -145,20 +108,23 @@ const FindServicesPage = () => {
     const carSpeed = 60; // km/h
     const bikeSpeed = 20; // km/h
     const walkSpeed = 5; // km/h
+
     const distance = calculateDistance(origin.lat, origin.lon, destination.lat, destination.lon);
+
     const carTime = distance / carSpeed;
     const bikeTime = distance / bikeSpeed;
     const walkTime = distance / walkSpeed;
-    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 };
+
+    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 }; // Convert hours to minutes
   };
 
   const toRad = (value) => (value * Math.PI) / 180;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Services Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Tuitions and Classes Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
@@ -185,87 +151,70 @@ const FindServicesPage = () => {
 
         {showResults && (
           <div>
-            <section className="mb-12 absolute top-80">
-              <div className="max-w-lg mx-auto flex justify-between items-center">
-                <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
-                <div className="relative">
-                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl
-                  -lg pr-8 appearance-none">
-                    <option value="distance">Distance</option>
-                    <option value="rating">Rating</option>
-                    {/* <option value="open">Open Now</option> */}
-                    <option value="patientFavorite">Student Favorite</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <FontAwesomeIcon icon={faClock} className="text-gray-500" />
-                  </div>
-                </div>
-              </div>
-            </section>
-
             {loading ? (
-              <p className="text-center">Loading...</p>
-            ) : results.length > 0 ?
-            (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {results.map((result, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="px-6 py-4">
-                        <h3 className="text-lg font-bold text-blue-600 mb-2">{result.title}</h3>
-                        <p className="text-gray-700 mb-2">{result.vicinity}</p>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{`${result.distance.toFixed(2)} km`}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faStar} className="text-yellow-500 mr-1" />
-                          <p className="text-gray-600">{`${result.rating.toFixed(1)} (${result.reviews} reviews)`}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faPhone} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{result.phone || 'N/A'}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faClock} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{result.isOpenNow ? 'Open Now' : 'Closed Now'}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faWalking} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{`Travel time by walking: ${result.travelTime.walk.toFixed(1)} min`}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faBicycle} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{`Travel time by bike: ${result.travelTime.bike.toFixed(1)} min`}</p>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          <FontAwesomeIcon icon={faCar} className="text-gray-500 mr-1" />
-                          <p className="text-gray-600">{`Travel time by car: ${result.travelTime.car.toFixed(1)} min`}</p>
-                        </div>
-                        <div className="flex flex-wrap">
-                          {result.patientsTellUs.map((statement, index) => (
-                            <span key={index} className="inline-block bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">
-                              {statement}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="mt-4">
-                          <p className="text-gray-600 text-sm">Address: {result.address}</p>
-                        </div>
+              <div className="text-center">Loading...</div>
+            ) : errorMessage ? (
+              <div className="text-center text-red-600">{errorMessage}</div>
+            ) : (
+              <section className="mb-12">
+                <div className="space-y-8">
+                  {results.map((result) => (
+                    <div key={result.id} className="bg-whiteshadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="Result" className="w-48 h-auto object-cover" />
+                      <div className="p-6 flex-grow">
+                        <h3 className="text-xl font-semibold text-white mb-2 flex items-center">
+                          {result.title}
+                          {result.categories && result.categories.some(category => category.id === 'tuition') && <span className="ml-2 text-sm bg-green-200 text-green-800 px-2 py-1 rounded-full">Tuition</span>}
+                          {result.categories && result.categories.some(category => category.id === 'classes') && <span className="ml-2 text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded-full">Classes</span>}
+                        </h3>
+                        <p className="text-gray-100 mb-4">{result.address.label}</p>
+                        {result.contacts && result.contacts[0].mobile && (
+                          <p className="text-gray-200 mb-2 text-xl">
+                            <FontAwesomeIcon icon={faPhone} /> <strong>{result.contacts[0].mobile[0].value}</strong>
+                          </p>
+                        )}
+                        {result.distance && (
+                          <p className="text-gray-100 mb-2 text-xl">{`Distance: ${result.distance.toFixed(2)} km`}</p>
+                        )}
+                        {result.travelTime && (
+                          <div className="flex justify-around text-gray-300 mb-2">
+                            <span><FontAwesomeIcon icon={faCar} /> {` ${result.travelTime.car.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${result.travelTime.bike.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faWalking} /> {` ${result.travelTime.walk.toFixed(0)} min`}</span>
+                          </div>
+                        )}
+                        {result.openingHours && result.openingHours[0] && (
+                          <div className="text-gray-600 mb-2">
+                            <FontAwesomeIcon icon={faClock} /> {result.openingHours[0].text.join(', ')}
+                          </div>
+                        )}
+                        {result.contacts && result.contacts[0].www && result.contacts[0].www[0].value ? (
+                          <p className="text-gray-800 mb-2 text-xl">
+                            <a href={result.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                              {result.contacts[0].www[0].value}
+                            </a>
+                          </p>
+                        ) : (
+                          <p className="text-gray-800 mb-2 text-xl">Website not provided</p>
+                        )}
+                        <button
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${result.position.lat},${result.position.lng}`, '_blank')}
+                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
+                        >
+                          <FontAwesomeIcon icon={faMap} className="mr-2" />
+                          View on Google Maps
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              ) : (
-                <p className="text-center">No results found.</p>
-              )}
-            </div>
-          )}
-  
-          {errorMessage && <p className="text-red-500 text-center mt-4">{errorMessage}</p>}
-        </main>
-      </div>
-    );
-  };
-  
-  export default FindServicesPage;
-  
+              </section>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default TuitionAndClassesPage;
