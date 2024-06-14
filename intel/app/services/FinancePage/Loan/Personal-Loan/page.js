@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Link from 'next/link';
 
 function HomePage() {
   return (
@@ -16,32 +15,12 @@ function HomePage() {
 
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Types of Personal Loans</h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <Link href="/unsecured-loans" className="text-blue-500 hover:underline">
-              Unsecured Loans
-            </Link>
-          </li>
-          <li>
-            <Link href="/secured-loans" className="text-blue-500 hover:underline">
-              Secured Loans
-            </Link>
-          </li>
-          <li>
-            <Link href="/debt-consolidation-loans" className="text-blue-500 hover:underline">
-              Debt Consolidation Loans
-            </Link>
-          </li>
-          <li>
-            <Link href="/wedding-loans" className="text-blue-500 hover:underline">
-              Wedding Loans
-            </Link>
-          </li>
-          <li>
-            <Link href="/home-renovation-loans" className="text-blue-500 hover:underline">
-              Home Renovation Loans
-            </Link>
-          </li>
+        <ul className="list-disc pl-6 space-y-2 text-gray-700">
+          <li>Unsecured Loans</li>
+          <li>Secured Loans</li>
+          <li>Debt Consolidation Loans</li>
+          <li>Wedding Loans</li>
+          <li>Home Renovation Loans</li>
         </ul>
       </section>
 
@@ -104,6 +83,23 @@ function HomePage() {
         </div>
       </section>
 
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">FAQ</h2>
+        <div className="bg-white p-4 rounded shadow-md">
+          <details className="mb-4">
+            <summary className="font-semibold text-gray-800">What is the maximum tenure for a personal loan?</summary>
+            <p className="mt-2 text-gray-700">The maximum tenure for a personal loan is typically up to 5 years.</p>
+          </details>
+          <details className="mb-4">
+            <summary className="font-semibold text-gray-800">Can I get a personal loan with a bad credit score?</summary>
+            <p className="mt-2 text-gray-700">It may be difficult to get a personal loan with a bad credit score. However, some lenders may offer loans at higher interest rates.</p>
+          </details>
+          <details className="mb-4">
+            <summary className="font-semibold text-gray-800">What documents are required for a personal loan application?</summary>
+            <p className="mt-2 text-gray-700">Generally, you'll need identity proof, address proof, income proof, and bank statements.</p>
+          </details>
+        </div>
+      </section>
     </div>
   );
 }
