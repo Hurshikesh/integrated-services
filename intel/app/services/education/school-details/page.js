@@ -53,7 +53,17 @@ const SchoolDetailsPage = () => {
         travelTime: calculateTravelTime(userCoordinates, { lat: school.position.lat, lon: school.position.lng }),
       }));
 
-      setSchools(schoolsWithDistances);
+      // Sort schools: those with websites first, then by distance
+      const sortedSchools = schoolsWithDistances.sort((a, b) => {
+        const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
+        const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
+
+        if (aHasWebsite && !bHasWebsite) return -1;
+        if (!aHasWebsite && bHasWebsite) return 1;
+        return a.distance - b.distance;
+      });
+
+      setSchools(sortedSchools);
       setShowResults(true); // Display results after fetching
     } catch (error) {
       console.error('Error fetching schools:', error);
@@ -76,7 +86,7 @@ const SchoolDetailsPage = () => {
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lat2 - lon1);
+    const dLon = toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
@@ -106,7 +116,7 @@ const SchoolDetailsPage = () => {
     <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Schools Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Schools Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
