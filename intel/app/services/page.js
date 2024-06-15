@@ -34,7 +34,7 @@ const services = [
   {
     category: 'Government Services',
     description: 'Aadhar, passport, ration card, and other government services.',
-    link: '/services/government-services',
+    link: '/services/Government',
     icon: faLandmark,
   },
   {
