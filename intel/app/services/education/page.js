@@ -29,7 +29,7 @@ const educationServices = [
   {
     category: 'Arts and Sports',
     description: 'Details on arts, music, sports, and cultural activity centers.',
-    link: '/services/education/arts-sports',
+    link: '/services/education/arts-and-sports',
     icon: faGraduationCap,
   },
   {
