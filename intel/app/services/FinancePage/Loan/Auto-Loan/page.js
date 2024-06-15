@@ -2,6 +2,24 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 function AutoLoanPage() {
+  const loans = [
+    { institution: "SBI", rate: "7.50% - 9.50%", tenure: "1 - 7 years", url: "https://sbi.co.in/web/personal-banking/loans/auto-loans" },
+    { institution: "HDFC Bank", rate: "8.00% - 10.00%", tenure: "1 - 7 years", url: "https://www.hdfcbank.com/personal/borrow/popular-loans/new-car-loan" },
+    { institution: "ICICI Bank", rate: "8.50% - 10.50%", tenure: "1 - 7 years", url: "https://www.icicibank.com/Personal-Banking/loans/car-loan/index.page" },
+    { institution: "Axis Bank", rate: "9.00% - 11.00%", tenure: "1 - 7 years", url: "https://www.axisbank.com/retail/loans/car-loan/new-car-loan" },
+    { institution: "Yes Bank", rate: "9.50% - 11.50%", tenure: "1 - 7 years", url: "https://www.yesbank.in/personal-banking/yes-individual/loans/car-loans" },
+    { institution: "Kotak Mahindra Bank", rate: "10.00% - 12.00%", tenure: "1 - 7 years", url: "https://www.kotak.com/en/personal-banking/loans/car-loan.html" },
+    { institution: "IndusInd Bank", rate: "10.50% - 12.50%", tenure: "1 - 7 years", url: "https://www.indusind.com/in/en/personal/loans/vehicle-loan.html" },
+    { institution: "HSBC", rate: "11.00% - 13.00%", tenure: "1 - 7 years", url: "https://www.hsbc.co.in/loans/things-to-check-before-you-apply-for-a-loan/" },
+    { institution: "Standard Chartered", rate: "11.50% - 13.50%", tenure: "1 - 7 years", url: "https://www.sc.com/in/loans/personal-loans/" },
+    { institution: "Citibank", rate: "12.00% - 14.00%", tenure: "1 - 7 years", url: "https://www.online.citibank.co.in/products-services/loans/loan-on-commercial-vehicle-construction-equipment.htm" },
+    { institution: "Bajaj Finserv", rate: "12.50% - 14.50%", tenure: "1 - 7 years", url: "https://www.bajajfinserv.in/new-car-finance" },
+    { institution: "Tata Capital", rate: "13.00% - 15.00%", tenure: "1 - 7 years", url: "https://www.tatacapital.com/vehicle-loan.html" },
+    { institution: "Mahindra Finance", rate: "13.50% - 15.50%", tenure: "1 - 7 years", url: "https://www.mahindrafinance.com/loans/car-loan" },
+    { institution: "Fullerton India", rate: "14.00% - 16.00%", tenure: "1 - 7 years", url: "https://www.smfgindiacredit.com/" },
+    { institution: "Capital First", rate: "14.50% - 16.50%", tenure: "1 - 7 years", url: "https://www.idfcfirstbank.com/personal-banking/loans/car-loan" },
+  ];
+
   return (
     <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12 bg-gray-50">
       <Head>
@@ -69,25 +87,13 @@ function AutoLoanPage() {
               </tr>
             </thead>
             <tbody>
-              {[
-                { institution: "SBI", rate: "7.50% - 9.50%", tenure: "1 - 7 years" },
-                { institution: "HDFC Bank", rate: "8.00% - 10.00%", tenure: "1 - 7 years" },
-                { institution: "ICICI Bank", rate: "8.50% - 10.50%", tenure: "1 - 7 years" },
-                { institution: "Axis Bank", rate: "9.00% - 11.00%", tenure: "1 - 7 years" },
-                { institution: "Yes Bank", rate: "9.50% - 11.50%", tenure: "1 - 7 years" },
-                { institution: "Kotak Mahindra Bank", rate: "10.00% - 12.00%", tenure: "1 - 7 years" },
-                { institution: "IndusInd Bank", rate: "10.50% - 12.50%", tenure: "1 - 7 years" },
-                { institution: "HSBC", rate: "11.00% - 13.00%", tenure: "1 - 7 years" },
-                { institution: "Standard Chartered", rate: "11.50% - 13.50%", tenure: "1 - 7 years" },
-                { institution: "Citibank", rate: "12.00% - 14.00%", tenure: "1 - 7 years" },
-                { institution: "Bajaj Finserv", rate: "12.50% - 14.50%", tenure: "1 - 7 years" },
-                { institution: "Tata Capital", rate: "13.00% - 15.00%", tenure: "1 - 7 years" },
-                { institution: "Mahindra Finance", rate: "13.50% - 15.50%", tenure: "1 - 7 years" },
-                { institution: "Fullerton India", rate: "14.00% - 16.00%", tenure: "1 - 7 years" },
-                { institution: "Capital First", rate: "14.50% - 16.50%", tenure: "1 - 7 years" },
-              ].map((loan, index) => (
+              {loans.map((loan, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                  <td className="px-4 py-2 border border-gray-400 text-gray-700">{loan.institution}</td>
+                  <td className="px-4 py-2 border border-gray-400 text-gray-700">
+                    <a href={loan.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      {loan.institution}
+                    </a>
+                  </td>
                   <td className="px-4 py-2 border border-gray-400 text-gray-700">{loan.rate}</td>
                   <td className="px-4 py-2 border border-gray-400 text-gray-700">{loan.tenure}</td>
                 </tr>
@@ -115,7 +121,6 @@ function AutoLoanPage() {
           <div className="elfsight-app-9b8cf743-c2ee-40b0-804f-a6ef5eb89520" data-elfsight-app-lazy></div>
         </div>
       </section>
-
     </div>
   );
 }
