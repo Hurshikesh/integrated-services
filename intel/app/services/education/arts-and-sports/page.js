@@ -44,7 +44,7 @@ const ClassesPage = () => {
   const fetchClasses = async (userCoordinates) => {
     setLoading(true);
     try {
-      const query = classType === 'art' ? 'art%20classes' : 'sports%20classes';
+      const query = classType === 'art' ? 'art%20classes' : 'sport+centre';
       const response = await fetch(
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=${query}&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
@@ -86,9 +86,9 @@ const ClassesPage = () => {
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km
+    const R = 6371; // Radius of the Earth in km  
     const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lat2 - lon2);
+    const dLon = toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
@@ -117,7 +117,7 @@ const ClassesPage = () => {
   return (
     <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
-        <section className="mb-12"> 
+        <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Classes Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
@@ -168,12 +168,12 @@ const ClassesPage = () => {
                 <div className="space-y-8">
                   {classes.map((cls) => (
                     <div key={cls.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img 
-                        src={classType === 'art' ? 
-                          "https://i.postimg.cc/tTvgHQZC/pixlr-image-generator-31e18239-e192-46da-bb83-159c2c99eb2f.png" : 
-                          "https://i.postimg.cc/bJdjjGf4/fotor-ai-20240615105655.jpg"} 
-                        alt={classType === 'art' ? "Art Class" : "Sports Class"} 
-                        className="w-48 h-auto object-cover" 
+                      <img
+                        src={classType === 'art' ?
+                          "https://i.postimg.cc/tTvgHQZC/pixlr-image-generator-31e18239-e192-46da-bb83-159c2c99eb2f.png" :
+                          "https://i.postimg.cc/bJdjjGf4/fotor-ai-20240615105655.jpg"}
+                        alt={classType === 'art' ? "Art Class" : "Sports Class"}
+                        className="w-48 h-auto object-cover"
                       />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
