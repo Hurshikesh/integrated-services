@@ -33,9 +33,9 @@ const educationServices = [
     icon: faGraduationCap,
   },
   {
-    category: 'Industry Training',
-    description: 'Industry training and job aid centers.',
-    link: '/services/education/industry-training',
+    category: 'Colleges and University',
+    description: 'List of top colleges and universities in India.',
+    link: '/services/education/colleges',
     icon: faGraduationCap,
   }
 ];
