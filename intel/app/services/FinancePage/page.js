@@ -22,6 +22,11 @@ const FinancePage = () => {
       category: 'Atm Locator',
       description: 'Finds the atm near your location.',
       link: '/services/FinancePage/AtmLocator',
+    },
+    {
+      category: 'Insurance Providers',
+      description: 'Lists the insurance companies and agents near you with the ratings.',
+      link: '/services/FinancePage/InsuranceProvider',
     }
   ];
 
