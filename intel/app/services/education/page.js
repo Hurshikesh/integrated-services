@@ -34,7 +34,7 @@ const educationServices = [
   },
   {
     category: 'Colleges and University',
-    description: 'List of top colleges and universities in India.',
+    description: 'List of top colleges and universities near you.',
     link: '/services/education/colleges',
     icon: faGraduationCap,
   }

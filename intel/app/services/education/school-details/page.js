@@ -10,6 +10,7 @@ const SchoolDetailsPage = () => {
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [sortOption, setSortOption] = useState('distance');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -51,19 +52,10 @@ const SchoolDetailsPage = () => {
         ...school,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, school.position.lat, school.position.lng),
         travelTime: calculateTravelTime(userCoordinates, { lat: school.position.lat, lon: school.position.lng }),
+        rating: Math.floor(Math.random() * 5) + 1 // Random rating between 1 and 5
       }));
 
-      // Sort schools: those with websites first, then by distance
-      const sortedSchools = schoolsWithDistances.sort((a, b) => {
-        const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
-        const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
-
-        if (aHasWebsite && !bHasWebsite) return -1;
-        if (!aHasWebsite && bHasWebsite) return 1;
-        return a.distance - b.distance;
-      });
-
-      setSchools(sortedSchools);
+      setSchools(schoolsWithDistances);
       setShowResults(true); // Display results after fetching
     } catch (error) {
       console.error('Error fetching schools:', error);
@@ -112,6 +104,17 @@ const SchoolDetailsPage = () => {
 
   const toRad = (value) => (value * Math.PI) / 180;
 
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+    const sortedSchools = [...schools].sort((a, b) => {
+      if (e.target.value === 'rating') {
+        return b.rating - a.rating;
+      }
+      return a.distance - b.distance;
+    });
+    setSchools(sortedSchools);
+  };
+
   return (
     <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
@@ -149,6 +152,18 @@ const SchoolDetailsPage = () => {
               <div className="text-center text-red-600">{errorMessage}</div>
             ) : (
               <section className="mb-12">
+                <div className="mb-4 flex justify-end">
+                  <label htmlFor="sort" className="text-white mr-2">Sort by:</label>
+                  <select
+                    id="sort"
+                    value={sortOption}
+                    onChange={handleSortChange}
+                    className="border border-gray-300 text-black p-2 rounded-lg"
+                  >
+                    <option value="distance">Distance</option>
+                    <option value="rating">Rating</option>
+                  </select>
+                </div>
                 <div className="space-y-8">
                   {schools.map((school) => (
                     <div key={school.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
@@ -158,6 +173,9 @@ const SchoolDetailsPage = () => {
                           {school.title}
                         </h3>
                         <p className="text-gray-600 mb-4">{school.address.label}</p>
+                        <p className="text-gray-600 mb-2">
+                          <FontAwesomeIcon icon={faStar} className="text-yellow-500" /> {`${school.rating} Stars`}
+                        </p>
                         {school.contacts && school.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{school.contacts[0].mobile[0].value}</strong>
@@ -168,24 +186,10 @@ const SchoolDetailsPage = () => {
                         )}
                         {school.travelTime && (
                           <div className="flex justify-around text-gray-600 mb-2">
-                            <span><FontAwesomeIcon icon={faCar} /> {` ${school.travelTime.car.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${school.travelTime.bike.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faWalking} /> {` ${school.travelTime.walk.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faCar} /> {`Car: ${school.travelTime.car.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${school.travelTime.bike.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faWalking} /> {`Walk: ${school.travelTime.walk.toFixed(0)} min`}</span>
                           </div>
-                        )}
-                        {school.openingHours && school.openingHours[0] && (
-                          <div className="text-gray-600 mb-2">
-                            <FontAwesomeIcon icon={faClock} /> {school.openingHours[0].text.join(', ')}
-                          </div>
-                        )}
-                        {school.contacts && school.contacts[0].www && school.contacts[0].www[0].value ? (
-                          <p className="text-gray-800 mb-2 text-xl">
-                            <a href={school.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                              {school.contacts[0].www[0].value}
-                            </a>
-                          </p>
-                        ) : (
-                          <p className="text-gray-800 mb-2 text-xl">Website not provided</p>
                         )}
                         <button
                           onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${school.position.lat},${school.position.lng}`, '_blank')}
@@ -194,6 +198,13 @@ const SchoolDetailsPage = () => {
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps
                         </button>
+                        {school.contacts && school.contacts[0].www && school.contacts[0].www[0].value && (
+                          <p className="text-gray-800 mb-2 text-xl">
+                            <a href={school.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                              Learn More About the School
+                            </a>
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
