@@ -40,7 +40,7 @@ const governmentServices = [
   {
     category: 'Pension & PF Consultants',
     description: 'Pension, PF, and gratuity consultant details.',
-    link: '/services/Government/pension-pf-consultants',
+    link: '/services/Government/Pension',
     icon: faHandHoldingUsd,
   }
 ];

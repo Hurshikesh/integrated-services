@@ -263,7 +263,7 @@ const FindDoctorPage = () => {
                                                     {doctor.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                                                 </p>
                                                 <div className="mt-4">
-                                                    <h4 className="text-lg font-semibold text-gray-800 mb-2">Patients Tell Us:</h4>
+                                                    <h4 className="text-lg font-semibold text-gray-800 mb-2">Users Tell Us:</h4>
                                                     <ul className="list-disc list-inside">
                                                         {doctor.patientsTellUs.map((statement, index) => (
                                                             <li key={index} className="text-gray-600">{statement}</li>
