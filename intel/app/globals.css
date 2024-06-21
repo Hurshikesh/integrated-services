@@ -31,3 +31,72 @@ body {
     text-wrap: balance;
   }
 }
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 0.5s forwards;
+  animation-delay: 0.5s;
+}
+
+.animate-slide-up {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: slide-up 0.5s forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 0.5s forwards;
+  animation-delay: 0.5s;
+}
+
+.animate-slide-up {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: slide-up 0.5s forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.group:hover .group-hover\:flex {
+  display: flex;
+}
+
+.relative .absolute {
+  position: absolute;
+}
+
+.absolute.hidden {
+  display: none;
+}
+
+.group-hover\:flex {
+  display: none;
+}
+
+.group:hover .group-hover\:flex {
+  display: flex;
+}

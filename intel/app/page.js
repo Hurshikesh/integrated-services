@@ -4,25 +4,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import FinancePage from './services/FinancePage/FinancePage';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
 export default function Home() {
   return (
-    <div className="min-h-[87vh] bg-blue-900 text-white">
-      <header className="bg-cover bg-center h-64 relative" style={{ backgroundImage: "url('/header-bg.jpg')" }}>
-        <div className="absolute inset-0 bg-blue-900 bg-opacity-70 flex items-center justify-center">
-          <h1 className="text-6xl font-bold text-white">Welcome to Integrated Services</h1>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <header className="bg-cover bg-center h-screen relative" style={{ backgroundImage: "url('/header-bg.jpg')" }}>
+        <div className="absolute inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center">
+          <h1 className="text-6xl font-bold text-white">Integrated Services</h1>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <section className="mb-12">
+        <section className="mb-12 animate-fade-in">
           <h2 className="text-3xl font-bold mb-4 text-white">Explore Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service) => (
-              <div key={service.title} className="bg-blue-800 shadow-md rounded-lg overflow-hidden">
+              <div key={service.title} className="bg-gray-800 shadow-md rounded-lg overflow-hidden animate-slide-up">
                 <Image src={service.image} alt={service.title} width={400} height={300} className="w-full h-48 object-cover" />
                 <div className="p-4">
                   <h3 className="text-xl font-bold text-white">{service.title}</h3>
@@ -40,7 +39,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold mb-4 text-white">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step) => (
-              <div key={step.title} className="bg-blue-800 shadow-md rounded-lg p-6 text-center">
+              <div key={step.title} className="bg-gray-800 shadow-md rounded-lg p-6 text-center">
                 <Image src={step.image} alt={step.title} width={100} height={100} className="mx-auto" />
                 <h3 className="text-xl font-bold mt-4 text-white">{step.title}</h3>
                 <p className="mt-2 text-white">{step.description}</p>
@@ -51,7 +50,7 @@ export default function Home() {
 
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4 text-white">Contact Us</h2>
-          <form className="bg-blue-800 shadow-md rounded-lg p-6">
+          <form className="bg-gray-800 shadow-md rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input type="text" placeholder="Name" className="border border-gray-300 p-3 rounded-lg w-full bg-gray-700 text-white" />
               <input type="email" placeholder="Email" className="border border-gray-300 p-3 rounded-lg w-full bg-gray-700 text-white" />
@@ -63,7 +62,7 @@ export default function Home() {
 
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4 text-white">Access Premium Services</h2>
-          <div className="bg-blue-800 shadow-md rounded-lg p-6">
+          <div className="bg-gray-800 shadow-md rounded-lg p-6">
             <Elements stripe={stripePromise}>
               {/* Add your Stripe component here */}
             </Elements>
@@ -73,7 +72,6 @@ export default function Home() {
     </div>
   );
 }
-
 
 const services = [
   {
@@ -95,11 +93,10 @@ const services = [
     link: "/services/transport"
   },
   {
-    title: "Finance Services",
+title: "Finance Services",
     description: "Find information on banking, tax, and insurance services.",
     image: "/finance.jpg",
-    //<FinancePage />
-    link: "/services/FinancePage"
+    link: "/services/finance"
   },
   {
     title: "Government Services",

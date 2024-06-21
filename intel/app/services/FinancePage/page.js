@@ -31,11 +31,11 @@ const FinancePage = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
       <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Finance Services</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map((service, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+          <div key={index} className="bg-white p-6 rounded-lg shadow-md animate-slide-up">
             <Link href={service.link} legacyBehavior>
               <a className="block">
                 <h2 className="text-2xl font-bold text-blue-600 mb-4">{service.category}</h2>

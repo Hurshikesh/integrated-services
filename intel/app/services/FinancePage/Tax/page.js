@@ -1,8 +1,20 @@
+'use client'; // Add this line at the top of the file
 
-'use client';
+import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCar,
+  faBicycle,
+  faWalking,
+  faPhone,
+  faClock,
+  faStar,
+  faMapMarkerAlt,
+  faMap,
+} from '@fortawesome/free-solid-svg-icons';
+
+
 
 const FindAccountantPage = () => {
   const [location, setLocation] = useState('');
@@ -49,7 +61,7 @@ const FindAccountantPage = () => {
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=chartered+accountant&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const data = await response.json();
-      const accountantsWithDistances = data.items.map(accountant => ({
+      const accountantsWithDistances = data.items.map((accountant) => ({
         ...accountant,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, accountant.position.lat, accountant.position.lng),
         travelTime: calculateTravelTime(userCoordinates, { lat: accountant.position.lat, lon: accountant.position.lng }),
@@ -141,6 +153,9 @@ const FindAccountantPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Head>
+        <title>Find Chartered Accountants Near You</title>
+      </Head>
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Chartered Accountants Near You</h2>
@@ -169,8 +184,8 @@ const FindAccountantPage = () => {
         </section>
 
         {showResults && (
-          <div>
-            <section className="mb-12 absolute top-80">
+          <div className="animate-fade-in">
+            <section className="mb-12">
               <div className="max-w-lg mx-auto flex justify-between items-center">
                 <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
                 <div className="relative">
@@ -189,9 +204,9 @@ const FindAccountantPage = () => {
               </div>
             </section>
 
-            {loading ? (
+            {loading? (
               <div className="text-center">Loading...</div>
-            ) : errorMessage ? (
+            ) : errorMessage? (
               <div className="text-center text-red-600">{errorMessage}</div>
             ) : (
               <section className="mb-12">
@@ -257,4 +272,3 @@ const FindAccountantPage = () => {
 };
 
 export default FindAccountantPage;
-
