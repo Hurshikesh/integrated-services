@@ -81,6 +81,11 @@ const testimonies = [
     name: "Chloe Hernandez",
     testimony: "Math tutoring woes? Patient tutors, clear explanations. Son's confidence & grades soared. Great investment!"
   },
+  { 
+    name: "Jayesh Randy",
+    testimony: "Math tutoring woes? Patient tutors, clear explanations. Son's confidence & grades soared. Great investment!"
+
+  },
 ];
 
   
