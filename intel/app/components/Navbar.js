@@ -41,25 +41,25 @@ const Navbar = () => {
             </button>
             <div className="absolute hidden group-hover:flex flex-col bg-blue-600 text-white shadow-md mt-2 rounded-lg">
               <a 
-                href="/services/education" 
+                href="/services/Education" 
                 className="block w-full text-left px-4 py-2 hover:bg-blue-700 focus:outline-none"
               >
                 Education
               </a>
               <a 
-                href="/services/finance" 
+                href="/services/FinancePage" 
                 className="block w-full text-left px-4 py-2 hover:bg-blue-700 focus:outline-none"
               >
                 Finance
               </a>
               <a 
-                href="/services/health" 
+                href="/services/Health" 
                 className="block w-full text-left px-4 py-2 hover:bg-blue-700 focus:outline-none"
               >
                 Health
               </a>
               <a 
-                href="/services/government" 
+                href="/services/Government" 
                 className="block w-full text-left px-4 py-2 hover:bg-blue-700 focus:outline-none"
               >
                 Government

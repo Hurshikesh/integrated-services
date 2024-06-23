@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
 
-const FindInsurancePage = () => {
+const BuySellCarsPage = () => {
   const [location, setLocation] = useState('');
-  const [insuranceProviders, setInsuranceProviders] = useState([]);
+  const [carProviders, setCarProviders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,11 +41,11 @@ const FindInsurancePage = () => {
     return null;
   };
 
-  const fetchInsuranceProviders = async (userCoordinates) => {
+  const fetchCarProviders = async (userCoordinates) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=insurance&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=car+dealership&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const data = await response.json();
       const providersWithDistances = data.items.map(provider => ({
@@ -54,15 +54,15 @@ const FindInsurancePage = () => {
         rating: Math.floor(Math.random() * 5) + 1,
         reviews: Math.floor(Math.random() * 1000) + 1,
         isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '10:00 - 18:00',
+        formattedOpeningHours: '09:00 - 19:00',
         isFavorite: Math.random() < 0.5,
       }));
 
-      setInsuranceProviders(sortProviders(providersWithDistances, sortOption));
+      setCarProviders(sortProviders(providersWithDistances, sortOption));
       setShowResults(true);
     } catch (error) {
-      console.error('Error fetching insurance providers:', error);
-      setErrorMessage('Error fetching insurance providers.');
+      console.error('Error fetching car providers:', error);
+      setErrorMessage('Error fetching car providers.');
     }
     setLoading(false);
   };
@@ -75,7 +75,6 @@ const FindInsurancePage = () => {
         return providers.sort((a, b) => b.rating - a.rating);
       case 'open':
         return providers.sort((a, b) => b.isOpenNow - a.isOpenNow);
-      
       default:
         return providers;
     }
@@ -84,8 +83,8 @@ const FindInsurancePage = () => {
   const checkIfOpenNow = () => {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
-    const openingTime = '1000';
-    const closingTime = '1800';
+    const openingTime = '0900';
+    const closingTime = '1900';
 
     return currentTime >= openingTime && currentTime <= closingTime;
   };
@@ -95,16 +94,16 @@ const FindInsurancePage = () => {
     const userCoordinates = await fetchUserCoords(location);
     if (userCoordinates) {
       setUserCoords(userCoordinates);
-      fetchInsuranceProviders(userCoordinates);
+      fetchCarProviders(userCoordinates);
     } else {
-      setInsuranceProviders([]);
+      setCarProviders([]);
     }
   };
 
   const handleSortChange = (e) => {
     const newSortOption = e.target.value;
     setSortOption(newSortOption);
-    setInsuranceProviders(sortProviders([...insuranceProviders], newSortOption));
+    setCarProviders(sortProviders([...carProviders], newSortOption));
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -126,7 +125,7 @@ const FindInsurancePage = () => {
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Insurance Providers Near You</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Car Buying and Selling Providers Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
@@ -179,9 +178,9 @@ const FindInsurancePage = () => {
             ) : (
               <section className="mb-12">
                 <div className="space-y-8">
-                  {insuranceProviders.map((provider) => (
+                  {carProviders.map((provider) => (
                     <div key={provider.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="insurance_provider.webp" alt="Insurance Provider" className="w-48 h-auto object-cover" />
+                      <img src="car_dealership.webp" alt="Car Dealership" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {provider.title}
@@ -232,4 +231,4 @@ const FindInsurancePage = () => {
   );
 };
 
-export default FindInsurancePage;
+export default BuySellCarsPage;

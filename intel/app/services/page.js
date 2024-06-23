@@ -22,7 +22,7 @@ const services = [
   {
     category: 'Transportation',
     description: 'Transport services, vehicle centers, bus stations, and more.',
-    link: '/services/transportation',
+    link: '/services/Transportation',
     icon: faCar,
   },
   {

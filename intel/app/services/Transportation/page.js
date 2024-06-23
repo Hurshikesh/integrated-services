@@ -5,91 +5,63 @@ import Link from 'next/link';
 import Image from 'next/image';
 import 'tailwindcss/tailwind.css';
 
-const healthServices = [
+const transportationServices = [
   {
-    title: "Find Hospitals",
-    description: "Search for the best hospitals with highly rated doctors near you.",
-    image: "https://i.postimg.cc/DwjcrPGG/hospitals.jpg",
-    link: "/services/Health/FindHospital"
+    title: "Find Cabs",
+    description: "Search for the best cabs with highly rated drivers near you.",
+    image: "https://i.postimg.cc/XvPD61PY/cab.jpg",
+    link: "/services/Transportation/FindCabs"
   },
   {
-    title: "Consult Doctors",
-    description: "Book appointments with top-rated doctors in various specialties.",
-    image: "https://i.postimg.cc/br9xsx8s/doctos.jpg",
-    link: "/services/Health/doctors"
+    title: "Car Rentals",
+    description: "Rent cars from top-rated rental services in your area.",
+    image: "https://i.postimg.cc/FzVZzTTc/rentals.jpg",
+    link: "/services/Transportation/CarRentals"
   },
   {
-    title: "Find Pharmacies",
-    description: "Locate pharmacies that are open 24/7 near your location.",
-    image: "https://i.postimg.cc/cHJjT7B3/pharmacy.jpg",
-    link: "/services/Health/pharmacies"
+    title: "Nearby Bus Stops",
+    description: "Locate bus stops that are near your location and check schedules.",
+    image: "https://i.postimg.cc/htjr4bTz/busStop.jpg",
+    link: "/services/Transportation/BusStops"
   },
   {
-    title: "Fitness Services",
-    description: "Access information on nearest gyms,yoga and physiotherapy centres near you",
-    image: "https://i.postimg.cc/bvqNyMqj/Fitness-Services.jpg",
-    link: "/services/Health/FitnessServices"
+    title: "Buy & Sell Old Cars",
+    description: "Access the best deals to buy or sell used cars near you.",
+    image: "https://i.postimg.cc/brpx7Qqv/oldcars.jpg",
+    link: "/services/Transportation/BuySellCars"
   },
   {
-    title: "Elder Care",
-    description: "Find contact details for elder care and nurse services nearby.",
-    image: "https://i.postimg.cc/XJGM4cBb/eldercare.jpg",
-    link: "/services/Health/ElderCare"
-  },
-  {
-    title: "Diagnostic Centers",
-    description: "Locate diagnostic centers for lab tests and imaging services.",
-    image: "https://i.postimg.cc/0jM41832/diagnostic.jpg",
-    link: "/services/Health/DiagnosticCentre"
+    title: "Mechanic Near Me",
+    description: "Find contact details for mechanics and auto repair services nearby.",
+    image: "https://i.postimg.cc/1RrcpYKV/mechanic.jpg",
+    link: "/services/Transportation/Mechanic"
   }
 ];
 
 const testimonies = [
   {
     name: "John Doe",
-    testimony: "Great platform! Easy to use, fantastic support. Found the perfect professional, stress-free experience."
+    testimony: "Great platform! Easy to use, fantastic support. Found the perfect cab service, stress-free experience."
   },
   {
     name: "Jane Smith",
-    testimony: "Advanced search for doctors! Found a specialist, knowledgeable and attentive. Highly recommend!"
+    testimony: "Advanced search for rentals! Found a great car, knowledgeable and helpful staff. Highly recommend!"
   },
   {
     name: "Michael Brown",
-    testimony: "Emergency? Don't panic! Fast response, professional paramedics. Lifesaver service!"
+    testimony: "Emergency on the road? Don't panic! Fast response, professional mechanics. Lifesaver service!"
   },
   {
     name: "Emily Johnson",
-    testimony: "Elder care worries? Wide options, helpful reviews. Compassionate caregivers, peace of mind."
+    testimony: "Selling my old car was a breeze! Wide options, helpful reviews. Great buyers, peace of mind."
   },
   {
     name: "Sarah Lee",
-    testimony: "Language learning struggles? Interactive lessons, patient tutors. Speak your new language confidently!"
-  },
-  {
-    name: "David Williams",
-    testimony: "Grocery delivery doubts? Fresh produce, easy app. Saves time, perfect for busy schedules."
-  },
-  {
-    name: "Amanda Garcia",
-    testimony: "Get fit at home! Varied workouts, motivating instructors. Improved fitness, overall well-being boost."
-  },
-  {
-    name: "Noah Miller",
-    testimony: "Freelancer struggles? Find perfect projects. User-friendly platform, landed successful gigs."
-  },
-  {
-    name: "Chloe Hernandez",
-    testimony: "Math tutoring woes? Patient tutors, clear explanations. Son's confidence & grades soared. Great investment!"
-  },
-  { 
-    name: "Jayesh Randy",
-    testimony: "Math tutoring woes? Patient tutors, clear explanations. Son's confidence & grades soared. Great investment!"
-
-  },
+    testimony: "Public transport worries? Easy to locate bus stops, helpful schedules. Efficient commute!"
+  }
 ];
 
-  
-export default function HealthPage() {
+export default function TransportationPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentTestimonyIndex, setCurrentTestimonyIndex] = useState(0);
 
@@ -110,16 +82,16 @@ export default function HealthPage() {
         {/* Hero Section */}
         <section className={`relative h-64 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <Image 
-            src='https://i.postimg.cc/zvrh872b/healthcare.jpg' // Update with the correct path to your image
+            src='https://i.postimg.cc/x1KZHPqs/transportation.jpg' // Update with the correct path to your image
             layout="fill"
             objectFit="cover"
-            alt="Health Hero"
+            alt="Transportation Hero"
             className="absolute inset-0 z-0"
           />
           <div className="absolute inset-0 flex items-center justify-center z-10 bg-blue-900 bg-opacity-50">
             <div className="text-center text-white">
-              <h1 className="text-4xl font-bold mb-2">Making health accessible and affordable</h1>
-              <p className="text-lg mb-4">The most trusted name in health supplements</p>
+              <h1 className="text-4xl font-bold mb-2">Making transportation easy and accessible</h1>
+              <p className="text-lg mb-4">The most trusted name in transportation services</p>
             </div>
           </div>
         </section>
@@ -127,7 +99,7 @@ export default function HealthPage() {
         {/* Services Section */}
         <section className="mb-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {healthServices.map((service, index) => (
+            {transportationServices.map((service, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <Link href={service.link} legacyBehavior>
                   <a className="block">

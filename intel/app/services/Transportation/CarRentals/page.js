@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
 
-const FindInsurancePage = () => {
+const CarRentals = () => {
   const [location, setLocation] = useState('');
-  const [insuranceProviders, setInsuranceProviders] = useState([]);
+  const [carRentals, setCarRentals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,51 +41,51 @@ const FindInsurancePage = () => {
     return null;
   };
 
-  const fetchInsuranceProviders = async (userCoordinates) => {
+  const fetchCarRentals = async (userCoordinates) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=insurance&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=car rental&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const data = await response.json();
-      const providersWithDistances = data.items.map(provider => ({
-        ...provider,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.position.lat, provider.position.lng),
+      const rentalsWithDistances = data.items.map(rental => ({
+        ...rental,
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, rental.position.lat, rental.position.lng),
         rating: Math.floor(Math.random() * 5) + 1,
         reviews: Math.floor(Math.random() * 1000) + 1,
         isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '10:00 - 18:00',
+        formattedOpeningHours: '08:00 - 20:00',
         isFavorite: Math.random() < 0.5,
       }));
 
-      setInsuranceProviders(sortProviders(providersWithDistances, sortOption));
+      setCarRentals(sortRentals(rentalsWithDistances, sortOption));
       setShowResults(true);
     } catch (error) {
-      console.error('Error fetching insurance providers:', error);
-      setErrorMessage('Error fetching insurance providers.');
+      console.error('Error fetching car rentals:', error);
+      setErrorMessage('Error fetching car rentals.');
     }
     setLoading(false);
   };
 
-  const sortProviders = (providers, option) => {
+  const sortRentals = (rentals, option) => {
     switch (option) {
       case 'distance':
-        return providers.sort((a, b) => a.distance - b.distance);
+        return rentals.sort((a, b) => a.distance - b.distance);
       case 'rating':
-        return providers.sort((a, b) => b.rating - a.rating);
+        return rentals.sort((a, b) => b.rating - a.rating);
       case 'open':
-        return providers.sort((a, b) => b.isOpenNow - a.isOpenNow);
+        return rentals.sort((a, b) => b.isOpenNow - a.isOpenNow);
       
       default:
-        return providers;
+        return rentals;
     }
   };
 
   const checkIfOpenNow = () => {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
-    const openingTime = '1000';
-    const closingTime = '1800';
+    const openingTime = '0800';
+    const closingTime = '2000';
 
     return currentTime >= openingTime && currentTime <= closingTime;
   };
@@ -95,16 +95,16 @@ const FindInsurancePage = () => {
     const userCoordinates = await fetchUserCoords(location);
     if (userCoordinates) {
       setUserCoords(userCoordinates);
-      fetchInsuranceProviders(userCoordinates);
+      fetchCarRentals(userCoordinates);
     } else {
-      setInsuranceProviders([]);
+      setCarRentals([]);
     }
   };
 
   const handleSortChange = (e) => {
     const newSortOption = e.target.value;
     setSortOption(newSortOption);
-    setInsuranceProviders(sortProviders([...insuranceProviders], newSortOption));
+    setCarRentals(sortRentals([...carRentals], newSortOption));
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -126,7 +126,7 @@ const FindInsurancePage = () => {
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Insurance Providers Near You</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Car Rentals Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
@@ -161,7 +161,7 @@ const FindInsurancePage = () => {
                     <option value="distance">Distance</option>
                     <option value="rating">Rating</option>
                     <option value="open">Open Now</option>
-                    <option value="patientFavorite">Patient Favorite</option>
+                    <option value="favorite">Favorite</option>
                   </select>
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,42 +179,42 @@ const FindInsurancePage = () => {
             ) : (
               <section className="mb-12">
                 <div className="space-y-8">
-                  {insuranceProviders.map((provider) => (
-                    <div key={provider.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="insurance_provider.webp" alt="Insurance Provider" className="w-48 h-auto object-cover" />
+                  {carRentals.map((rental) => (
+                    <div key={rental.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                      <img src="car_rental.webp" alt="Car Rental" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
-                          {provider.title}
-                          {provider.isFavorite && (
+                          {rental.title}
+                          {rental.isFavorite && (
                             <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded">Favorite</span>
                           )}
                         </h3>
-                        <p className="text-gray-600 mb-4">{provider.address.label}</p>
-                        {provider.contacts && provider.contacts[0].mobile && (
+                        <p className="text-gray-600 mb-4">{rental.address.label}</p>
+                        {rental.contacts && rental.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-xl">
-                            <FontAwesomeIcon icon={faPhone} /> <strong>{provider.contacts[0].mobile[0].value}</strong>
+                            <FontAwesomeIcon icon={faPhone} /> <strong>{rental.contacts[0].mobile[0].value}</strong>
                           </p>
                         )}
-                        {provider.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${provider.distance.toFixed(2)} km`}</p>
+                        {rental.distance && (
+                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${rental.distance.toFixed(2)} km`}</p>
                         )}
                         <div className="flex items-center text-yellow-500 mb-2">
-                          {[...Array(provider.rating)].map((_, i) => (
+                          {[...Array(rental.rating)].map((_, i) => (
                             <FontAwesomeIcon key={i} icon={faStar} className="mr-1" />
                           ))}
-                          {[...Array(5 - provider.rating)].map((_, i) => (
+                          {[...Array(5 - rental.rating)].map((_, i) => (
                             <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
                           ))}
-                          <span className="ml-2 text-gray-700">({provider.reviews} reviews)</span>
+                          <span className="ml-2 text-gray-700">({rental.reviews} reviews)</span>
                         </div>
                         <div className="text-gray-600 mb-2">
-                          <FontAwesomeIcon icon={faClock} /> {provider.formattedOpeningHours}
+                          <FontAwesomeIcon icon={faClock} /> {rental.formattedOpeningHours}
                         </div>
-                        <p className={`text-lg font-bold ${provider.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
-                          {provider.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
+                        <p className={`text-lg font-bold ${rental.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
+                          {rental.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                         </p>
                         <button
-                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${provider.position.lat},${provider.position.lng}`, '_blank')}
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${rental.position.lat},${rental.position.lng}`, '_blank')}
                           className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View in Map
@@ -232,4 +232,4 @@ const FindInsurancePage = () => {
   );
 };
 
-export default FindInsurancePage;
+export default CarRentals;

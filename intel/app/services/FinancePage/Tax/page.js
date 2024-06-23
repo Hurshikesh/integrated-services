@@ -89,8 +89,7 @@ const FindAccountantPage = () => {
         return accountants.sort((a, b) => b.rating - a.rating);
       case 'open':
         return accountants.sort((a, b) => b.isOpenNow - a.isOpenNow);
-      case 'patientFavorite':
-        return accountants.sort((a, b) => b.isFavorite - a.isFavorite);
+      
       default:
         return accountants;
     }
