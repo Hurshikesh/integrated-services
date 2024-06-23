@@ -160,7 +160,7 @@ const BuySellCarsPage = () => {
                     <option value="distance">Distance</option>
                     <option value="rating">Rating</option>
                     <option value="open">Open Now</option>
-                    <option value="patientFavorite">Patient Favorite</option>
+                    
                   </select>
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

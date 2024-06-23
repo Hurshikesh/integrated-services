@@ -18,32 +18,32 @@ const services = [
   {
     title: "Education Services",
     description: "Access learning materials, find mentors, and tutoring centers.",
-    image: "https://i.postimg.cc/cHJjT7B3/pharmacy.jpg",
+    image: "https://i.postimg.cc/fLd0nYTh/education.jpg",
     link: "/services/education"
   },
   {
     title: "Transportation Services",
     description: "Get details on auto, car, bus, and air services.",
-    image: "https://i.postimg.cc/bvqNyMqj/Fitness-Services.jpg",
+    image: "https://i.postimg.cc/2yFb3mZc/transportation.jpg",
     link: "/services/Transportation"
   },
   {
     title: "Finance Services",
     description: "Find information on banking, tax, and insurance services.",
-    image: "https://i.postimg.cc/0jM41832/diagnostic.jpg",
+    image: "https://i.postimg.cc/3rgDtjcX/finance.jpg",
     link: "/services/FinancePage"
   },
   {
     title: "Government Services",
     description: "Access details on Aadhar, ration card, passport, and more.",
-    image: "https://i.postimg.cc/XJGM4cBb/eldercare.jpg",
+    image: "https://i.postimg.cc/htGz4kPs/goverenment.jpg",
     link: "/services/Government"
   },
   {
     title: "Housing Services",
     description: "Find electricians, plumbers, carpenters, and other services.",
-    image: "https://i.postimg.cc/BZ7sWb8s/hospitals.jpg",
-    link: "/services/housing"
+    image: "https://i.postimg.cc/VkHSJKJ8/housing.jpg",
+    link: "/services/Housing"
   }
 ];
 
@@ -51,17 +51,17 @@ const steps = [
   {
     title: "Register",
     description: "Sign up and create your account.",
-    image: "https://i.postimg.cc/zvrh872b/healthcare.jpg"
+    image: "https://i.postimg.cc/qq0qPY58/login.jpg"
   },
   {
     title: "Search",
     description: "Find the services you need from our comprehensive directory.",
-    image: "https://i.postimg.cc/cHJjT7B3/pharmacy.jpg"
+    image: "https://i.postimg.cc/zXz3psWN/service.jpg"
   },
   {
     title: "Connect",
     description: "Get in touch with service providers directly.",
-    image: "https://i.postimg.cc/bvqNyMqj/Fitness-Services.jpg"
+    image: "https://i.postimg.cc/XJK7kLYX/choose.jpg"
   }
 ];
 

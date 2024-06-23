@@ -5,63 +5,53 @@ import Link from 'next/link';
 import Image from 'next/image';
 import 'tailwindcss/tailwind.css';
 
-const transportationServices = [
+const housingServices = [
   {
-    title: "Taxi Fare Calculator",
-    description: "Calculates the approximate fare between two locations.",
-    image: "https://i.postimg.cc/XvPD61PY/cab.jpg",
-    link: "/services/Transportation/FindCabs"
+    title: "Home Repair",
+    description: "Find reliable home repair services for any maintenance needs.",
+    image: "https://i.postimg.cc/Gt7RFn9J/home-repair.jpg",
+    link: "/services/Housing/HomeRepair"
   },
   {
-    title: "Car Rentals",
-    description: "Rent cars from top-rated rental services in your area.",
-    image: "https://i.postimg.cc/FzVZzTTc/rentals.jpg",
-    link: "/services/Transportation/CarRentals"
+    title: "Grocery Nearby",
+    description: "Locate grocery shops near you for all your needs.",
+    image: "https://i.postimg.cc/fRLc5K7P/food-water.jpg",
+    link: "/services/Housing/Grocery"
   },
   {
-    title: "Nearby Bus Stops",
-    description: "Locate bus stops that are near your location and check schedules.",
-    image: "https://i.postimg.cc/htjr4bTz/busStop.jpg",
-    link: "/services/Transportation/BusStops"
+    title: "Maid & Aaya Centres",
+    description: "Find trusted maid and aaya centres for housekeeping and caregiving.",
+    image: "https://i.postimg.cc/Ls5zF4c3/maid-aaya.jpg",
+    link: "/services/Housing/Maid"
   },
   {
-    title: "Buy & Sell Old Cars",
-    description: "Access the best deals to buy or sell used cars near you.",
-    image: "https://i.postimg.cc/brpx7Qqv/oldcars.jpg",
-    link: "/services/Transportation/BuySellCars"
-  },
-  {
-    title: "Mechanic Near Me",
-    description: "Find contact details for mechanics and auto repair services nearby.",
-    image: "https://i.postimg.cc/1RrcpYKV/mechanic.jpg",
-    link: "/services/Transportation/Mechanic"
+    title: "Packers and Movers",
+    description: "Get details on packers and movers to help with your relocation needs.",
+    image: "https://i.postimg.cc/QtkqW3f7/packers-movers.jpg",
+    link: "/services/Housing/PackersMovers"
   }
 ];
 
 const testimonies = [
   {
     name: "John Doe",
-    testimony: "Great platform! Easy to use, fantastic support. Found the perfect cab service, stress-free experience."
+    testimony: "Amazing home repair service! Prompt and professional, fixed all issues efficiently."
   },
   {
     name: "Jane Smith",
-    testimony: "Advanced search for rentals! Found a great car, knowledgeable and helpful staff. Highly recommend!"
+    testimony: "Found the best food and water shop nearby. Great variety and quality products!"
   },
   {
     name: "Michael Brown",
-    testimony: "Emergency on the road? Don't panic! Fast response, professional mechanics. Lifesaver service!"
+    testimony: "Excellent maid services! Reliable and trustworthy staff. Highly recommend!"
   },
   {
     name: "Emily Johnson",
-    testimony: "Selling my old car was a breeze! Wide options, helpful reviews. Great buyers, peace of mind."
-  },
-  {
-    name: "Sarah Lee",
-    testimony: "Public transport worries? Easy to locate bus stops, helpful schedules. Efficient commute!"
+    testimony: "Packers and movers made my relocation hassle-free. Very satisfied with their service."
   }
 ];
 
-export default function TransportationPage() {
+export default function HousingPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentTestimonyIndex, setCurrentTestimonyIndex] = useState(0);
 
@@ -82,16 +72,16 @@ export default function TransportationPage() {
         {/* Hero Section */}
         <section className={`relative h-64 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <Image 
-            src='https://i.postimg.cc/x1KZHPqs/transportation.jpg' // Update with the correct path to your image
+            src='https://i.postimg.cc/QtvKqKTV/housing-hero.jpg' // Update with the correct path to your image
             layout="fill"
             objectFit="cover"
-            alt="Transportation Hero"
+            alt="Housing Hero"
             className="absolute inset-0 z-0"
           />
           <div className="absolute inset-0 flex items-center justify-center z-10 bg-blue-900 bg-opacity-50">
             <div className="text-center text-white">
-              <h1 className="text-4xl font-bold mb-2">Making transportation easy and accessible</h1>
-              <p className="text-lg mb-4">The most trusted name in transportation services</p>
+              <h1 className="text-4xl font-bold mb-2">Your one-stop solution for housing needs</h1>
+              <p className="text-lg mb-4">Reliable and convenient housing services at your fingertips</p>
             </div>
           </div>
         </section>
@@ -99,7 +89,7 @@ export default function TransportationPage() {
         {/* Services Section */}
         <section className="mb-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {transportationServices.map((service, index) => (
+            {housingServices.map((service, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <Link href={service.link} legacyBehavior>
                   <a className="block">

@@ -40,7 +40,7 @@ const services = [
   {
     category: 'Housing Services',
     description: 'Find electricians, plumbers, painters, and other housing services.',
-    link: '/services/housing-services',
+    link: '/services/Housing',
     icon: faHome,
   }
 ];
