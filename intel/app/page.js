@@ -67,13 +67,60 @@ const steps = [
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
+  const [showLoginModal, setShowLoginModal] = useState(false); // State to manage login modal visibility
+  const [showChoiceModal, setShowChoiceModal] = useState(true); // State to manage choice modal visibility
 
   useEffect(() => {
     setIsVisible(true);
+    // Here you can check if the user is logged in, for example, by checking a token in local storage
+    // setIsLoggedIn(localStorage.getItem('token') ? true : false);
   }, []);
+
+  const handleServiceClick = (link) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+    } else {
+      // Navigate to the service link
+      window.location.href = link;
+    }
+  };
+
+  const handleChoice = (choice) => {
+    setShowChoiceModal(false);
+    if (choice === 'customer') {
+      // Stay on the current page
+    } else if (choice === 'serviceProvider') {
+      // Redirect to the service provider page (Replace with actual URL)
+      window.location.href = '/ServiceProvider';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* Choice Modal */}
+      {showChoiceModal && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full text-center">
+            <h2 className="text-2xl font-bold mb-4 text-black">Are you a Customer or a Service Provider?</h2>
+            <div className="flex justify-around">
+              <button
+                onClick={() => handleChoice('customer')}
+                className="bg-blue-500 text-white p-3 rounded-lg w-1/3"
+              >
+                Customer
+              </button>
+              <button
+                onClick={() => handleChoice('serviceProvider')}
+                className="bg-green-500 text-white p-3 rounded-lg w-1/3"
+              >
+                Service Provider
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <header className={`relative h-64 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <Image 
@@ -98,19 +145,17 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <Link href={service.link} legacyBehavior>
-                  <a className="block">
-                    <Image 
-                      src={service.image} 
-                      width={400}
-                      height={300}
-                      alt={service.title}
-                      className="rounded-lg mb-4"
-                    />
-                    <h3 className="text-2xl font-bold text-blue-600 mb-2">{service.title}</h3>
-                    <p className="text-gray-700">{service.description}</p>
-                  </a>
-                </Link>
+                <a className="block" onClick={() => handleServiceClick(service.link)}>
+                  <Image 
+                    src={service.image} 
+                    width={400}
+                    height={300}
+                    alt={service.title}
+                    className="rounded-lg mb-4"
+                  />
+                  <h3 className="text-2xl font-bold text-blue-600 mb-2">{service.title}</h3>
+                  <p className="text-gray-700">{service.description}</p>
+                </a>
               </div>
             ))}
           </div>
@@ -159,6 +204,21 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+            {/* Add your login component here */}
+            <button
+              onClick={() => setShowLoginModal(false)}
+              className="mt-4 bg-red-500 text-white p-2 rounded-lg w-full"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
