@@ -4,75 +4,81 @@ import React, { useState } from 'react';
 
 const AddNewService = () => {
   const [selectedDomain, setSelectedDomain] = useState('');
-  const [selectedHealthcareService, setSelectedHealthcareService] = useState('');
-  const [selectedFinanceService, setSelectedFinanceService] = useState('');
+  const [selectedService, setSelectedService] = useState('');
 
-  const domains = ['Healthcare', 'Finance', 'Transportation', 'Government', 'Housing'];
+  const domains = ['Healthcare', 'Finance', 'Transportation', 'Government', 'Housing', 'Education'];
   const healthcareServices = ['Hospital', 'Clinic', 'Pharmacy', 'Elder Care', 'Diagnostic Centre', 'Fitness Centre'];
   const financeServices = ['ATM', 'CA', 'Insurance Provider'];
+  const transportation=['Car Rentals','Buy And Sell Cars','Auto Mechanic'];
+  const education=['School','University/College','Coaching Centre','Arts And Sprots'];
+  const housing=['Home Repair','Grocery','Domestic Help','Packers And Movers'];
+  const serviceOptions = {
+    Healthcare: healthcareServices,
+    Finance: financeServices,
+    Transportation:transportation,
+    Housing:housing,
+    Education:education,
+
+    // Add other domain services here if needed
+  };
+
+  const handleDomainChange = (event) => {
+    setSelectedDomain(event.target.value);
+    setSelectedService(''); // Reset the service when domain changes
+  };
+
+  const handleServiceChange = (event) => {
+    setSelectedService(event.target.value);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Add New Service</h1>
 
-      {!selectedDomain ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="domain">
+          Select Domain
+        </label>
+        <select
+          id="domain"
+          value={selectedDomain}
+          onChange={handleDomainChange}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="">Select Domain</option>
           {domains.map((domain, index) => (
-            <div 
-              key={index} 
-              className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-blue-100"
-              onClick={() => setSelectedDomain(domain)}
-            >
-              <h2 className="text-2xl font-bold text-blue-600 mb-4">{domain}</h2>
-            </div>
+            <option key={index} value={domain}>
+              {domain}
+            </option>
           ))}
-        </div>
-      ) : selectedDomain === 'Healthcare' && !selectedHealthcareService ? (
-        <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">Select Healthcare Service Type</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {healthcareServices.map((service, index) => (
-              <div 
-                key={index} 
-                className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-blue-100"
-                onClick={() => setSelectedHealthcareService(service)}
-              >
-                <h2 className="text-2xl font-bold text-blue-600 mb-4">{service}</h2>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={() => setSelectedDomain('')}
-            className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        </select>
+      </div>
+
+      {selectedDomain && serviceOptions[selectedDomain] && (
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="service">
+            Select Service Type
+          </label>
+          <select
+            id="service"
+            value={selectedService}
+            onChange={handleServiceChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           >
-            Back to Domain Selection
-          </button>
-        </div>
-      ) : selectedDomain === 'Finance' && !selectedFinanceService ? (
-        <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">Select Finance Service Type</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {financeServices.map((service, index) => (
-              <div 
-                key={index} 
-                className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-blue-100"
-                onClick={() => setSelectedFinanceService(service)}
-              >
-                <h2 className="text-2xl font-bold text-blue-600 mb-4">{service}</h2>
-              </div>
+            <option value="">Select Service Type</option>
+            {serviceOptions[selectedDomain].map((service, index) => (
+              <option key={index} value={service}>
+                {service}
+              </option>
             ))}
-          </div>
-          <button
-            onClick={() => setSelectedDomain('')}
-            className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Back to Domain Selection
-          </button>
+          </select>
         </div>
-      ) : (
+      )}
+
+      {selectedDomain && selectedService && (
         <div>
           <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            Add {selectedHealthcareService || selectedFinanceService || 'Service'} in {selectedDomain}
+            Add {selectedService} in {selectedDomain}
           </h2>
           <form>
             <div className="mb-4">
@@ -122,17 +128,12 @@ const AddNewService = () => {
           </form>
           <button
             onClick={() => {
-              if (selectedHealthcareService) {
-                setSelectedHealthcareService('');
-              } else if (selectedFinanceService) {
-                setSelectedFinanceService('');
-              } else {
-                setSelectedDomain('');
-              }
+              setSelectedService('');
+              setSelectedDomain('');
             }}
             className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            {selectedHealthcareService || selectedFinanceService ? 'Back to Service Types' : 'Back to Domain Selection'}
+            Back to Domain Selection
           </button>
         </div>
       )}
