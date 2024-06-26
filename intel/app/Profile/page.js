@@ -16,74 +16,62 @@ const Profile = () => {
     bio: ''
   });
 
-  const [shouldFetchProfile, setShouldFetchProfile] = useState(false);
-
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (status === 'authenticated') {
-        // Set initial data from session
-        const initialData = {
+  const fetchUserData = async () => {
+    if (status === 'authenticated' && session.user.email) {
+      try {
+        const response = await axios.get(`/api/profileData?email=${encodeURIComponent(session.user.email)}`);
+        if (response.status === 200) {
+          const data = response.data.data;
+          setUserData({
+            username: data.username || session.user.name || '',
+            email: data.email || session.user.email || '',
+            phone: data.phone || '',
+            address: data.address || '',
+            bio: data.bio || ''
+          });
+        } else {
+          // If profile doesn't exist, set initial data from session
+          setUserData({
+            username: session.user.name || '',
+            email: session.user.email || '',
+            phone: '',
+            address: '',
+            bio: ''
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        // Set initial data from session if there's an error
+        setUserData({
           username: session.user.name || '',
           email: session.user.email || '',
           phone: '',
           address: '',
           bio: ''
-        };
-        setUserData(initialData);
-
-      } else if (status === 'unauthenticated') {
-        router.push('/login'); // Redirect to login if not authenticated
+        });
       }
-    };
-    fetchUserData();
-  }, [status, router]);
+    } else if (status === 'unauthenticated') {
+      router.push('/login'); // Redirect to login if not authenticated
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (status === 'authenticated') {
-        try {
-          // Fetch additional profile data from API using Axios
-          const response = await axios.post('/api/profileData', { phone: userData.phone });
-          console.log(response)
-          if (response.status === 200) {
-            const data = response.data.data;
-            setUserData((prevData) => ({
-              ...prevData,
-              phone: data.phone,
-              address: data.address,
-              bio: data.bio
-            }));
-          } else {
-            console.error('Failed to fetch profile data:', response.data.error);
-          }
-        } catch (error) {
-          console.error('Error fetching profile data:', error);
-        }
-      } else if (status === 'unauthenticated') {
-        router.push('/login'); // Redirect to login if not authenticated
-      }
-    };
-    
-    if (shouldFetchProfile) {
-      fetchUserData();
-      setShouldFetchProfile(false); // Reset the fetch flag
-    }
-  }, [status, shouldFetchProfile, userData.phone, router]);
-
+    fetchUserData();
+  }, [status, session, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/profile",userData)
-      console.log("profile updated successsfully",response.data)
-      setShouldFetchProfile(true);
-  } catch (error) {
-      console.log("profile failed to update");
-  } 
+      const response = await axios.post("/api/profile", userData)
+      console.log("Profile updated successfully", response.data)
+      // Fetch the updated data immediately after saving
+      fetchUserData();
+    } catch (error) {
+      console.error("Profile failed to update", error);
+    } 
   };
 
-  if (status === 'loading') return <div>Loading...</div>; // Render loading state
+  if (status === 'loading') return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
@@ -109,7 +97,7 @@ const Profile = () => {
                 type="text"
                 name="name"
                 value={userData.username}
-                onChange={(e)=> setUserData({...userData,username:e.target.value})}
+                onChange={(e) => setUserData({...userData, username: e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -135,7 +123,7 @@ const Profile = () => {
                 type="text"
                 name="phone"
                 value={userData.phone}
-                onChange={(e)=> setUserData({...userData,phone:e.target.value})}
+                onChange={(e) => setUserData({...userData, phone: e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -147,7 +135,7 @@ const Profile = () => {
                 type="text"
                 name="address"
                 value={userData.address}
-                onChange={(e)=> setUserData({...userData,address:e.target.value})}
+                onChange={(e) => setUserData({...userData, address: e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -158,7 +146,7 @@ const Profile = () => {
               <textarea
                 name="bio"
                 value={userData.bio}
-                onChange={(e)=> setUserData({...userData,bio:e.target.value})}
+                onChange={(e) => setUserData({...userData, bio: e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows="4"
               />
