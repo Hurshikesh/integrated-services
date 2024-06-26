@@ -7,7 +7,7 @@ const profileSchema = new mongoose.Schema({
      unique:true
   },
   phone:{
-    type: Number,
+    type: String,
     required:[true,"please provide your phone number"],
     unique:true
  },

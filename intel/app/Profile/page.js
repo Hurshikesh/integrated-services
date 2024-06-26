@@ -3,24 +3,28 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import axios from 'axios'
 
 const Profile = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [userData, setUserData] = useState({
-    name: '',
+    username: '',
     email: '',
     phone: '',
     address: '',
     bio: ''
   });
 
+  const [shouldFetchProfile, setShouldFetchProfile] = useState(false);
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (status === 'authenticated') {
         // Set initial data from session
         const initialData = {
-          name: session.user.name || '',
+          username: session.user.name || '',
           email: session.user.email || '',
           phone: '',
           address: '',
@@ -28,57 +32,55 @@ const Profile = () => {
         };
         setUserData(initialData);
 
-        // Fetch additional profile data from API
-        const response = await fetch('/api/profile');
-        if (response.ok) {
-          const data = await response.json();
-          setUserData({
-            ...initialData,
-            phone: data.phone,
-            address: data.address,
-            bio: data.bio
-          });
+      } else if (status === 'unauthenticated') {
+        router.push('/login'); // Redirect to login if not authenticated
+      }
+    };
+    fetchUserData();
+  }, [status, router]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (status === 'authenticated') {
+        try {
+          // Fetch additional profile data from API using Axios
+          const response = await axios.post('/api/profileData', { phone: userData.phone });
+          console.log(response)
+          if (response.status === 200) {
+            const data = response.data.data;
+            setUserData((prevData) => ({
+              ...prevData,
+              phone: data.phone,
+              address: data.address,
+              bio: data.bio
+            }));
+          } else {
+            console.error('Failed to fetch profile data:', response.data.error);
+          }
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
         }
       } else if (status === 'unauthenticated') {
         router.push('/login'); // Redirect to login if not authenticated
       }
     };
+    
+    if (shouldFetchProfile) {
+      fetchUserData();
+      setShouldFetchProfile(false); // Reset the fetch flag
+    }
+  }, [status, shouldFetchProfile, userData.phone, router]);
 
-    fetchUserData();
-  }, [status, session, router]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: userData.name,
-          phone: userData.phone,
-          address: userData.address,
-          bio: userData.bio,
-        }),
-      });
-
-      if (response.ok) {
-        console.log('Profile updated successfully');
-        alert('Profile updated successfully!');
-      } else {
-        console.log('Failed to update profile');
-        alert('Failed to update profile');
-      }
-    } catch (error) {
-      console.error('An error occurred while updating the profile:', error);
-      alert('An error occurred while updating the profile');
-    }
+      const response = await axios.post("/api/profile",userData)
+      console.log("profile updated successsfully",response.data)
+      setShouldFetchProfile(true);
+  } catch (error) {
+      console.log("profile failed to update");
+  } 
   };
 
   if (status === 'loading') return <div>Loading...</div>; // Render loading state
@@ -106,8 +108,8 @@ const Profile = () => {
               <input
                 type="text"
                 name="name"
-                value={userData.name}
-                onChange={handleChange}
+                value={userData.username}
+                onChange={(e)=> setUserData({...userData,username:e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -133,7 +135,7 @@ const Profile = () => {
                 type="text"
                 name="phone"
                 value={userData.phone}
-                onChange={handleChange}
+                onChange={(e)=> setUserData({...userData,phone:e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -145,7 +147,7 @@ const Profile = () => {
                 type="text"
                 name="address"
                 value={userData.address}
-                onChange={handleChange}
+                onChange={(e)=> setUserData({...userData,address:e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -156,7 +158,7 @@ const Profile = () => {
               <textarea
                 name="bio"
                 value={userData.bio}
-                onChange={handleChange}
+                onChange={(e)=> setUserData({...userData,bio:e.target.value})}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows="4"
               />
