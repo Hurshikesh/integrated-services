@@ -74,7 +74,8 @@ const Profile = () => {
   if (status === 'loading') return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+    
+    <div className="min-h-screen bg-gray-100  flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Profile</h1>
         {session?.user?.image && (

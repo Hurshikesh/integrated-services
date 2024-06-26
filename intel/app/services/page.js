@@ -46,15 +46,23 @@ const services = [
 ];
 
 const ServicesPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push('/');
-  //   } 
-  // }, [session, router]);
+  useEffect(() => {
+    if (status === 'loading') return; // Do nothing while loading
+    if (!session) {
+      router.push('/login'); // Redirect to login page if not authenticated
+    }
+  }, [session, status, router]);
 
+  if (status === 'loading') {
+    return <div>Loading...</div>; // Show loading state while checking session
+  }
+
+  if (!session) {
+    return null; // Return null to prevent flash of content before redirect
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Our Services</h1>
