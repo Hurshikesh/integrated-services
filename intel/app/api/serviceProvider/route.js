@@ -61,9 +61,9 @@ export async function POST(request) {
     const savedServiceProvider = await serviceProvider.save();
     console.log('Saved profile:', savedServiceProvider);
 
-    return NextResponse.json({ status: serviceProvider ? 200 : 201, data: savedServiceProvider });
+    return NextResponse.json({ success: true, data: savedServiceProvider });
   } catch (error) {
     console.error('Error creating or updating service provider:', error);
-    return NextResponse.json({ status: 500, data: { error: 'Error creating or updating service provider', details: error.message } });
+    return NextResponse.json({ success: false, error: 'Error creating or updating service provider', details: error.message });
   }
 }

@@ -1,30 +1,22 @@
-import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+'use client'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-export async function middleware(request) {
-  const path = request.nextUrl.pathname;
+const ProtectedRoute = ({ children }) => {
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
-  // Define protected routes
-  const protectedRoutes = ['/services'];
+  useEffect(() => {
+    if (status === 'loading') return // Do nothing while loading
+    if (!session) router.push('/login')
+  }, [session, status, router])
 
-  // Check if the current path is a protected route
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
-
-  if (isProtectedRoute) {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-
-    // If there's no token, redirect to the login page
-    if (!token) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('callbackUrl', path);
-      return NextResponse.redirect(loginUrl);
-    }
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
 
-  // If it's not a protected route or the user is authenticated, continue
-  return NextResponse.next();
+  return session ? children : null
 }
 
-export const config = {
-  matcher: ['/services/:path*']
-};
+export default ProtectedRoute
