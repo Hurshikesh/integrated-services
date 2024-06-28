@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const profileSchema = new mongoose.Schema({
   username: String,
   email: { type: String, unique: true },
-  phone: String,
+  phone:{ type: Number, unique: true },
   address: String,
   bio: String,
   isAdmin: { type: Boolean, default: false },
