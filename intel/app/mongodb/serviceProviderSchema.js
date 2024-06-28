@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const serviceProviderSchema = new mongoose.Schema({
   domain:{ type: String, required: true},
   serviceType: { type: String, required: true},
-  phone:{ type: Number, unique: true, required: true},
+  phone:{ type: Number, unique:false ,required: true},
   address: { type: String, required: true},
   companyName: { type: String, required: true},
   bio: { type: String, required: true},
