@@ -1,42 +1,29 @@
+// api/serviceProviderData.js
+
 import { connect } from '@/app/mongodb/mongodb';
 import Provider from '@/app/mongodb/serviceProviderSchema';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
-    await connect();
+    await connect(); // Ensure MongoDB connection is established
+
     const { searchParams } = new URL(request.url);
-    const lon = parseFloat(searchParams.get('lon'));
-    const lat = parseFloat(searchParams.get('lat'));
-    const maxDistance = parseInt(searchParams.get('maxDistance')) || 100000; // default to 5km
-    const domain = searchParams.get('domain');
-    const serviceType = searchParams.get('serviceType');
+    const gst = searchParams.get('gst');
 
-    const query = {
-      location: {
-        $geoNear: {
-          $geometry: { type: 'Point', coordinates: [lon, lat] },
-          $maxDistance: maxDistance // distance in meters
-        }
-      }
-    };
-
-    if (domain) {
-      query.domain = domain;
-    }
-    if (serviceType) {
-      query.serviceType = serviceType;
+    if (!gst) {
+      return NextResponse.json({ status: 400, data: { error: 'GST number is required' } });
     }
 
-    const providers = await Provider.find(query);
+    const serviceProvider = await Provider.findOne({ GST: gst });
 
-    if (providers.length > 0) {
-      return NextResponse.json({ status: 200, data: providers });
+    if (serviceProvider) {
+      return NextResponse.json({ status: 200, data: serviceProvider });
     } else {
-      return NextResponse.json({ status: 404, data: { error: 'No companies found at the specified location' } });
+      return NextResponse.json({ status: 404, data: { error: 'No service provider found with the specified GST number' } });
     }
   } catch (error) {
-    console.error('Error fetching companies:', error);
-    return NextResponse.json({ status: 500, data: { error: 'Error fetching companies', details: error.message } });
+    console.error('Error fetching service provider:', error);
+    return NextResponse.json({ status: 500, data: { error: 'Error fetching service provider', details: error.message } });
   }
 }

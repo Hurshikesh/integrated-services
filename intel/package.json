@@ -18,9 +18,10 @@
     "@stripe/stripe-js": "^3.5.0",
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
-    "mongoose": "^8.4.3",
+    "mongoose": "^8.4.4",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
     "react-share": "^5.1.0"
