@@ -121,21 +121,31 @@ export default function Home() {
         </div>
       )}
 
-      {/* Hero Section */}
-      <header className={`relative h-64 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        <Image 
-          src='https://i.postimg.cc/zvrh872b/healthcare.jpg' // Update with the correct path to your image
-          layout="fill"
-          objectFit="cover"
-          alt="Header Background"
-          className="absolute inset-0 z-0"
-        />
-        <div className="absolute inset-0 flex items-center justify-center z-10 bg-gray-900 bg-opacity-70">
-          <div className="text-center text-white">
-            <h1 className="text-6xl font-bold mb-2">Integrated Services</h1>
-          </div>
-        </div>
-      </header>
+   {/* Hero Section */}
+<header className={`relative h-96 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+  <div className="flex w-full h-full relative">
+    <div className="relative w-1/2 h-full">
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/herovideo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+    </div>
+    <div className="relative w-1/2 flex items-center justify-center z-10 bg-gradient-to-r from-transparent to-white">
+      <div className="text-center text-gray-900">
+        <h1 className="text-6xl font-bold mb-2">Integrated Services</h1>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
