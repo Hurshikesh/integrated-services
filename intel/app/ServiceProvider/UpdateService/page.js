@@ -1,5 +1,3 @@
-// UpdateService.js
-
 'use client';
 
 import React, { useState } from 'react';
@@ -79,6 +77,33 @@ const UpdateService = () => {
       {serviceData && (
         <div>
           <h2 className="text-2xl font-bold text-blue-600 mb-4">Update Service Details</h2>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="domain">
+              Domain
+            </label>
+            <input
+              id="domain"
+              type="text"
+              value={serviceData.domain || ''}
+              readOnly
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="serviceType">
+              Service Type
+            </label>
+            <input
+              id="serviceType"
+              type="text"
+              value={serviceData.serviceType || ''}
+              readOnly
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+            />
+          </div>
+          
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
               Company Name
@@ -91,6 +116,7 @@ const UpdateService = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
+          
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
               Address
@@ -102,6 +128,7 @@ const UpdateService = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
+          
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
               Bio
@@ -113,6 +140,7 @@ const UpdateService = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
+          
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
               Phone Number
@@ -125,6 +153,7 @@ const UpdateService = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
+          
           <button
             onClick={handleUpdate}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
