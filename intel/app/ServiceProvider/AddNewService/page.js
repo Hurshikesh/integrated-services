@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { FaUserMd, FaUsers, FaClipboardList, FaHospitalAlt, FaHandsHelping } from 'react-icons/fa';
 
 const AddNewService = () => {
   const [selectedDomain, setSelectedDomain] = useState('');
@@ -81,136 +82,167 @@ const AddNewService = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Add New Service</h1>
-
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="domain">
-          Select Domain
-        </label>
-        <select
-          id="domain"
-          value={selectedDomain}
-          onChange={handleDomainChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        >
-          <option value="">Select Domain</option>
-          {domains.map((domain, index) => (
-            <option key={index} value={domain}>
-              {domain}
-            </option>
-          ))}
-        </select>
+    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url("path/to/your/background-image.jpg")' }}>
+      <div className="flex flex-col items-center justify-center bg-opacity-75 py-12 px-6 lg:px-8">
+        <div className="bg-white p-8 shadow rounded-lg w-full max-w-7xl">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-extrabold text-gray-900">
+              Claim Your <span className="underline text-blue-500">Profile</span>
+            </h1>
+            <p className="mt-4 text-lg text-gray-600">
+              Join thousands of professionals who have successfully claimed their profiles.
+            </p>
+          </div>
+          <div className="flex flex-wrap">
+            <div className="w-full lg:w-2/3 space-y-8">
+              <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                <div className="rounded-md shadow-sm space-y-4">
+                  <div>
+                    <label htmlFor="domain" className="sr-only">Domain</label>
+                    <select
+                      id="domain"
+                      value={selectedDomain}
+                      onChange={handleDomainChange}
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    >
+                      <option value="">Select Domain</option>
+                      {domains.map((domain, index) => (
+                        <option key={index} value={domain}>
+                          {domain}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedDomain && serviceOptions[selectedDomain] && (
+                    <div>
+                      <label htmlFor="service" className="sr-only">Service Type</label>
+                      <select
+                        id="service"
+                        value={selectedService}
+                        onChange={handleServiceChange}
+                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      >
+                        <option value="">Select Service Type</option>
+                        {serviceOptions[selectedDomain].map((service, index) => (
+                          <option key={index} value={service}>
+                            {service}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div>
+                    <label htmlFor="companyName" className="sr-only">Company Name</label>
+                    <input
+                      id="companyName"
+                      name="companyName"
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      required
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Company Name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="GST" className="sr-only">GST Number</label>
+                    <input
+                      id="GST"
+                      name="GST"
+                      type="text"
+                      value={GST}
+                      onChange={(e) => setGST(e.target.value)}
+                      required
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="GST Number"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="address" className="sr-only">Address</label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Your Location"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="bio" className="sr-only">Bio</label>
+                    <textarea
+                      id="bio"
+                      name="bio"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      required
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Provide a detailed description about your service"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="sr-only">Phone Number</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Phone Number"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Add Service
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div className="w-full lg:w-1/3 mt-12 lg:mt-0 lg:pl-12">
+              <div className="bg-white p-8 shadow rounded-lg space-y-6">
+                <div className="flex items-center">
+                  <FaUserMd className="text-indigo-500 text-4xl" />
+                  <div className="ml-4">
+                    <h3 className="text-xl font-bold">Increase Visibility</h3>
+                    <p className="text-gray-600">Personalize your profile and make it visible to more users</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <FaClipboardList className="text-indigo-500 text-4xl" />
+                  <div className="ml-4">
+                    <h3 className="text-xl font-bold">Connect with Patients</h3>
+                    <p className="text-gray-600">Engage with users patients directly through your profile</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <FaHospitalAlt className="text-indigo-500 text-4xl" />
+                  <div className="ml-4">
+                    <h3 className="text-xl font-bold">Manage Appointments</h3>
+                    <p className="text-gray-600">Easily manage and schedule appointments with users</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <FaHandsHelping className="text-indigo-500 text-4xl" />
+                  <div className="ml-4">
+                    <h3 className="text-xl font-bold">Improve Your Practice</h3>
+                    <p className="text-gray-600">Gain insights and improve your service</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7vmmIiLnjDnnHqLW7WTMopgi_NTAZywxwDA&s" alt="Logo 1" className="h-40 mx-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {selectedDomain && serviceOptions[selectedDomain] && (
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="service">
-            Select Service Type
-          </label>
-          <select
-            id="service"
-            value={selectedService}
-            onChange={handleServiceChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="">Select Service Type</option>
-            {serviceOptions[selectedDomain].map((service, index) => (
-              <option key={index} value={service}>
-                {service}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {selectedDomain && selectedService && (
-        <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            Add {selectedService} in {selectedDomain}
-          </h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
-                Company Name
-              </label>
-              <input
-                id="companyName"
-                type="text"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="GST">
-                GST Number
-              </label>
-              <input
-                id="GST"
-                type="text"
-                value={GST}
-                onChange={(e) => setGST(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
-                Your Location
-              </label>
-              <textarea
-                id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
-                Provide a detailed description about your service
-              </label>
-              <textarea
-                id="bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-                Phone Number
-              </label>
-              <input
-                id="phone"
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Add Service
-            </button>
-          </form>
-          <button
-            onClick={() => {
-              setSelectedService('');
-              setSelectedDomain('');
-              setCompanyName('');
-              setGST('');
-              setAddress('');
-              setBio('');
-              setPhone('');
-            }}
-            className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Back to Domain Selection
-          </button>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,3 +1,5 @@
+// UpdateService.js
+
 'use client';
 
 import React, { useState } from 'react';
@@ -55,113 +57,88 @@ const UpdateService = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Update Your Service</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          value={GST}
-          onChange={(e) => setGST(e.target.value)}
-          placeholder="Enter GST Number"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-        <button
-          onClick={handleSearch}
-          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Search Service
-        </button>
-      </div>
-
-      {error && <p className="text-red-500">{error}</p>}
-
-      {serviceData && (
-        <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">Update Service Details</h2>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="domain">
-              Domain
-            </label>
-            <input
-              id="domain"
-              type="text"
-              value={serviceData.domain || ''}
-              readOnly
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-            />
+      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="text-center mb-8">
+            <h1 className="text-4xl font-extrabold text-gray-900">
+              Find And Update Your <span className="underline text-blue-500">Service</span>
+            </h1>
           </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="serviceType">
-              Service Type
-            </label>
-            <input
-              id="serviceType"
-              type="text"
-              value={serviceData.serviceType || ''}
-              readOnly
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
-              Company Name
-            </label>
-            <input
-              id="companyName"
-              type="text"
-              value={serviceData.companyName || ''}
-              onChange={handleInputChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
-              Address
-            </label>
-            <textarea
-              id="address"
-              value={serviceData.address || ''}
-              onChange={handleInputChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
-              Bio
-            </label>
-            <textarea
-              id="bio"
-              value={serviceData.bio || ''}
-              onChange={handleInputChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-              Phone Number
-            </label>
-            <input
-              id="phone"
-              type="text"
-              value={serviceData.phone || ''}
-              onChange={handleInputChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          
+        
+        {/* Find Your Service Section */}
+        <div className="mb-4">
+          <input
+            type="text"
+            value={GST}
+            onChange={(e) => setGST(e.target.value)}
+            placeholder="Enter GST Number"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
           <button
-            onClick={handleUpdate}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Update Service
-          </button>
+          onClick={handleSearch}
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >Find Your Profile</button>
         </div>
-      )}
+
+        {error && <p className="text-red-500">{error}</p>}
+
+        {serviceData && (
+          <div className="mt-8 p-4 border rounded shadow-md bg-white">
+            <h2 className="text-2xl font-bold text-blue-600 mb-4">Update Service Details</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
+                Company Name
+              </label>
+              <input
+                id="companyName"
+                type="text"
+                value={serviceData.companyName || ''}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
+                Address
+              </label>
+              <textarea
+                id="address"
+                value={serviceData.address || ''}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
+                Bio
+              </label>
+              <textarea
+                id="bio"
+                value={serviceData.bio || ''}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                type="text"
+                value={serviceData.phone || ''}
+                onChange={handleInputChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <button
+            onClick={handleUpdate}
+                    type="submit"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >Update Your profile</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -12,16 +12,6 @@ const ServiceProvider = () => {
       category: 'Update Service',
       description: 'Update the details of an existing service.',
       link: '/ServiceProvider/UpdateService',
-    },
-    {
-      category: 'Contact Us',
-      description: 'Get in touch with our team for any inquiries.',
-      link: '/ServiceProvider/ContactUs',
-    },
-    {
-      category: 'Pricing',
-      description: 'Learn about the pricing for our services.',
-      link: '/ServiceProvider/Pricing',
     }
   ];
 
