@@ -24,28 +24,27 @@ const Navbar = () => {
   if (!mounted) return null; // Render nothing initially
 
   return (
-    <nav className="bg-white border-b border-white-700 shadow-2xl w-full mx-auto">
+    <nav className="bg-purple-700 shadow-2xl w-full mx-auto">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-        <div className="text-xl font-bold text-black">Integrated Services</div>
+        <div className="text-xl font-bold font text-white">Integrated Services</div>
         <div className="flex space-x-8">
-          <a href="/" className="text-black text-l hover:text-gray-600">Home</a>
+          <a href="/" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Home</a>
           <div className="relative group">
             <button
-              className="text-black text-l hover:text-gray-600 flex items-center"
+              className="text-black font-bold hover:text-black font-serif hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded flex items-center"
               onClick={() => router.push('/services')}
             >
               Services
-              
             </button>
-            </div>
-            <a href="/ServiceProvider" className="text-black text-l hover:text-gray-600">Add Service</a>
-          <a href="/about" className="text-black text-l hover:text-gray-600">About Us</a>
+          </div>
+          <a href="/ServiceProvider" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Add Service</a>
+          <a href="/about" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">About Us</a>
           {session ? (
             <>
               <span className="text-black text-l">Welcome, {session.user.name}</span>
               <button
                 onClick={() => router.push('/Profile')}
-                className="text-black text-l hover:text-gray-600"
+                className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
               >
                 Profile
               </button>
@@ -54,13 +53,13 @@ const Navbar = () => {
                   localStorage.removeItem('hasRedirected');
                   signOut();
                 }}
-                className="text-black text-l hover:text-gray-600"
+                className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
               >
                 Sign out
               </button>
             </>
           ) : (
-            <a href="/login" className="text-black text-l hover:text-gray-600">Login</a>
+            <a href="/login" className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Login</a>
           )}
         </div>
       </div>

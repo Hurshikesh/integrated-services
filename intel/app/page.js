@@ -1,10 +1,10 @@
-'use client'
-import React, { useEffect, useState } from 'react';
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import 'tailwindcss/tailwind.css';
+import About from './about/page';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
@@ -36,7 +36,7 @@ const services = [
   {
     title: "Government Services",
     description: "Access details on Aadhar, ration card, passport, and more.",
-    image: "https://i.postimg.cc/htGz4kPs/goverenment.jpg",
+    image: "https://i.postimg.cc/x8QpbRK9/goverenment.jpg",
     link: "/services/Government"
   },
   {
@@ -71,6 +71,8 @@ export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false); // State to manage login modal visibility
   const [showChoiceModal, setShowChoiceModal] = useState(true); // State to manage choice modal visibility
 
+  const aboutRef = useRef(null);
+
   useEffect(() => {
     setIsVisible(true);
     // Here you can check if the user is logged in, for example, by checking a token in local storage
@@ -96,53 +98,49 @@ export default function Home() {
     }
   };
 
+  const scrollToAbout = () => {
+    aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Choice Modal */}
-      {showChoiceModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full text-center">
-            <h2 className="text-2xl font-bold mb-4 text-black">Are you a Customer or a Service Provider?</h2>
-            <div className="flex justify-around">
-              <button
-                onClick={() => handleChoice('customer')}
-                className="bg-blue-500 text-white p-3 rounded-lg w-1/3"
-              >
-                Customer
-              </button>
-              <button
-                onClick={() => handleChoice('serviceProvider')}
-                className="bg-green-500 text-white p-3 rounded-lg w-1/3"
-              >
-                Service Provider
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+     
 
-   {/* Hero Section */}
-<header className={`relative h-96 rounded-lg mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-  <div className="flex w-full h-full relative">
-    <div className="relative w-1/2 h-full">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      >
-        <source src="/herovideo.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+{/* Hero Section */}
+<header className={`relative h-[500px] mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-700 to-transparent`}>
+  <div className="relative w-full h-full flex">
+    <div className="w-1/2 flex items-center justify-center relative">
+      <div className="relative w-[75%] h-[75%] z-10 border-8 border-white rounded-lg overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="/herovideo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-purple-700 to-transparent pointer-events-none"></div>
     </div>
-    <div className="relative w-1/2 flex items-center justify-center z-10 bg-gradient-to-r from-transparent to-white">
-      <div className="text-center text-gray-900">
-        <h1 className="text-6xl font-bold mb-2">Integrated Services</h1>
+    <div className="w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-r from-transparent to-purple-700">
+      <div className="text-center text-white mb-40">
+        <h1 className="text-6xl font-bold mb-4">Integrated Services</h1>
+        <div className="space-y-4">
+  <p className="text-xl font-serif font-extrabold">Navigating life's challenges. Together.</p>
+  <p className="text-xl font-thin font-serif">
+    Facing challenges in healthcare, finances, education, or housing?
+     We're here to help. Our website connects you with expert guidance, streamlined resources, and actionable steps across healthcare, finance, education, transportation, government services, and housing. We empower you to navigate life's complexities and build a brighter future.
+  </p>
+</div>
       </div>
     </div>
   </div>
 </header>
+
+
+
+
 
 
 
@@ -156,13 +154,15 @@ export default function Home() {
             {services.map((service, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <a className="block" onClick={() => handleServiceClick(service.link)}>
-                  <Image 
-                    src={service.image} 
-                    width={400}
-                    height={300}
-                    alt={service.title}
-                    className="rounded-lg mb-4"
-                  />
+                  <div className="w-full h-64 mb-4">
+                    <Image 
+                      src={service.image} 
+                      width={400}
+                      height={300}
+                      alt={service.title}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
                   <h3 className="text-2xl font-bold text-blue-600 mb-2">{service.title}</h3>
                   <p className="text-gray-700">{service.description}</p>
                 </a>
@@ -189,6 +189,11 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* About Section */}
+        <section ref={aboutRef}>
+          <About />
         </section>
 
         {/* Contact Us Section */}

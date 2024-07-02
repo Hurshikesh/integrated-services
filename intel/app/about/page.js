@@ -27,8 +27,8 @@ const developers = [
 const About = () => {
   return (
     <div className="flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold mb-6">About Us</h1>
-      <p className="text-center mb-8">
+      <h1 className="text-3xl font-bold mb-6 text-black">About Us</h1>
+      <p className="text-center mb-8 text-black">
         We are a group of three developers who developed this page to provide integrated services to common people in the fields of education, health, finance, and government services.
       </p>
       <div className="flex justify-center space-x-6">
