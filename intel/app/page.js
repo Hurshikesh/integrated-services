@@ -5,6 +5,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import 'tailwindcss/tailwind.css';
 import About from './about/page';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
@@ -70,14 +72,35 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
   const [showLoginModal, setShowLoginModal] = useState(false); // State to manage login modal visibility
   const [showChoiceModal, setShowChoiceModal] = useState(true); // State to manage choice modal visibility
+  const [feedbackMessage, setFeedbackMessage] = useState(''); // State to manage feedback message
+  const [feedbackEmail, setFeedbackEmail] = useState(''); // State to manage feedback Email
+  const [feedbackResponse, setFeedbackResponse] = useState(null); // State to manage feedback response
+  const [username, setUsername] = useState(''); // State to store username
+  const [email, setEmail] = useState(''); // State to store email
+
+  const { data: session, status } = useSession();
 
   const aboutRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
-    // Here you can check if the user is logged in, for example, by checking a token in local storage
-    // setIsLoggedIn(localStorage.getItem('token') ? true : false);
-  }, []);
+
+    if (status === "authenticated") {
+      setIsLoggedIn(true);
+      // Fetch profile data
+      const fetchProfile = async () => {
+        try {
+          const response = await axios.get(`/api/profileData?email=${encodeURIComponent(session.user.email)}`);
+          setUsername(response.data.username);
+          setEmail(response.data.email);
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        }
+      };
+
+      fetchProfile();
+    }
+  }, [status, session]);
 
   const handleServiceClick = (link) => {
     if (!isLoggedIn) {
@@ -98,8 +121,22 @@ export default function Home() {
     }
   };
 
-  const scrollToAbout = () => {
-    aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('/api/Feedback', { 
+        message: feedbackMessage,
+        username: username,
+        email: feedbackEmail
+      });
+      setFeedbackResponse(response.data);
+      setFeedbackMessage(''); // Clear the feedback message input
+      setFeedbackEmail(''); // Clear the feedback email input
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      setFeedbackResponse({ status: 500, data: { error: 'Error submitting feedback', details: error.message } });
+    }
   };
 
   return (
@@ -175,19 +212,19 @@ export default function Home() {
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4 text-gray-900">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-                <Image 
-                  src={step.image}
-                  width={100}
-                  height={100}
-                  alt={step.title}
-                  className="mx-auto mb-4"
-                />
-                <h3 className="text-xl font-bold text-blue-600 mb-2">{step.title}</h3>
-                <p className="text-gray-700">{step.description}</p>
-              </div>
-            ))}
+          {steps.map((step, index) => (
+  <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
+    <Image 
+      src={step.image}
+      width={100}
+      height={100}
+      alt={step.title}
+      className="mx-auto mb-4"
+    />
+    <h3 className="text-xl font-bold text-blue-600 mb-2">{step.title}</h3>
+    <p className="text-gray-700">{step.description}</p>
+  </div>
+))}
           </div>
         </section>
 
@@ -198,25 +235,28 @@ export default function Home() {
 
         {/* Contact Us Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Contact Us</h2>
-          <form className="bg-white p-6 rounded-lg shadow-md">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <input type="text" placeholder="Name" className="border border-gray-300 p-3 rounded-lg w-full bg-gray-200 text-gray-900" />
-              <input type="email" placeholder="Email" className="border border-gray-300 p-3 rounded-lg w-full bg-gray-200 text-gray-900" />
-            </div>
-            <textarea placeholder="Message" className="border border-gray-300 p-3 rounded-lg w-full mt-4 h-32 bg-gray-200 text-gray-900"></textarea>
+          <h2 className="text-3xl font-bold mb-4 text-gray-900">Give Us Your Feedback</h2>
+          <form className="bg-white p-6 rounded-lg shadow-md" onSubmit={handleFeedbackSubmit}>
+            <textarea 
+              placeholder="Message" 
+              className="border border-gray-300 p-3 rounded-lg w-full mt-4 h-32 bg-gray-200 text-gray-900"
+              value={feedbackMessage}
+              onChange={(e) => setFeedbackMessage(e.target.value)}
+            ></textarea>
+            <input 
+              type="email"
+              placeholder="Email" 
+              className="border border-gray-300 p-3 rounded-lg w-full mt-4 h-14 bg-gray-200 text-gray-900"
+              value={feedbackEmail}
+              onChange={(e) => setFeedbackEmail(e.target.value)}
+            />
             <button type="submit" className="bg-indigo-600 text-white p-3 rounded-lg mt-4">Send Message</button>
           </form>
-        </section>
-
-        {/* Premium Services Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Access Premium Services</h2>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <Elements stripe={stripePromise}>
-              {/* Add your Stripe component here */}
-            </Elements>
-          </div>
+          {feedbackResponse && (
+            <div className={`mt-4 p-4 rounded-lg ${feedbackResponse.status === 200 ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+              {feedbackResponse.status === 200 ? 'Feedback submitted successfully!' : 'Error submitting feedback. Please try again.'}
+            </div>
+          )}
         </section>
       </main>
 

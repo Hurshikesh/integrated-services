@@ -41,10 +41,10 @@ const Navbar = () => {
           <a href="/about" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">About Us</a>
           {session ? (
             <>
-              <span className="text-black text-l">Welcome, {session.user.name}</span>
+              <span className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Welcome, {session.user.name}</span>
               <button
                 onClick={() => router.push('/Profile')}
-                className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+                className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
               >
                 Profile
               </button>
@@ -53,7 +53,7 @@ const Navbar = () => {
                   localStorage.removeItem('hasRedirected');
                   signOut();
                 }}
-                className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+                className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
               >
                 Sign out
               </button>
