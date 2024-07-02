@@ -73,6 +73,7 @@ export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false); // State to manage login modal visibility
   const [showChoiceModal, setShowChoiceModal] = useState(true); // State to manage choice modal visibility
   const [feedbackMessage, setFeedbackMessage] = useState(''); // State to manage feedback message
+  const [feedbackEmail, setFeedbackEmail] = useState(''); // State to manage feedback Email
   const [feedbackResponse, setFeedbackResponse] = useState(null); // State to manage feedback response
   const [username, setUsername] = useState(''); // State to store username
   const [email, setEmail] = useState(''); // State to store email
@@ -125,10 +126,11 @@ export default function Home() {
       const response = await axios.post('/api/Feedback', { 
         message: feedbackMessage,
         username: username,
-        email: email
+        email: feedbackEmail
       });
       setFeedbackResponse(response.data);
       setFeedbackMessage(''); // Clear the feedback message input
+      setFeedbackEmail(''); // Clear the feedback email input
     } catch (error) {
       console.error('Error submitting feedback:', error);
       setFeedbackResponse({ status: 500, data: { error: 'Error submitting feedback', details: error.message } });
@@ -211,19 +213,19 @@ export default function Home() {
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4 text-gray-900">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-                <Image 
-                  src={step.image}
-                  width={100}
-                  height={100}
-                  alt={step.title}
-                  className="mx-auto mb-4"
-                />
-                <h3 className="text-xl font-bold text-blue-600 mb-2">{step.title}</h3>
-                <p className="text-gray-700">{step.description}</p>
-              </div>
-            ))}
+          {steps.map((step, index) => (
+  <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
+    <Image 
+      src={step.image}
+      width={100}
+      height={100}
+      alt={step.title}
+      className="mx-auto mb-4"
+    />
+    <h3 className="text-xl font-bold text-blue-600 mb-2">{step.title}</h3>
+    <p className="text-gray-700">{step.description}</p>
+  </div>
+))}
           </div>
         </section>
 
@@ -237,6 +239,13 @@ export default function Home() {
               value={feedbackMessage}
               onChange={(e) => setFeedbackMessage(e.target.value)}
             ></textarea>
+            <input 
+              type="email"
+              placeholder="Email" 
+              className="border border-gray-300 p-3 rounded-lg w-full mt-4 h-14 bg-gray-200 text-gray-900"
+              value={feedbackEmail}
+              onChange={(e) => setFeedbackEmail(e.target.value)}
+            />
             <button type="submit" className="bg-indigo-600 text-white p-3 rounded-lg mt-4">Send Message</button>
           </form>
           {feedbackResponse && (
