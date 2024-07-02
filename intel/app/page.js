@@ -8,6 +8,11 @@ import About from './about/page';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import Login from './login/page';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
@@ -147,14 +152,6 @@ export default function Home() {
     }
   };
 
-  const handlePrevClick = () => {
-    setCurrentServiceIndex((prevIndex) => (prevIndex - 1 + services.length) % services.length);
-  };
-
-  const handleNextClick = () => {
-    setCurrentServiceIndex((prevIndex) => (prevIndex + 1) % services.length);
-  };
-
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Hero Section */}
@@ -191,140 +188,119 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Services Section */}
+      <main className="container mx-auto px-4 py-8 text-black font-bold font-serif">
+        {/* Explore Our Services Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-4 text-gray-900">Explore Our Services</h2>
-          <div className="relative flex items-center justify-center">
-            <button
-              className="absolute left-0 p-2 bg-purple-600 text-white rounded-full z-10"
-              onClick={handlePrevClick}
+          <h2 className="text-3xl font-bold mb-4 text-gray-900 font-serif">Explore Our Services</h2>
+          <div className='container'>
+            <Swiper
+              navigation
+              pagination={{ type: 'fraction' }}
+              modules={[Navigation, Pagination]}
+              onSwiper={swiper => console.log(swiper)}
+              className='h-96 w-full rounded-lg'
             >
-              &lt;
-            </button>
-            <div className="relative w-full flex items-center justify-center overflow-hidden">
               {services.map((service, index) => (
-                <div
-                  key={index}
-                  className={`absolute transition-opacity duration-500 ease-in-out transform ${index === currentServiceIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
-                >
-                  <div className="bg-white p-6 rounded-lg shadow-md text-center w-[400px] mx-2">
-                    <a className="block" onClick={() => handleServiceClick(service.link)}>
-                      <Image 
-                        src={service.image} 
-                        width={400}
-                        height={300}
+                <SwiperSlide key={index}>
+                  <div className='flex h-full w-full items-center justify-center'>
+                    <div className="w-1/2 h-full relative">
+                      <Image
+                        src={service.image}
                         alt={service.title}
-                        className="w-full h-full object-cover rounded-lg mb-4"
+                        width={500}
+                        height={300}
+                        layout="responsive"
+                        objectFit="cover"
+                        className='block h-full w-full object-cover rounded-l-lg shadow-lg cursor-pointer'
+                        onClick={() => handleServiceClick(service.link)}
                       />
-                      <h3 className="text-2xl font-bold text-purple-600 mb-2 font-serif">{service.title}</h3>
-                      <p className="text-gray-700">{service.description}</p>
-                    </a>
+                    </div>
+                    <div className="w-1/2 h-full flex flex-col justify-center bg-purple-300 rounded-r-lg p-4">
+                      <h3 className="text-2xl font-extrabold text-white text-pretty  font-serif">{service.title}</h3>
+                      <p className="text-lg text-gray-600 font-serif">{service.description}</p>
+                    </div>
                   </div>
-                </div>
+                </SwiperSlide>
               ))}
-            </div>
-            <button
-              className="absolute right-0 p-2 bg-purple-600 text-white rounded-full z-10"
-              onClick={handleNextClick}
-            >
-              &gt;
-            </button>
-          </div>
-          <div className="flex justify-center mt-4 space-x-2">
-            {services.map((_, index) => (
-              <span
-                key={index}
-                className={`w-3 h-3 rounded-full ${index === currentServiceIndex ? 'bg-purple-600' : 'bg-gray-300'}`}
-              ></span>
-            ))}
+            </Swiper>
           </div>
         </section>
 
-        {/* Steps Section */}
+        {/* How It Works Section */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4 text-gray-900">How It Works</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <Image 
-                  src={step.image} 
-                  width={400}
-                  height={300}
+              <div key={index} className="text-center">
+                <Image
+                  src={step.image}
                   alt={step.title}
-                  className="w-full h-full object-cover rounded-lg mb-4"
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                  objectFit="cover"
+                  className="rounded-lg shadow-lg mb-4"
                 />
-                <h3 className="text-2xl font-bold text-purple-600 mb-2 font-serif">{step.title}</h3>
-                <p className="text-gray-700">{step.description}</p>
+                <h3 className="text-2xl font-bold">{step.title}</h3>
+                <p className="text-lg text-gray-600">{step.description}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* About Section */}
-        <section className="mb-12" ref={aboutRef}>
-          <About />
-        </section>
-
-        {/* Feedback Form */}
+        {/* Feedback Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">We Value Your Feedback</h2>
-          <form onSubmit={handleFeedbackSubmit} className="bg-white p-6 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="feedbackMessage" className="block text-gray-700">Your Feedback</label>
-              <textarea
-                id="feedbackMessage"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                rows="4"
-                value={feedbackMessage}
-                onChange={(e) => setFeedbackMessage(e.target.value)}
-                required
-              ></textarea>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="feedbackEmail" className="block text-gray-700">Your Email (Optional)</label>
-              <input
-                type="email"
-                id="feedbackEmail"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                value={feedbackEmail}
-                onChange={(e) => setFeedbackEmail(e.target.value)}
-              />
-            </div>
+          <h2 className="text-3xl font-bold mb-4 text-gray-900">Feedback</h2>
+          <form onSubmit={handleFeedbackSubmit} className="grid grid-cols-1 gap-4 max-w-md mx-auto">
+            <textarea
+              value={feedbackMessage}
+              onChange={(e) => setFeedbackMessage(e.target.value)}
+              placeholder="Your feedback..."
+              className="p-2 border border-gray-300 rounded-md"
+              required
+            />
+            <input
+              type="email"
+              value={feedbackEmail}
+              onChange={(e) => setFeedbackEmail(e.target.value)}
+              placeholder="Your email (optional)..."
+              className="p-2 border border-gray-300 rounded-md"
+            />
             <button
               type="submit"
-              className="bg-purple-600 text-white px-4 py-2 rounded-md"
+              className="p-2 bg-purple-600 text-white rounded-md"
             >
               Submit Feedback
             </button>
           </form>
           {feedbackResponse && (
-            <div className="mt-4">
-              {feedbackResponse.status === 200 ? (
-                <p className="text-green-500">Thank you for your feedback!</p>
-              ) : (
-                <p className="text-red-500">Error: {feedbackResponse.data.error}</p>
-              )}
+            <div className={`mt-4 p-2 ${feedbackResponse.status === 200 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-md`}>
+              {feedbackResponse.data.message || feedbackResponse.data.error}
             </div>
           )}
         </section>
 
-        {/* Login Modal */}
-        {showLoginModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">Login</h2>
-              <Login />
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+        {/* About Section */}
+        <section ref={aboutRef} className="mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-gray-900">About Us</h2>
+          <About />
+        </section>
       </main>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+            <button
+              className="absolute top-2 right-2 text-gray-600"
+              onClick={() => setShowLoginModal(false)}
+            >
+              &times;
+            </button>
+            <Login />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
