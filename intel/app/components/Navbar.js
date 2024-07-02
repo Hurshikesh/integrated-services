@@ -59,7 +59,7 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            <a href="/login" className="text-black font-bold font-serif hover:text-white hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Login</a>
+            <a href="/login" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Login</a>
           )}
         </div>
       </div>
