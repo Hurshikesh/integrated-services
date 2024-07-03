@@ -170,6 +170,7 @@ export default function Home() {
               </video>
             </div>
           </div>
+          <script async data-id="1452517225" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
           <div className="w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-r from-transparent to-purple-700">
             <div className="text-center text-white mb-40">
               <h1 className="text-6xl font-bold mb-4">Integrated Services</h1>
