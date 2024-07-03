@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const SchoolDetailsPage = () => {
   const [location, setLocation] = useState('');
@@ -29,7 +30,7 @@ const SchoolDetailsPage = () => {
       );
       const data = await response.json();
       if (data.items.length > 0) {
-        setErrorMessage(''); // Clear previous error message
+        setErrorMessage('');
         return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
         setErrorMessage('Address not found. Please try again with another address.');
@@ -44,24 +45,65 @@ const SchoolDetailsPage = () => {
   const fetchSchools = async (userCoordinates) => {
     setLoading(true);
     try {
-      const response = await fetch(
+     
+      const hereResponse = await fetch(
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=school&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
-      const data = await response.json();
-      const schoolsWithDistances = data.items.map(school => ({
-        ...school,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, school.position.lat, school.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: school.position.lat, lon: school.position.lng }),
-        rating: Math.floor(Math.random() * 5) + 1 // Random rating between 1 and 5
-      }));
+      const hereData = await hereResponse.json();
+      console.log('HERE API Response:', hereData);
 
-      setSchools(schoolsWithDistances);
-      setShowResults(true); // Display results after fetching
+     
+      const backendResponse = await axios.get(`/api/Education/School?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Education&serviceType=School`);
+      console.log('Backend Response:', backendResponse.data);
+
+      if (backendResponse.data.success) {
+        const backendSchools = backendResponse.data.data.map(school => ({
+          id: school._id,
+          title: school.companyName,
+          address: school.address,
+          position: { lat: school.location.coordinates[1], lon: school.location.coordinates[0] },
+          phone: school.phone,
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, school.location.coordinates[1], school.location.coordinates[0]),
+          travelTime: calculateTravelTime(userCoordinates, { lat: school.location.coordinates[1], lon: school.location.coordinates[0] }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          website: school.website
+        }));
+
+        const hereSchools = hereData.items.map(school => ({
+          id: school.id,
+          title: school.title,
+          address: school.address.label,
+          position: school.position,
+          phone: school.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, school.position.lat, school.position.lng),
+          travelTime: calculateTravelTime(userCoordinates, { lat: school.position.lat, lon: school.position.lng }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          website: school.contacts?.[0]?.www?.[0]?.value
+        }));
+
+        const allSchools = [...hereSchools, ...backendSchools];
+        setSchools(sortSchools(allSchools, sortOption));
+        setShowResults(true);
+      } else {
+        console.error('Backend response indicates failure:', backendResponse.data.error);
+        setErrorMessage('Error fetching schools from backend.');
+      }
     } catch (error) {
       console.error('Error fetching schools:', error);
       setErrorMessage('Error fetching schools.');
     }
     setLoading(false);
+  };
+
+  const sortSchools = (schools, option) => {
+    switch (option) {
+      case 'distance':
+        return schools.sort((a, b) => a.distance - b.distance);
+      case 'rating':
+        return schools.sort((a, b) => b.rating - a.rating);
+      default:
+        return schools;
+    }
   };
 
   const handleSearch = async (e) => {
@@ -71,7 +113,7 @@ const SchoolDetailsPage = () => {
       setUserCoords(userCoordinates);
       fetchSchools(userCoordinates);
     } else {
-      setSchools([]); // Clear previous school data
+      setSchools([]);
     }
   };
 
@@ -105,14 +147,9 @@ const SchoolDetailsPage = () => {
   const toRad = (value) => (value * Math.PI) / 180;
 
   const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-    const sortedSchools = [...schools].sort((a, b) => {
-      if (e.target.value === 'rating') {
-        return b.rating - a.rating;
-      }
-      return a.distance - b.distance;
-    });
-    setSchools(sortedSchools);
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    setSchools(sortSchools([...schools], newSortOption));
   };
 
   return (
@@ -147,7 +184,7 @@ const SchoolDetailsPage = () => {
         {showResults && (
           <div>
             {loading ? (
-              <div className="text-center">Loading...</div>
+              <div className="text-center text-white">Loading...</div>
             ) : errorMessage ? (
               <div className="text-center text-red-600">{errorMessage}</div>
             ) : (
@@ -172,35 +209,29 @@ const SchoolDetailsPage = () => {
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {school.title}
                         </h3>
-                        <p className="text-gray-600 mb-4">{school.address.label}</p>
+                        <p className="text-gray-600 mb-4">{school.address}</p>
                         <p className="text-gray-600 mb-2">
                           <FontAwesomeIcon icon={faStar} className="text-yellow-500" /> {`${school.rating} Stars`}
                         </p>
-                        {school.contacts && school.contacts[0].mobile && (
-                          <p className="text-gray-800 mb-2 text-xl">
-                            <FontAwesomeIcon icon={faPhone} /> <strong>{school.contacts[0].mobile[0].value}</strong>
-                          </p>
-                        )}
-                        {school.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${school.distance.toFixed(2)} km`}</p>
-                        )}
-                        {school.travelTime && (
-                          <div className="flex justify-around text-gray-600 mb-2">
-                            <span><FontAwesomeIcon icon={faCar} /> {`Car: ${school.travelTime.car.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${school.travelTime.bike.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faWalking} /> {`Walk: ${school.travelTime.walk.toFixed(0)} min`}</span>
-                          </div>
-                        )}
+                        <p className="text-gray-800 mb-2 text-xl">
+                          <FontAwesomeIcon icon={faPhone} /> <strong>{school.phone}</strong>
+                        </p>
+                        <p className="text-gray-800 mb-2 text-xl">{`Distance: ${school.distance.toFixed(2)} km`}</p>
+                        <div className="flex justify-around text-gray-600 mb-2">
+                          <span><FontAwesomeIcon icon={faCar} /> {`Car: ${school.travelTime.car.toFixed(0)} min`}</span>
+                          <span><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${school.travelTime.bike.toFixed(0)} min`}</span>
+                          <span><FontAwesomeIcon icon={faWalking} /> {`Walk: ${school.travelTime.walk.toFixed(0)} min`}</span>
+                        </div>
                         <button
-                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${school.position.lat},${school.position.lng}`, '_blank')}
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${school.position.lat},${school.position.lon}`, '_blank')}
                           className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
                         >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps
                         </button>
-                        {school.contacts && school.contacts[0].www && school.contacts[0].www[0].value && (
+                        {school.website && (
                           <p className="text-gray-800 mb-2 text-xl">
-                            <a href={school.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                            <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                               Learn More About the School
                             </a>
                           </p>
