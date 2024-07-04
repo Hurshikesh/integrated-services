@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt,faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const FindDoctorPage = () => {
   const [location, setLocation] = useState('');
@@ -41,36 +42,70 @@ const FindDoctorPage = () => {
     return null;
   };
 
+
   const fetchDoctors = async (userCoordinates) => {
     setLoading(true);
     try {
-      const response = await fetch(
+      const hereResponse = await fetch(
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=doctor&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
-      const data = await response.json();
-      const patientsTellUsOptions = [
-        "Offers Telehealth",
-        "Easy scheduling",
-        "Employs friendly staff",
-        "Accepts walk-ins",
-        "Provides online prescription refill",
-        "Friendly bedside manner"
-      ];
-      const doctorsWithDistances = data.items.map(doctor => ({
-        ...doctor,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, doctor.position.lat, doctor.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: doctor.position.lat, lon: doctor.position.lng }),
-        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
-        reviews: Math.floor(Math.random() * 1000) + 1,
-        isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '10:00 - 22:00', // Fixed opening hours
-        isFavorite: Math.random() < 0.5, // Randomly decide if a doctor is a "Patient Favorite"
-        // Selecting 3 random "Patient Tell Us" statements for each doctor
-        patientsTellUs: Array.from(new Set(Array.from({ length: 3 }, () => patientsTellUsOptions[Math.floor(Math.random() * patientsTellUsOptions.length)])))
-      }));
-
-      setDoctors(sortDoctors(doctorsWithDistances, sortOption));
-      setShowResults(true); // Display results after fetching
+      const hereData = await hereResponse.json();
+      console.log('HERE API Response:', hereData);
+  
+      const backendResponse = await axios.get(`/api/health/clinics?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Healthcare&serviceType=Clinic`);
+     
+      console.log('Backend Response:', backendResponse.data);
+  
+      if (backendResponse.data.success) {
+        const patientsTellUsOptions = [
+          "Offers Telehealth",
+          "Easy scheduling",
+          "Employs friendly staff",
+          "Accepts walk-ins",
+          "Provides online prescription refill",
+          "Friendly bedside manner"
+        ];
+  
+        const backendProviders = backendResponse.data.data.map(provider => ({
+          id: provider._id,
+          title: provider.companyName,
+          address: provider.address,
+          position: { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] },
+          phone: provider.phone,
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.location.coordinates[1], provider.location.coordinates[0]),
+          travelTime: calculateTravelTime(userCoordinates, { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          isOpenNow: checkIfOpenNow(),
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+          patientsTellUs: Array.from(new Set(Array.from({ length: 3 }, () => patientsTellUsOptions[Math.floor(Math.random() * patientsTellUsOptions.length)])))
+        }));
+  
+        const hereProviders = hereData.items.map(item => ({
+          id: item.id,
+          title: item.title,
+          address: item.address.label,
+          position: item.position,
+          phone: item.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, item.position.lat, item.position.lng),
+          travelTime: calculateTravelTime(userCoordinates, { lat: item.position.lat, lon: item.position.lng }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          isOpenNow: checkIfOpenNow(),
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+          patientsTellUs: Array.from(new Set(Array.from({ length: 3 }, () => patientsTellUsOptions[Math.floor(Math.random() * patientsTellUsOptions.length)])))
+        }));
+  
+        const allProviders = [...hereProviders, ...backendProviders];
+  
+        setDoctors(sortDoctors(allProviders, sortOption));
+        setShowResults(true); // Display results after fetching
+      } else {
+        console.error('Backend response indicates failure:', backendResponse.data.error);
+        setErrorMessage('Error fetching providers from backend.');
+      }
     } catch (error) {
       console.error('Error fetching doctors:', error);
       setErrorMessage('Error fetching doctors.');
