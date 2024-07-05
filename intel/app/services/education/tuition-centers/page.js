@@ -46,7 +46,7 @@ const CoachingDetailsPage = () => {
     setLoading(true);
     try {
       const hereResponse = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=coaching center&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=class&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const hereData = await hereResponse.json();
       console.log('HERE API Response:', hereData);
