@@ -1,15 +1,17 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-const TuitionAndClassesPage = () => {
+const CoachingDetailsPage = () => {
   const [location, setLocation] = useState('');
-  const [results, setResults] = useState([]);
+  const [coachingCenters, setCoachingCenters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [sortOption, setSortOption] = useState('distance');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -28,7 +30,7 @@ const TuitionAndClassesPage = () => {
       );
       const data = await response.json();
       if (data.items.length > 0) {
-        setErrorMessage(''); // Clear previous error message
+        setErrorMessage('');
         return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
         setErrorMessage('Address not found. Please try again with another address.');
@@ -40,44 +42,66 @@ const TuitionAndClassesPage = () => {
     return null;
   };
 
-  const fetchTuitionsAndClasses = async (userCoordinates) => {
+  const fetchCoachingCenters = async (userCoordinates) => {
     setLoading(true);
     try {
-      const tuitionResponse = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=coaching&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+      const hereResponse = await fetch(
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=coaching center&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
-      const tuitionData = await tuitionResponse.json();
+      const hereData = await hereResponse.json();
+      console.log('HERE API Response:', hereData);
 
-      const classResponse = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=class&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
-      );
-      const classData = await classResponse.json();
+      const backendResponse = await axios.get(`/api/Education/Coaching?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Education&serviceType=Coaching Centre`);
+      console.log('Backend Response:', backendResponse.data);
 
-      const allResults = [...tuitionData.items, ...classData.items];
+      if (backendResponse.data.success) {
+        const backendCoachingCenters = backendResponse.data.data.map(center => ({
+          id: center._id,
+          title: center.companyName,
+          address: center.address,
+          position: { lat: center.location.coordinates[1], lon: center.location.coordinates[0] },
+          phone: center.phone,
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, center.location.coordinates[1], center.location.coordinates[0]),
+          travelTime: calculateTravelTime(userCoordinates, { lat: center.location.coordinates[1], lon: center.location.coordinates[0] }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          website: center.website
+        }));
 
-      const resultsWithDistances = allResults.map(result => ({
-        ...result,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, result.position.lat, result.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: result.position.lat, lon: result.position.lng }),
-      }));
+        const hereCoachingCenters = hereData.items.map(center => ({
+          id: center.id,
+          title: center.title,
+          address: center.address.label,
+          position: center.position,
+          phone: center.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, center.position.lat, center.position.lng),
+          travelTime: calculateTravelTime(userCoordinates, { lat: center.position.lat, lon: center.position.lng }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          website: center.contacts?.[0]?.www?.[0]?.value
+        }));
 
-      // Sort results: those with websites first, then by distance
-      const sortedResults = resultsWithDistances.sort((a, b) => {
-        const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
-        const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
-
-        if (aHasWebsite && !bHasWebsite) return -1;
-        if (!aHasWebsite && bHasWebsite) return 1;
-        return a.distance - b.distance;
-      });
-
-      setResults(sortedResults);
-      setShowResults(true); // Display results after fetching
+        const allCoachingCenters = [...hereCoachingCenters, ...backendCoachingCenters];
+        setCoachingCenters(sortCoachingCenters(allCoachingCenters, sortOption));
+        setShowResults(true);
+      } else {
+        console.error('Backend response indicates failure:', backendResponse.data.error);
+        setErrorMessage('Error fetching coaching centers from backend.');
+      }
     } catch (error) {
-      console.error('Error fetching tuitions and classes:', error);
-      setErrorMessage('Error fetching tuitions and classes.');
+      console.error('Error fetching coaching centers:', error);
+      setErrorMessage('Error fetching coaching centers.');
     }
     setLoading(false);
+  };
+
+  const sortCoachingCenters = (coachingCenters, option) => {
+    switch (option) {
+      case 'distance':
+        return coachingCenters.sort((a, b) => a.distance - b.distance);
+      case 'rating':
+        return coachingCenters.sort((a, b) => b.rating - a.rating);
+      default:
+        return coachingCenters;
+    }
   };
 
   const handleSearch = async (e) => {
@@ -85,9 +109,9 @@ const TuitionAndClassesPage = () => {
     const userCoordinates = await fetchUserCoords(location);
     if (userCoordinates) {
       setUserCoords(userCoordinates);
-      fetchTuitionsAndClasses(userCoordinates);
+      fetchCoachingCenters(userCoordinates);
     } else {
-      setResults([]); // Clear previous result data
+      setCoachingCenters([]);
     }
   };
 
@@ -120,11 +144,17 @@ const TuitionAndClassesPage = () => {
 
   const toRad = (value) => (value * Math.PI) / 180;
 
+  const handleSortChange = (e) => {
+    const newSortOption = e.target.value;
+    setSortOption(newSortOption);
+    setCoachingCenters(sortCoachingCenters([...coachingCenters], newSortOption));
+  };
+
   return (
     <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Tuitions and Classes Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Coaching Centers Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
@@ -152,58 +182,58 @@ const TuitionAndClassesPage = () => {
         {showResults && (
           <div>
             {loading ? (
-              <div className="text-center">Loading...</div>
+              <div className="text-center text-white">Loading...</div>
             ) : errorMessage ? (
               <div className="text-center text-red-600">{errorMessage}</div>
             ) : (
               <section className="mb-12">
+                <div className="mb-4 flex justify-end">
+                  <label htmlFor="sort" className="text-white mr-2">Sort by:</label>
+                  <select
+                    id="sort"
+                    value={sortOption}
+                    onChange={handleSortChange}
+                    className="border border-gray-300 text-black p-2 rounded-lg"
+                  >
+                    <option value="distance">Distance</option>
+                    <option                     value="rating">Rating</option>
+                  </select>
+                </div>
                 <div className="space-y-8">
-                  {results.map((result) => (
-                    <div key={result.id} className="bg-whiteshadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="Result" className="w-48 h-auto object-cover" />
+                  {coachingCenters.map((center) => (
+                    <div key={center.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="Coaching Center" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
-                        <h3 className="text-xl font-semibold text-white mb-2 flex items-center">
-                          {result.title}
-                          {result.categories && result.categories.some(category => category.id === 'tuition') && <span className="ml-2 text-sm bg-green-200 text-green-800 px-2 py-1 rounded-full">Tuition</span>}
-                          {result.categories && result.categories.some(category => category.id === 'classes') && <span className="ml-2 text-sm bg-purple-200 text-purple-800 px-2 py-1 rounded-full">Classes</span>}
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+                          {center.title}
                         </h3>
-                        <p className="text-gray-100 mb-4">{result.address.label}</p>
-                        {result.contacts && result.contacts[0].mobile && (
-                          <p className="text-gray-200 mb-2 text-xl">
-                            <FontAwesomeIcon icon={faPhone} /> <strong>{result.contacts[0].mobile[0].value}</strong>
-                          </p>
-                        )}
-                        {result.distance && (
-                          <p className="text-gray-100 mb-2 text-xl">{`Distance: ${result.distance.toFixed(2)} km`}</p>
-                        )}
-                        {result.travelTime && (
-                          <div className="flex justify-around text-gray-300 mb-2">
-                            <span><FontAwesomeIcon icon={faCar} /> {` ${result.travelTime.car.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${result.travelTime.bike.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faWalking} /> {` ${result.travelTime.walk.toFixed(0)} min`}</span>
-                          </div>
-                        )}
-                        {result.openingHours && result.openingHours[0] && (
-                          <div className="text-gray-600 mb-2">
-                            <FontAwesomeIcon icon={faClock} /> {result.openingHours[0].text.join(', ')}
-                          </div>
-                        )}
-                        {result.contacts && result.contacts[0].www && result.contacts[0].www[0].value ? (
-                          <p className="text-gray-800 mb-2 text-xl">
-                            <a href={result.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                              {result.contacts[0].www[0].value}
-                            </a>
-                          </p>
-                        ) : (
-                          <p className="text-gray-800 mb-2 text-xl">Website not provided</p>
-                        )}
+                        <p className="text-gray-600 mb-4">{center.address}</p>
+                        <p className="text-gray-600 mb-2">
+                          <FontAwesomeIcon icon={faStar} className="text-yellow-500" /> {`${center.rating} Stars`}
+                        </p>
+                        <p className="text-gray-800 mb-2 text-xl">
+                          <FontAwesomeIcon icon={faPhone} /> <strong>{center.phone}</strong>
+                        </p>
+                        <p className="text-gray-800 mb-2 text-xl">{`Distance: ${center.distance.toFixed(2)} km`}</p>
+                        <div className="flex justify-around text-gray-600 mb-2">
+                          <span><FontAwesomeIcon icon={faCar} /> {`Car: ${center.travelTime.car.toFixed(0)} min`}</span>
+                          <span><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${center.travelTime.bike.toFixed(0)} min`}</span>
+                          <span><FontAwesomeIcon icon={faWalking} /> {`Walk: ${center.travelTime.walk.toFixed(0)} min`}</span>
+                        </div>
                         <button
-                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${result.position.lat},${result.position.lng}`, '_blank')}
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${center.position.lat},${center.position.lon}`, '_blank')}
                           className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
                         >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps
                         </button>
+                        {center.website && (
+                          <p className="text-gray-800 mb-2 text-xl">
+                            <a href={center.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                              Learn More About the Coaching Center
+                            </a>
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -217,4 +247,5 @@ const TuitionAndClassesPage = () => {
   );
 };
 
-export default TuitionAndClassesPage;
+export default CoachingDetailsPage;
+
