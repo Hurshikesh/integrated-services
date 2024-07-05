@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const FindCollegePage = () => {
     const [location, setLocation] = useState('');
@@ -9,7 +10,7 @@ const FindCollegePage = () => {
     const [loading, setLoading] = useState(false);
     const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
     const [errorMessage, setErrorMessage] = useState('');
-    const [sortOption, setSortOption] = useState('distance'); // Default sort option
+    const [sortOption, setSortOption] = useState('distance');
     const [showResults, setShowResults] = useState(false);
 
     useEffect(() => {
@@ -25,7 +26,7 @@ const FindCollegePage = () => {
             );
             const data = await response.json();
             if (data.items.length > 0) {
-                setErrorMessage(''); // Clear previous error message
+                setErrorMessage('');
                 return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
             } else {
                 setErrorMessage('Address not found. Please try again with another address.');
@@ -40,22 +41,53 @@ const FindCollegePage = () => {
     const fetchColleges = async (userCoordinates) => {
         setLoading(true);
         try {
-            const response = await fetch(
+            // Fetch colleges from HERE API
+            const hereResponse = await fetch(
                 `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=college&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
             );
-            const data = await response.json();
-            const collegesWithDistances = data.items.map(college => ({
-                ...college,
-                distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, college.position.lat, college.position.lng),
-                travelTime: calculateTravelTime(userCoordinates, { lat: college.position.lat, lon: college.position.lng }),
-                rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
-                reviews: Math.floor(Math.random() * 1000) + 1,
-                isOpenNow: checkIfOpenNow(),
-                formattedOpeningHours: '08:00 - 20:00' // Fixed opening hours
-            }));
+            const hereData = await hereResponse.json();
 
-            setColleges(sortColleges(collegesWithDistances, sortOption));
-            setShowResults(true); // Display results after fetching
+            // Fetch colleges from backend API
+            const backendResponse = await axios.get(`/api/Education/College?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Education&serviceType=University/College`);
+            const backendData = backendResponse.data;
+
+            // Check if backend response is successful
+            if (backendData.success) {
+                const backendColleges = backendData.data.map(college => ({
+                    id: college._id,
+                    title: college.companyName,
+                    address: college.address,
+                    position: { lat: college.location.coordinates[1], lon: college.location.coordinates[0] },
+                    phone: college.phone,
+                    distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, college.location.coordinates[1], college.location.coordinates[0]),
+                    travelTime: calculateTravelTime(userCoordinates, { lat: college.location.coordinates[1], lon: college.location.coordinates[0] }),
+                    rating: Math.floor(Math.random() * 5) + 1,
+                    reviews: Math.floor(Math.random() * 1000) + 1,
+                    isOpenNow: checkIfOpenNow(),
+                    formattedOpeningHours: '08:00 - 20:00'
+                }));
+
+                const hereColleges = hereData.items.map(college => ({
+                    id: college.id,
+                    title: college.title,
+                    address: college.address.label,
+                    position: college.position,
+                    phone: college.contacts?.[0]?.mobile?.[0]?.value || 'N/A',
+                    distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, college.position.lat, college.position.lng),
+                    travelTime: calculateTravelTime(userCoordinates, { lat: college.position.lat, lon: college.position.lng }),
+                    rating: Math.floor(Math.random() * 5) + 1,
+                    reviews: Math.floor(Math.random() * 1000) + 1,
+                    isOpenNow: checkIfOpenNow(),
+                    formattedOpeningHours: '08:00 - 20:00'
+                }));
+
+                const allColleges = [...hereColleges, ...backendColleges];
+                setColleges(sortColleges(allColleges, sortOption));
+                setShowResults(true);
+            } else {
+                console.error('Backend response indicates failure:', backendData.error);
+                setErrorMessage('Error fetching colleges from backend.');
+            }
         } catch (error) {
             console.error('Error fetching colleges:', error);
             setErrorMessage('Error fetching colleges.');
@@ -92,7 +124,7 @@ const FindCollegePage = () => {
             setUserCoords(userCoordinates);
             fetchColleges(userCoordinates);
         } else {
-            setColleges([]); // Clear previous college data
+            setColleges([]);
         }
     };
 
@@ -193,9 +225,9 @@ const FindCollegePage = () => {
                                                     {college.title}
                                                 </h3>
                                                 <p className="text-gray-600 mb-4">{college.address.label}</p>
-                                                {college.contacts && college.contacts[0].mobile && (
+                                                {college.phone && (
                                                     <p className="text-gray-800 mb-2 text-xl">
-                                                        <FontAwesomeIcon icon={faPhone} /> <strong>{college.contacts[0].mobile[0].value}</strong>
+                                                        <FontAwesomeIcon icon={faPhone} /> <strong>{college.phone}</strong>
                                                     </p>
                                                 )}
                                                 {college.distance && (
@@ -224,7 +256,7 @@ const FindCollegePage = () => {
                                                     {college.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                                                 </p>
                                                 <button
-                                                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${college.position.lat},${college.position.lng}`, '_blank')}
+                                                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${college.position.lat},${college.position.lon}`, '_blank')}
                                                     className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
                                                     <FontAwesomeIcon icon={faMap} className="mr-2" />
                                                     View in Map
