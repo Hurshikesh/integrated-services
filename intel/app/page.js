@@ -205,21 +205,19 @@ export default function Home() {
               {services.map((service, index) => (
                 <SwiperSlide key={index}>
                   <div className='flex h-full w-full items-center justify-center'>
-                    <div className="w-1/2 h-full relative">
+                    <div className="relative w-full h-full">
                       <Image
                         src={service.image}
                         alt={service.title}
-                        width={500}
-                        height={300}
-                        layout="responsive"
+                        layout="fill"
                         objectFit="cover"
-                        className='block h-full w-full object-cover rounded-l-lg shadow-lg cursor-pointer'
+                        className='rounded-lg shadow-lg cursor-pointer'
                         onClick={() => handleServiceClick(service.link)}
                       />
-                    </div>
-                    <div className="w-1/2 h-full flex flex-col justify-center bg-purple-300 rounded-r-lg p-4">
-                      <h3 className="text-2xl font-extrabold text-white text-pretty  font-serif">{service.title}</h3>
-                      <p className="text-lg text-gray-600 font-serif">{service.description}</p>
+                      <div className="absolute bottom-0 left-0 w-full  hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">
+                        <h3 className="text-2xl font-bold text-blue-700">{service.title}</h3>
+                        <p className="text-lg text-black">{service.description}</p>
+                      </div>
                     </div>
                   </div>
                 </SwiperSlide>
@@ -228,27 +226,37 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
-              <div key={index} className="text-center">
-                <Image
-                  src={step.image}
-                  alt={step.title}
-                  width={300}
-                  height={200}
-                  layout="responsive"
-                  objectFit="cover"
-                  className="rounded-lg shadow-lg mb-4"
-                />
-                <h3 className="text-2xl font-bold">{step.title}</h3>
-                <p className="text-lg text-gray-600">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <section className="relative h-[500px] flex mb-12">
+  {/* Left Side - Text */}
+  <div className="w-2/3 flex flex-col justify-center p-6">
+    <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Vision</h2>
+    <p className={`text-lg font-serif font-semibold leading-relaxed overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-700 to-transparent`}>
+      We aspire to a world where unimpeded access to essential resources empowers all individuals and communities to flourish.
+      <br />
+      We envision a future where navigating healthcare, finances, education, housing, and other critical services is streamlined
+      and transparent, fostering a sense of agency and self-sufficiency for everyone.
+      <br />
+      Through our comprehensive services and collaborative approach, we aim to dismantle barriers and unlock the inherent potential within each individual and the communities we serve.
+    </p>
+  </div>
+  {/* Right Side - Abstract Pattern */}
+  <div className="w-1/3 flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="absolute right-0 h-1/3 w-1/3 flex items-center justify-center">
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        <defs>
+          <pattern id="abstractPattern" patternUnits="userSpaceOnUse" width="4" height="4">
+            <circle cx="5" cy="5" r="5" fill="#9333ea" />
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#abstractPattern)" />
+      </svg>
+    </div>
+    <div className="relative z-10 flex items-center justify-center h-full w-full">
+      {/* Any additional content can go here */}
+    </div>
+  </div>
+</section>
+
 
         {/* Feedback Section */}
         <section className="mb-12">
@@ -284,7 +292,7 @@ export default function Home() {
 
         {/* About Section */}
         <section ref={aboutRef} className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">About Us</h2>
+          <h2 className="text-3xl font-bold mb-4 text-gray-900"></h2>
           <About />
         </section>
       </main>
