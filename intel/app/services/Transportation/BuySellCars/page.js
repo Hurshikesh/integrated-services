@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const BuySellCarsPage = () => {
   const [location, setLocation] = useState('');
@@ -44,25 +45,59 @@ const BuySellCarsPage = () => {
   const fetchCarProviders = async (userCoordinates) => {
     setLoading(true);
     try {
-      const response = await fetch(
+      const hereResponse = await fetch(
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=car+dealership&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
-      const data = await response.json();
-      const providersWithDistances = data.items.map(provider => ({
-        ...provider,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.position.lat, provider.position.lng),
-        rating: Math.floor(Math.random() * 5) + 1,
-        reviews: Math.floor(Math.random() * 1000) + 1,
-        isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '09:00 - 19:00',
-        isFavorite: Math.random() < 0.5,
-      }));
-
-      setCarProviders(sortProviders(providersWithDistances, sortOption));
-      setShowResults(true);
+      const hereData = await hereResponse.json();
+      console.log('HERE API Response:', hereData);
+  
+      const backendResponse = await axios.get(`/api/transportation/BuySell?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Transportation&serviceType=Buy And Sell Cars`);
+     
+      console.log('Backend Response:', backendResponse.data);
+  
+      if (backendResponse.data.success) {
+  
+        const backendProviders = backendResponse.data.data.map(provider => ({
+          id: provider._id,
+          title: provider.companyName,
+          address: provider.address,
+          position: { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] },
+          phone: provider.phone,
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.location.coordinates[1], provider.location.coordinates[0]),
+          travelTime: calculateTravelTime(userCoordinates, { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          isOpenNow: checkIfOpenNow(),
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+        }));
+  
+        const hereProviders = hereData.items.map(item => ({
+          id: item.id,
+          title: item.title,
+          address: item.address.label,
+          position: item.position,
+          phone: item.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, item.position.lat, item.position.lng),
+          travelTime: calculateTravelTime(userCoordinates, { lat: item.position.lat, lon: item.position.lng }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          isOpenNow: checkIfOpenNow(),
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+        }));
+  
+        const allProviders = [...hereProviders, ...backendProviders];
+  
+        setCarProviders(allProviders);
+        setShowResults(true); // Display results after fetching
+      } else {
+        console.error('Backend response indicates failure:', backendResponse.data.error);
+        setErrorMessage('Error fetching providers from backend.');
+      }
     } catch (error) {
-      console.error('Error fetching car providers:', error);
-      setErrorMessage('Error fetching car providers.');
+      console.error('Error fetching doctors:', error);
+      setErrorMessage('Error fetching doctors.');
     }
     setLoading(false);
   };
@@ -117,6 +152,20 @@ const BuySellCarsPage = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;
+  };
+
+  const calculateTravelTime = (origin, destination) => {
+    const carSpeed = 60; // km/h
+    const bikeSpeed = 20; // km/h
+    const walkSpeed = 5; // km/h
+
+    const distance = calculateDistance(origin.lat, origin.lon, destination.lat, destination.lon);
+
+    const carTime = distance / carSpeed;
+    const bikeTime = distance / bikeSpeed;
+    const walkTime = distance / walkSpeed;
+
+    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 }; // Convert hours to minutes
   };
 
   const toRad = (value) => (value * Math.PI) / 180;
