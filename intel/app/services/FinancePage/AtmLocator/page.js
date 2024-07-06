@@ -44,12 +44,24 @@ const FindATMPage = () => {
   const fetchATMs = async (userCoordinates) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=atm&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
-      );
-      const data = await response.json();
-      const atmsWithDistances = data.items.map(atm => ({
-        ...atm,
+      const [hereResponse, backendResponse] = await Promise.all([
+        fetch(
+          `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=atm&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        ),
+        fetch(
+          `/api/Finance/atm?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}`
+        ),
+      ]);
+
+      const hereData = await hereResponse.json();
+      const backendData = await backendResponse.json();
+
+      const hereATMs = hereData.items.map(atm => ({
+        id: atm.id,
+        title: atm.title,
+        position: atm.position,
+        address: atm.address,
+        contacts: atm.contacts,
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, atm.position.lat, atm.position.lng),
         travelTime: calculateTravelTime(userCoordinates, { lat: atm.position.lat, lon: atm.position.lng }),
         rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
@@ -59,7 +71,24 @@ const FindATMPage = () => {
         isFavorite: Math.random() < 0.5, // Randomly decide if an ATM is a "Patient Favorite"
       }));
 
-      setAtms(sortATMs(atmsWithDistances, sortOption));
+      const backendATMs = backendData.data.map(atm => ({
+        id: atm._id,
+        title: atm.companyName,
+        position: { lat: atm.location.coordinates[1], lon: atm.location.coordinates[0] },
+        address: { label: atm.address },
+        contacts: [{ mobile: [{ value: atm.phone }] }],
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, atm.location.coordinates[1], atm.location.coordinates[0]),
+        travelTime: calculateTravelTime(userCoordinates, { lat: atm.location.coordinates[1], lon: atm.location.coordinates[0] }),
+        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+        reviews: Math.floor(Math.random() * 1000) + 1,
+        isOpenNow: checkIfOpenNow(),
+        formattedOpeningHours: '10:00 - 22:00', // Fixed opening hours
+        isFavorite: Math.random() < 0.5, // Randomly decide if an ATM is a "Patient Favorite"
+      }));
+
+      const combinedATMs = [...hereATMs, ...backendATMs];
+
+      setAtms(sortATMs(combinedATMs, sortOption));
       setShowResults(true); // Display results after fetching
     } catch (error) {
       console.error('Error fetching ATMs:', error);
@@ -157,7 +186,6 @@ const FindATMPage = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
                 required
               />
             </div>
@@ -237,11 +265,12 @@ const FindATMPage = () => {
                           {atm.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                         </p>
                         <button
-                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${atm.position.lat},${atm.position.lng}`, '_blank')}
-                            className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"> {/* Enhanced button style */}
-                            <FontAwesomeIcon icon={faMap} className="mr-2" />
-                            View in Map
-                          </button>
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${atm.position.lat},${atm.position.lng}`, '_blank')}
+                          className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"
+                        >
+                          <FontAwesomeIcon icon={faMap} className="mr-2" />
+                          View in Map
+                        </button>
                       </div>
                     </div>
                   ))}

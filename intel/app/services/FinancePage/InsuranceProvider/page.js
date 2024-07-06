@@ -1,15 +1,15 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faBicycle, faWalking, faPhone, faClock, faStar, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
 
-const FindInsurancePage = () => {
+const FindATMPage = () => {
   const [location, setLocation] = useState('');
-  const [insuranceProviders, setInsuranceProviders] = useState([]);
+  const [atms, setAtms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
-  const [sortOption, setSortOption] = useState('distance');
+  const [sortOption, setSortOption] = useState('distance'); // Default sort option
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const FindInsurancePage = () => {
       );
       const data = await response.json();
       if (data.items.length > 0) {
-        setErrorMessage('');
+        setErrorMessage(''); // Clear previous error message
         return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
         setErrorMessage('Address not found. Please try again with another address.');
@@ -41,43 +41,74 @@ const FindInsurancePage = () => {
     return null;
   };
 
-  const fetchInsuranceProviders = async (userCoordinates) => {
+  const fetchATMs = async (userCoordinates) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=insurance&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
-      );
-      const data = await response.json();
-      const providersWithDistances = data.items.map(provider => ({
-        ...provider,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.position.lat, provider.position.lng),
-        rating: Math.floor(Math.random() * 5) + 1,
+      const [hereResponse, backendResponse] = await Promise.all([
+        fetch(
+          `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=Insurance&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        ),
+        fetch(
+          `/api/Finance/Insurance?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}`
+        ),
+      ]);
+
+      const hereData = await hereResponse.json();
+      const backendData = await backendResponse.json();
+
+      const hereATMs = hereData.items.map(atm => ({
+        id: atm.id,
+        title: atm.title,
+        position: atm.position,
+        address: atm.address,
+        contacts: atm.contacts,
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, atm.position.lat, atm.position.lng),
+        travelTime: calculateTravelTime(userCoordinates, { lat: atm.position.lat, lon: atm.position.lng }),
+        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
         reviews: Math.floor(Math.random() * 1000) + 1,
         isOpenNow: checkIfOpenNow(),
-        formattedOpeningHours: '10:00 - 18:00',
-        isFavorite: Math.random() < 0.5,
+        formattedOpeningHours: '10:00 - 22:00', // Fixed opening hours
+        isFavorite: Math.random() < 0.5, // Randomly decide if an ATM is a "Patient Favorite"
       }));
 
-      setInsuranceProviders(sortProviders(providersWithDistances, sortOption));
-      setShowResults(true);
+      const backendATMs = backendData.data.map(atm => ({
+        id: atm._id,
+        title: atm.companyName,
+        position: { lat: atm.location.coordinates[1], lon: atm.location.coordinates[0] },
+        address: { label: atm.address },
+        contacts: [{ mobile: [{ value: atm.phone }] }],
+        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, atm.location.coordinates[1], atm.location.coordinates[0]),
+        travelTime: calculateTravelTime(userCoordinates, { lat: atm.location.coordinates[1], lon: atm.location.coordinates[0] }),
+        rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+        reviews: Math.floor(Math.random() * 1000) + 1,
+        isOpenNow: checkIfOpenNow(),
+        formattedOpeningHours: '10:00 - 22:00', // Fixed opening hours
+        isFavorite: Math.random() < 0.5, // Randomly decide if an ATM is a "Patient Favorite"
+      }));
+
+      const combinedATMs = [...hereATMs, ...backendATMs];
+
+      setAtms(sortATMs(combinedATMs, sortOption));
+      setShowResults(true); // Display results after fetching
     } catch (error) {
-      console.error('Error fetching insurance providers:', error);
-      setErrorMessage('Error fetching insurance providers.');
+      console.error('Error fetching ATMs:', error);
+      setErrorMessage('Error fetching ATMs.');
     }
     setLoading(false);
   };
 
-  const sortProviders = (providers, option) => {
+  const sortATMs = (atms, option) => {
     switch (option) {
       case 'distance':
-        return providers.sort((a, b) => a.distance - b.distance);
+        return atms.sort((a, b) => a.distance - b.distance);
       case 'rating':
-        return providers.sort((a, b) => b.rating - a.rating);
+        return atms.sort((a, b) => b.rating - a.rating);
       case 'open':
-        return providers.sort((a, b) => b.isOpenNow - a.isOpenNow);
-      
+        return atms.sort((a, b) => b.isOpenNow - a.isOpenNow);
+      case 'patientFavorite':
+        return atms.sort((a, b) => b.isFavorite - a.isFavorite);
       default:
-        return providers;
+        return atms;
     }
   };
 
@@ -85,7 +116,7 @@ const FindInsurancePage = () => {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5).replace(':', '');
     const openingTime = '1000';
-    const closingTime = '1800';
+    const closingTime = '2200';
 
     return currentTime >= openingTime && currentTime <= closingTime;
   };
@@ -95,20 +126,20 @@ const FindInsurancePage = () => {
     const userCoordinates = await fetchUserCoords(location);
     if (userCoordinates) {
       setUserCoords(userCoordinates);
-      fetchInsuranceProviders(userCoordinates);
+      fetchATMs(userCoordinates);
     } else {
-      setInsuranceProviders([]);
+      setAtms([]); // Clear previous ATM data
     }
   };
 
   const handleSortChange = (e) => {
     const newSortOption = e.target.value;
     setSortOption(newSortOption);
-    setInsuranceProviders(sortProviders([...insuranceProviders], newSortOption));
+    setAtms(sortATMs([...atms], newSortOption));
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371;
+    const R = 6371; // Radius of the Earth in km
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -116,8 +147,22 @@ const FindInsurancePage = () => {
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
+    const distance = R * c; // Distance in km
     return distance;
+  };
+
+  const calculateTravelTime = (origin, destination) => {
+    const carSpeed = 60; // km/h
+    const bikeSpeed = 20; // km/h
+    const walkSpeed = 5; // km/h
+
+    const distance = calculateDistance(origin.lat, origin.lon, destination.lat, destination.lon);
+
+    const carTime = distance / carSpeed;
+    const bikeTime = distance / bikeSpeed;
+    const walkTime = distance / walkSpeed;
+
+    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 }; // Convert hours to minutes
   };
 
   const toRad = (value) => (value * Math.PI) / 180;
@@ -126,7 +171,7 @@ const FindInsurancePage = () => {
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Insurance Providers Near You</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for  Insurance Providers near you</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
@@ -141,7 +186,6 @@ const FindInsurancePage = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
                 required
               />
             </div>
@@ -179,43 +223,51 @@ const FindInsurancePage = () => {
             ) : (
               <section className="mb-12">
                 <div className="space-y-8">
-                  {insuranceProviders.map((provider) => (
-                    <div key={provider.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="insurance_provider.webp" alt="Insurance Provider" className="w-48 h-auto object-cover" />
+                  {atms.map((atm) => (
+                    <div key={atm.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                      <img src="atm.webp" alt="ATM" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
-                          {provider.title}
-                          {provider.isFavorite && (
+                          {atm.title}
+                          {atm.isFavorite && (
                             <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded">Favorite</span>
                           )}
                         </h3>
-                        <p className="text-gray-600 mb-4">{provider.address.label}</p>
-                        {provider.contacts && provider.contacts[0].mobile && (
+                        <p className="text-gray-600 mb-4">{atm.address.label}</p>
+                        {atm.contacts && atm.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-xl">
-                            <FontAwesomeIcon icon={faPhone} /> <strong>{provider.contacts[0].mobile[0].value}</strong>
+                            <FontAwesomeIcon icon={faPhone} /> <strong>{atm.contacts[0].mobile[0].value}</strong>
                           </p>
                         )}
-                        {provider.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${provider.distance.toFixed(2)} km`}</p>
+                        {atm.distance && (
+                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${atm.distance.toFixed(2)} km`}</p>
+                        )}
+                        {atm.travelTime && (
+                          <div className="flex justify-around text-gray-600 mb-2">
+                            <span><FontAwesomeIcon icon={faCar} /> {` ${atm.travelTime.car.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${atm.travelTime.bike.toFixed(0)} min`}</span>
+                            <span><FontAwesomeIcon icon={faWalking} /> {` ${atm.travelTime.walk.toFixed(0)} min`}</span>
+                          </div>
                         )}
                         <div className="flex items-center text-yellow-500 mb-2">
-                          {[...Array(provider.rating)].map((_, i) => (
+                          {[...Array(atm.rating)].map((_, i) => (
                             <FontAwesomeIcon key={i} icon={faStar} className="mr-1" />
                           ))}
-                          {[...Array(5 - provider.rating)].map((_, i) => (
+                          {[...Array(5 - atm.rating)].map((_, i) => (
                             <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
                           ))}
-                          <span className="ml-2 text-gray-700">({provider.reviews} reviews)</span>
+                          <span className="ml-2 text-gray-700">({atm.reviews} reviews)</span>
                         </div>
                         <div className="text-gray-600 mb-2">
-                          <FontAwesomeIcon icon={faClock} /> {provider.formattedOpeningHours}
+                          <FontAwesomeIcon icon={faClock} /> {atm.formattedOpeningHours}
                         </div>
-                        <p className={`text-lg font-bold ${provider.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
-                          {provider.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
+                        <p className={`text-lg font-bold ${atm.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
+                          {atm.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                         </p>
                         <button
-                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${provider.position.lat},${provider.position.lng}`, '_blank')}
-                          className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${atm.position.lat},${atm.position.lng}`, '_blank')}
+                          className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"
+                        >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View in Map
                         </button>
@@ -232,4 +284,4 @@ const FindInsurancePage = () => {
   );
 };
 
-export default FindInsurancePage;
+export default FindATMPage;
