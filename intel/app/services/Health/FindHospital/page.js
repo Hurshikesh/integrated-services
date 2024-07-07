@@ -148,13 +148,16 @@ const FindDoctorPage = () => {
     }
   };
   const handleGPS = async () => {
+    
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+        console.log(userCoordinates);
         setUserCoords(userCoordinates);
         fetchDoctors(userCoordinates);
       });
     } else {
+      setDoctors([]);
       setErrorMessage('Geolocation is not supported by this browser.');
     }
   };
