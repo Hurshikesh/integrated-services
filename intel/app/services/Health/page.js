@@ -180,7 +180,7 @@ export default function HealthPage() {
 
         {/* Services Slider Section */}
         <section className="mb-12 relative">
-          <h2 className="text-3xl  text-center text-purple-700 mb-6 font-extrabold" style={{ fontFamily: 'serif' }}>Services We Offer</h2>
+          <h2 className="text-3xl  text-center text-purple-700 mb-6 font-extrabold " style={{ fontFamily: 'serif' }}>Services We Offer</h2>
           <div className="flex items-center justify-between">
             <button onClick={handlePrevService} className="text-white bg-purple-800 p-2 rounded-full hover:bg-blue-600 transition duration-300 transform hover:scale-110">
               &#8592;
@@ -215,7 +215,7 @@ export default function HealthPage() {
         {/* New Section */}
         <section className="mb-12 relative">
           <div className="container mx-auto bg-white p-6 rounded-lg shadow-md relative overflow-hidden">
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-300 to-purple-500 opacity-25 animate-pulse"></div>
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-300 to-purple-500 opacity-25 animate-pulse font-serif"></div>
             <p className="text-lg text-gray-700 text-center z-10 relative">
               In India, prioritizing your health is more important than ever. According to a recent study [source needed], over 60% of deaths in the country are attributed to preventable and treatable chronic diseases. This statistic underscores the importance of taking a proactive approach to your well-being. Our comprehensive healthcare services can empower you to do just that.
               <br />

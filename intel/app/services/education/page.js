@@ -15,12 +15,7 @@ const educationServices = [
     link: '/services/education/school-details',
     image: 'https://i.postimg.cc/sfwsqZd6/school-details.jpg',
   },
-  {
-    category: 'Learning Materials',
-    description: 'Second-hand / reusable learning materials for lesser cost including laptops, etc.',
-    link: '/services/education/learning-materials',
-    image: 'https://i.postimg.cc/QMfqcpMT/learning-materials.jpg',
-  },
+  
   {
     category: 'Tuition Centers',
     description: 'Nearest tuition center for a particular subject, with teacher details.',

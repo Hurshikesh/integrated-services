@@ -14,6 +14,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
+import {motion} from 'framer-motion';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
@@ -146,9 +147,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 font-lato">
       {/* Hero Section */}
-      <header className={`relative h-[500px] mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-700 to-transparent`}>
+      <header className={`relative h-[500px] mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-500 to-transparent`}>
         <div className="relative w-full h-full flex">
           <div className="w-1/2 flex items-center justify-center relative">
             <div className="relative w-[75%] h-[75%] z-10 overflow-hidden">
@@ -160,20 +161,33 @@ export default function Home() {
               >
                 <source src="/herovideo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
-                
               </video>
             </div>
           </div>
           <script async data-id="1452517225" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
-          <div className="w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-r from-transparent to-purple-700">
+          <div className="w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-f from-purple-500 to-purple-100">
             <div className="text-center text-white mb-40">
-              <h1 className="text-6xl font-bold mb-4">Integrated Services</h1>
+              <motion.div initial="hidden" animate="visible" variants={{
+                hidden: {
+                  scale: .8,
+                  opacity: 0
+                },
+                visible:{
+                  scale: 1,
+                  opacity: 1,
+                  transition:{
+                    delay: 0.4
+                  }
+                }
+                }
+              } >
+              <h1 className="text-6xl font-bold mb-4 font-helvetica">Integrated Services</h1>
+              </motion.div>
               <div className="space-y-4">
-                <p className="text-xl font-serif font-extrabold">Navigating life's challenges. Together.</p>
+                <p className="text-xl font-lato font-extrabold">Navigating life's challenges. Together.</p>
                 <div className="space-y-6">
-                  <p className="text-xl font-thin font-serif">
-                    Facing challenges in healthcare, finances, education, or housing?
-                    We're here to help. Our website connects you with expert guidance, streamlined resources, and actionable steps across healthcare, finance, education, transportation, government services, and housing. We empower you to navigate life's complexities and build a brighter future.
+                  <p className="text-xl font-lato text-balance">
+                    Facing challenges in healthcare, finances, education, or housing? We're here to help. Our website connects you with expert guidance, streamlined resources, and actionable steps across healthcare, finance, education, transportation,government services, and housing. We empower you to navigate life's complexities and build a brighter future.
                   </p>
                 </div>
               </div>
@@ -182,47 +196,50 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 text-black font-bold font-serif">
-        {/* Explore Our Services Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900 font-serif">Explore Our Services</h2>
-          <div className='container'>
-            <Swiper
-              navigation
-              pagination={{ type: 'fraction' }}
-              modules={[Navigation, Pagination]}
-              onSwiper={swiper => console.log(swiper)}
-              className='h-96 w-full rounded-lg'
-            >
-              {services.map((service, index) => (
-                <SwiperSlide key={index}>
-                  <div className='flex h-full w-full items-center justify-center'>
-                    <div className="relative w-full h-full">
-                      <Link href={service.link}>
-                        <Image
-                          src={service.image}
-                          alt={service.title}
-                          layout="fill"
-                          objectFit="cover"
-                          className='rounded-lg shadow-lg cursor-pointer'
-                        />
-                      </Link>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 p-4 rounded-b-lg text-center">
-                        <h3 className="text-2xl font-bold mb-2 text-white">{service.title}</h3>
-                        <p className="text-lg text-white">{service.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
+     {/* Main Content */}
+<main className="container mx-auto px-4 py-8">
+  {/* Explore Our Services Section */}
+  <section className="mb-12">
+    <h2 className="text-3xl font-bold mb-4 text-purple-600 font-helvetica">Explore Our Services</h2>
+    <div className="mx-auto max-w-screen-lg p-8 bg-purple-300 rounded-lg">
+      <Swiper
+        navigation
+        pagination={{ type: 'fraction' }}
+        modules={[Navigation, Pagination]}
+        onSwiper={(swiper) => console.log(swiper)}
+        className="h-96 w-full text-white"
+        style={{ padding: '20px' }}
+      >
+        {services.map((service, index) => (
+          <SwiperSlide key={index}>
+            <div className="flex h-full w-full items-center justify-center">
+              <div className="relative w-full h-full">
+                <Link href={'/services/'}>
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
+                  />
+                </Link>
+                <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 p-4 rounded-b-lg text-center">
+                  <h3 className="text-2xl font-bold mb-2 text-white font-helvetica">{service.title}</h3>
+                  <p className="text-lg text-white font-lato">Know More</p>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  </section>
+      
+
 
         {/* About Section */}
         <section className="mb-12" ref={aboutRef}>
-          <h2 className="text-3xl font-bold mb-4">About Us</h2>
+          <h2 className="text-3xl font-bold mb-4 font-helvetica">About Us</h2>
           <div className="border p-4">
             <About />
           </div>
@@ -230,12 +247,12 @@ export default function Home() {
 
         {/* Feedback Form Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4">Your Feedback Matters</h2>
+          <h2 className="text-3xl font-bold mb-4 font-helvetica">Your Feedback Matters</h2>
           <div className="border p-4">
             {isLoggedIn ? (
               <form onSubmit={handleFeedbackSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+                  <label htmlFor="email" className="block font-medium text-gray-700 font-helvetica">Email</label>
                   <input
                     type="email"
                     id="email"
@@ -247,7 +264,7 @@ export default function Home() {
                   {errors.email && <p className="text-red-500">{errors.email}</p>}
                 </div>
                 <div>
-                  <label htmlFor="message" className="block font-medium text-gray-700">Message</label>
+                  <label htmlFor="message" className="block font-medium text-gray-700 font-helvetica">Message</label>
                   <textarea
                     id="message"
                     value={feedbackMessage}
@@ -260,7 +277,7 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-800"
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-800 font-helvetica" 
                 >
                   Submit Feedback
                 </button>

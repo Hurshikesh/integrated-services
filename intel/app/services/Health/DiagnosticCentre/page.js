@@ -197,7 +197,7 @@ setDoctors([]);
   const toRad = (value) => (value * Math.PI) / 180;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for diagnostic centres Near You</h2>

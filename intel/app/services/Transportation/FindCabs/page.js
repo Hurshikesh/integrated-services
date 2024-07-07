@@ -86,54 +86,56 @@ const FindCabs = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Taxi Fare Calculator</h1>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="start">
-          Start Point
-        </label>
-        <input
-          type="text"
-          id="start"
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+    <div style={{ backgroundColor: 'white', minHeight: '100vh' }} className="flex items-center justify-center">
+      <div className="max-w-md mx-auto p-4 bg-purple-400 rounded shadow-lg">
+        <h1 className="text-2xl font-bold mb-4 text-black">Taxi Fare Calculator</h1>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="start">
+            Start Point
+          </label>
+          <input
+            type="text"
+            id="start"
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="end">
+            End Point
+          </label>
+          <input
+            type="text"
+            id="end"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <button
+          onClick={calculateFare}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          disabled={loading}
+        >
+          {loading ? 'Calculating...' : 'Calculate Fare'}
+        </button>
+        {error && (
+          <div className="mt-4 text-red-500">
+            <p>{error}</p>
+          </div>
+        )}
+        {distance !== null && (
+          <div className="mt-4">
+            <h2 className="text-xl font-bold">Distance: {distance} km</h2>
+          </div>
+        )}
+        {fare !== null && (
+          <div className="mt-4">
+            <h2 className="text-xl font-bold">Estimated Fare: ₹{fare}</h2>
+          </div>
+        )}
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="end">
-          End Point
-        </label>
-        <input
-          type="text"
-          id="end"
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
-      <button
-        onClick={calculateFare}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        disabled={loading}
-      >
-        {loading ? 'Calculating...' : 'Calculate Fare'}
-      </button>
-      {error && (
-        <div className="mt-4 text-red-500">
-          <p>{error}</p>
-        </div>
-      )}
-      {distance !== null && (
-        <div className="mt-4">
-          <h2 className="text-xl font-bold">Distance: {distance} km</h2>
-        </div>
-      )}
-      {fare !== null && (
-        <div className="mt-4">
-          <h2 className="text-xl font-bold">Estimated Fare: ₹{fare}</h2>
-        </div>
-      )}
     </div>
   );
 };
