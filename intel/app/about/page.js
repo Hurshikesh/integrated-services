@@ -33,18 +33,18 @@ const About = () => {
       </p>
       <div className="flex justify-center space-x-6">
         {developers.map((developer, index) => (
-          <div key={index} href="#" className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <div key={index} href="#" className="block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-purple-600 bg-purple-300">
             <div className="flex flex-col items-center">
               <img src={developer.photo} alt={`${developer.name}'s photo`} className="rounded-full w-36 h-36 object-cover mb-4" />
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{developer.name}</h5>
               <div className="text-left w-full px-4">
-                <p className="font-normal text-gray-700 dark:text-gray-400 mb-2">
+                <p className="font-normal text-white mb-2">
                   Email: <a href={`mailto:${developer.email}`} className="text-blue-500 hover:underline">{developer.email}</a>
                 </p>
-                <p className="font-normal text-gray-700 dark:text-gray-400 mb-2">
+                <p className="font-normal text-white mb-2">
                   LinkedIn: <a href={developer.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{developer.linkedin}</a>
                 </p>
-                <p className="font-normal text-gray-700 dark:text-gray-400">
+                <p className="font-normal text-white">
                   Phone: <a href={`tel:${developer.phone}`} className="text-blue-500 hover:underline">{developer.phone}</a>
                 </p>
               </div>

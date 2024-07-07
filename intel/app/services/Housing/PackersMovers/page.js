@@ -152,7 +152,7 @@ const PackersAndMovers = () => {
   const toRad = (value) => (value * Math.PI) / 180;
 
   return (
-    <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
+    <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Packers and Movers Near You</h2>

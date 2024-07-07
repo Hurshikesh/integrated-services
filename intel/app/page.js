@@ -239,7 +239,7 @@ export default function Home() {
 
         {/* About Section */}
         <section className="mb-12" ref={aboutRef}>
-          <h2 className="text-3xl font-bold mb-4 font-helvetica">About Us</h2>
+        
           <div className="border p-4">
             <About />
           </div>
@@ -247,7 +247,7 @@ export default function Home() {
 
         {/* Feedback Form Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 font-helvetica">Your Feedback Matters</h2>
+          <h2 className="text-3xl font-bold mb-4 font-helvetica text-black">Your Feedback Matters</h2>
           <div className="border p-4">
             {isLoggedIn ? (
               <form onSubmit={handleFeedbackSubmit} className="space-y-4">

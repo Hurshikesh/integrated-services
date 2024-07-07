@@ -48,24 +48,28 @@ function HomePage() {
             </thead>
             <tbody>
               {[
-                { institution: "SBI", rate: "10.50% - 15.50%", tenure: "1 - 5 years" },
-                { institution: "HDFC Bank", rate: "11.25% - 16.25%", tenure: "1 - 5 years" },
-                { institution: "ICICI Bank", rate: "11.50% - 17.50%", tenure: "1 - 5 years" },
-                { institution: "Axis Bank", rate: "12.00% - 18.00%", tenure: "1 - 5 years" },
-                { institution: "Yes Bank", rate: "12.50% - 19.50%", tenure: "1 - 5 years" },
-                { institution: "Kotak Mahindra Bank", rate: "13.00% - 20.00%", tenure: "1 - 5 years" },
-                { institution: "IndusInd Bank", rate: "13.50% - 21.50%", tenure: "1 - 5 years" },
-                { institution: "HSBC", rate: "14.00% - 22.00%", tenure: "1 - 5 years" },
-                { institution: "Standard Chartered", rate: "14.50% - 23.50%", tenure: "1 - 5 years" },
-                { institution: "Citibank", rate: "15.00% - 24.00%", tenure: "1 - 5 years" },
-                { institution: "Bajaj Finserv", rate: "15.50% - 25.50%", tenure: "1 - 5 years" },
-                { institution: "Tata Capital", rate: "16.00% - 26.00%", tenure: "1 - 5 years" },
-                { institution: "Mahindra Finance", rate: "16.50% - 27.50%", tenure: "1 - 5 years" },
-                { institution: "Fullerton India", rate: "17.00% - 28.50%", tenure: "1 - 5 years" },
-                { institution: "Capital First", rate: "17.50% - 29.50%", tenure: "1 - 5 years" },
+                { institution: "SBI", rate: "10.50% - 15.50%", tenure: "1 - 5 years", url: "https://www.sbi.co.in/web/personal-banking/loans/personal-loans" },
+                { institution: "HDFC Bank", rate: "11.25% - 16.25%", tenure: "1 - 5 years", url: "https://www.hdfcbank.com/personal/borrow/popular-loans/personal-loan" },
+                { institution: "ICICI Bank", rate: "11.50% - 17.50%", tenure: "1 - 5 years", url: "https://www.icicibank.com/Personal-Banking/loans/personal-loan/index.page" },
+                { institution: "Axis Bank", rate: "12.00% - 18.00%", tenure: "1 - 5 years", url: "https://www.axisbank.com/retail/loans/personal-loan" },
+                { institution: "Yes Bank", rate: "12.50% - 19.50%", tenure: "1 - 5 years", url: "https://www.yesbank.in/personal-banking/yes-individual/loans/personal-loan" },
+                { institution: "Kotak Mahindra Bank", rate: "13.00% - 20.00%", tenure: "1 - 5 years", url: "https://www.kotak.com/en/personal-banking/loans/personal-loan.html" },
+                { institution: "IndusInd Bank", rate: "13.50% - 21.50%", tenure: "1 - 5 years", url: "https://www.indusind.com/in/en/personal/loans/personal-loan.html" },
+                { institution: "HSBC", rate: "14.00% - 22.00%", tenure: "1 - 5 years", url: "https://www.hsbc.co.in/loans/products/personal/" },
+                { institution: "Standard Chartered", rate: "14.50% - 23.50%", tenure: "1 - 5 years", url: "https://www.sc.com/in/loans/personal-loans/" },
+                { institution: "Citibank", rate: "15.00% - 24.00%", tenure: "1 - 5 years", url: "https://www.online.citibank.co.in/portal/newgen/cards/tab/personalloan.htm" },
+                { institution: "Bajaj Finserv", rate: "15.50% - 25.50%", tenure: "1 - 5 years", url: "https://www.bajajfinserv.in/personal-loan" },
+                { institution: "Tata Capital", rate: "16.00% - 26.00%", tenure: "1 - 5 years", url: "https://www.tatacapital.com/personal-loan.html" },
+                { institution: "Mahindra Finance", rate: "16.50% - 27.50%", tenure: "1 - 5 years", url: "https://www.mahindrafinance.com/personal-loans" },
+                { institution: "Fullerton India", rate: "17.00% - 28.50%", tenure: "1 - 5 years", url: "https://www.fullertonindia.com/personal-loan.aspx" },
+                { institution: "Capital First", rate: "17.50% - 29.50%", tenure: "1 - 5 years", url: "https://www.idfcfirstbank.com/personal-banking/loans/personal-loan" },
               ].map((loan, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                  <td className="px-4 py-2 border border-black text-black">{loan.institution}</td>
+                  <td className="px-4 py-2 border border-black text-black">
+                    <a href={loan.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      {loan.institution}
+                    </a>
+                  </td>
                   <td className="px-4 py-2 border border-black text-black">{loan.rate}</td>
                   <td className="px-4 py-2 border border-black text-black">{loan.tenure}</td>
                 </tr>

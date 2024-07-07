@@ -68,24 +68,28 @@ function EducationLoanPage() {
             </thead>
             <tbody>
               {[
-                { institution: "SBI", rate: "8.50% - 10.50%", tenure: "5 - 15 years" },
-                { institution: "HDFC Bank", rate: "9.00% - 11.00%", tenure: "5 - 15 years" },
-                { institution: "ICICI Bank", rate: "9.50% - 11.50%", tenure: "5 - 15 years" },
-                { institution: "Axis Bank", rate: "10.00% - 12.00%", tenure: "5 - 15 years" },
-                { institution: "Yes Bank", rate: "10.50% - 12.50%", tenure: "5 - 15 years" },
-                { institution: "Kotak Mahindra Bank", rate: "11.00% - 13.00%", tenure: "5 - 15 years" },
-                { institution: "IndusInd Bank", rate: "11.50% - 13.50%", tenure: "5 - 15 years" },
-                { institution: "HSBC", rate: "12.00% - 14.00%", tenure: "5 - 15 years" },
-                { institution: "Standard Chartered", rate: "12.50% - 14.50%", tenure: "5 - 15 years" },
-                { institution: "Citibank", rate: "13.00% - 15.00%", tenure: "5 - 15 years" },
-                { institution: "Bajaj Finserv", rate: "13.50% - 15.50%", tenure: "5 - 15 years" },
-                { institution: "Tata Capital", rate: "14.00% - 16.00%", tenure: "5 - 15 years" },
-                { institution: "Mahindra Finance", rate: "14.50% - 16.50%", tenure: "5 - 15 years" },
-                { institution: "Fullerton India", rate: "15.00% - 17.00%", tenure: "5 - 15 years" },
-                { institution: "Capital First", rate: "15.50% - 17.50%", tenure: "5 - 15 years" },
+                { institution: "SBI", rate: "8.50% - 10.50%", tenure: "5 - 15 years", url: "https://www.sbi.co.in/web/personal-banking/loans/education-loans" },
+                { institution: "HDFC Bank", rate: "9.00% - 11.00%", tenure: "5 - 15 years", url: "https://www.hdfcbank.com/personal/loans/education-loan" },
+                { institution: "ICICI Bank", rate: "9.50% - 11.50%", tenure: "5 - 15 years", url: "https://www.icicibank.com/Personal-Banking/loans/education-loan/index.page" },
+                { institution: "Axis Bank", rate: "10.00% - 12.00%", tenure: "5 - 15 years", url: "https://www.axisbank.com/retail/loans/education-loan" },
+                { institution: "Yes Bank", rate: "10.50% - 12.50%", tenure: "5 - 15 years", url: "https://www.yesbank.in/personal-banking/loans/education-loan" },
+                { institution: "Kotak Mahindra Bank", rate: "11.00% - 13.00%", tenure: "5 - 15 years", url: "https://www.kotak.com/en/personal-banking/loans/education-loan.html" },
+                { institution: "IndusInd Bank", rate: "11.50% - 13.50%", tenure: "5 - 15 years", url: "https://www.indusind.com/in/en/personal/loans/education-loan.html" },
+                { institution: "HSBC", rate: "12.00% - 14.00%", tenure: "5 - 15 years", url: "https://www.hsbc.co.in/loans/products/education-loan/" },
+                { institution: "Standard Chartered", rate: "12.50% - 14.50%", tenure: "5 - 15 years", url: "https://www.sc.com/in/loans/education-loan/" },
+                { institution: "Citibank", rate: "13.00% - 15.00%", tenure: "5 - 15 years", url: "https://www.online.citibank.co.in/portal/newgen/cards/tab/educationloan.htm" },
+                { institution: "Bajaj Finserv", rate: "13.50% - 15.50%", tenure: "5 - 15 years", url: "https://www.bajajfinserv.in/education-loan" },
+                { institution: "Tata Capital", rate: "14.00% - 16.00%", tenure: "5 - 15 years", url: "https://www.tatacapital.com/education-loan.html" },
+                { institution: "Mahindra Finance", rate: "14.50% - 16.50%", tenure: "5 - 15 years", url: "https://www.mahindrafinance.com/education-loans" },
+                { institution: "Fullerton India", rate: "15.00% - 17.00%", tenure: "5 - 15 years", url: "https://www.fullertonindia.com/education-loan.aspx" },
+                { institution: "Capital First", rate: "15.50% - 17.50%", tenure: "5 - 15 years", url: "https://www.idfcfirstbank.com/personal-banking/loans/education-loan" },
               ].map((loan, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                  <td className="px-4 py-2 border border-black text-black">{loan.institution}</td>
+                  <td className="px-4 py-2 border border-black text-black">
+                    <a href={loan.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      {loan.institution}
+                    </a>
+                  </td>
                   <td className="px-4 py-2 border border-black text-black">{loan.rate}</td>
                   <td className="px-4 py-2 border border-black text-black">{loan.tenure}</td>
                 </tr>
@@ -113,7 +117,6 @@ function EducationLoanPage() {
           <div className="elfsight-app-9b8cf743-c2ee-40b0-804f-a6ef5eb89520" data-elfsight-app-lazy></div>
         </div>
       </section>
-
     </div>
   );
 }
