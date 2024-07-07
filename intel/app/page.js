@@ -56,23 +56,8 @@ const services = [
   }
 ];
 
-const steps = [
-  {
-    title: "Register",
-    description: "Sign up and create your account.",
-    image: "https://i.postimg.cc/qq0qPY58/login.jpg"
-  },
-  {
-    title: "Search",
-    description: "Find the services you need from our comprehensive directory.",
-    image: "https://i.postimg.cc/zXz3psWN/service.jpg"
-  },
-  {
-    title: "Connect",
-    description: "Get in touch with service providers directly.",
-    image: "https://i.postimg.cc/XJK7kLYX/choose.jpg"
-  }
-];
+
+
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);

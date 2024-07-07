@@ -131,18 +131,23 @@ export default function HealthPage() {
       setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
     }, 5000); // Change hero image every 5 seconds
 
+    const serviceInterval = setInterval(() => {
+      setCurrentServiceIndex((prevIndex) => (prevIndex + 3) % healthServices.length);
+    }, 3000); // Change services every 3 seconds
+
     return () => {
       clearInterval(testimonyInterval);
       clearInterval(heroInterval);
+      clearInterval(serviceInterval);
     };
   }, []);
 
   const handleNextService = () => {
-    setCurrentServiceIndex((prevIndex) => (prevIndex + 1) % healthServices.length);
+    setCurrentServiceIndex((prevIndex) => (prevIndex + 3) % healthServices.length);
   };
 
   const handlePrevService = () => {
-    setCurrentServiceIndex((prevIndex) => (prevIndex - 1 + healthServices.length) % healthServices.length);
+    setCurrentServiceIndex((prevIndex) => (prevIndex - 3 + healthServices.length) % healthServices.length);
   };
 
   return (
@@ -152,7 +157,7 @@ export default function HealthPage() {
         {/* Hero Section */}
         <section className={`relative h-[500px] rounded-lg mb-12 overflow-hidden bg-purple-500 transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="absolute inset-0 flex">
-            <div className="w-1/2 relative">
+            <div className="w-2/3 relative">
               {heroImages.map((image, index) => (
                 <Image
                   key={index}
@@ -164,7 +169,7 @@ export default function HealthPage() {
                 />
               ))}
             </div>
-            <div className="w-1/2 flex items-center justify-center bg-purple-400">
+            <div className="w-1/3 flex items-center justify-center bg-purple-400">
               <div className="text-center text-white p-8">
                 <h1 className="text-4xl font-bold mb-2">Making health accessible and affordable</h1>
                 <p className="text-lg mb-4">The most trusted name in health supplements</p>
@@ -175,58 +180,68 @@ export default function HealthPage() {
 
         {/* Services Slider Section */}
         <section className="mb-12 relative">
+          <h2 className="text-3xl  text-center text-purple-700 mb-6 font-extrabold" style={{ fontFamily: 'serif' }}>Services We Offer</h2>
           <div className="flex items-center justify-between">
-            <button onClick={handlePrevService} className="text-white bg-purple-800 p-2 rounded-full hover:bg-blue-600">
+            <button onClick={handlePrevService} className="text-white bg-purple-800 p-2 rounded-full hover:bg-blue-600 transition duration-300 transform hover:scale-110">
               &#8592;
             </button>
             <div className="flex-1 mx-4 bg-white p-6 rounded-lg shadow-md overflow-hidden relative group">
-              <Link href={healthServices[currentServiceIndex].link} legacyBehavior>
-                <a className="block">
-                  <Image 
-                    src={healthServices[currentServiceIndex].image} 
-                    width={400}
-                    height={300}
-                    alt={healthServices[currentServiceIndex].title}
-                    className="rounded-lg mb-4 object-cover w-full h-64"
-                  />
-                  <h2 className="text-2xl font-bold text-blue-600 mb-2">{healthServices[currentServiceIndex].title}</h2>
-                  <p className="text-gray-700">{healthServices[currentServiceIndex].description}</p>
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-lg">{healthServices[currentServiceIndex].description}</p>
-                  </div>
-                </a>
-              </Link>
+              <div className="flex justify-between space-x-4 transition-transform duration-1000 ease-in-out transform">
+                {healthServices.slice(currentServiceIndex, currentServiceIndex + 3).map((service, index) => (
+                  <Link href={service.link} key={index} legacyBehavior>
+                    <a className="block w-[30%] transition-transform transform hover:scale-105 hover:bg-purple-200 hover:shadow-lg relative bg-gray-100 p-4 rounded-lg overflow-hidden border border-transparent">
+                      <div className="relative w-full h-[150px]">
+                        <Image
+                          src={service.image}
+                          layout="fill"
+                          objectFit="cover"
+                          alt={service.title}
+                          className="rounded-lg"
+                        />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-800 mt-4 mb-2">{service.title}</h3>
+                      <p className="text-gray-700">{service.description}</p>
+                    </a>
+                  </Link>
+                ))}
+              </div>
             </div>
-            <button onClick={handleNextService} className="text-white bg-blue-500 p-2 rounded-full hover:bg-blue-600">
+            <button onClick={handleNextService} className="text-white bg-purple-800 p-2 rounded-full hover:bg-blue-600 transition duration-300 transform hover:scale-110">
               &#8594;
             </button>
           </div>
         </section>
 
         {/* New Section */}
-        <section className="mb-12">
-          <div className="container mx-auto bg-white p-6 rounded-lg shadow-md">
-           
-            <p className="text-lg text-gray-700 text-center bg-purple-300">In India, prioritizing your health is more important than ever.  According to a recent study [source needed], over 60% of deaths in the country are attributed to preventable and treatable chronic diseases.  This statistic underscores the importance of taking a proactive approach to your well-being.  Our comprehensive healthcare services can empower you to do just that.
-
-Imagine this: you're feeling under the weather and need to see a doctor.  With our "Find Hospitals" feature, you can search for the best hospitals with highly-rated doctors near you, all conveniently located on a user-friendly map.  Our service goes beyond hospitals; you can also book appointments with top-rated doctors in various specialties through "Consult Doctors," ensuring you get the right care from a qualified professional.
-
-But healthcare isn't just about doctors' appointments.  Maybe you need to refill a prescription late at night.  Our "Find Pharmacies" feature locates pharmacies that are open 24/7 near you, providing peace of mind no matter the time.  Perhaps you're looking to get active and improve your overall health.  "Fitness Services" provides information on the nearest gyms, yoga studios, and physiotherapy centers, so you can find the perfect workout routine to suit your needs.
-
-Thinking about your loved ones? We haven't forgotten about them.  "Elder Care" offers contact details for elder care services and nurse services in your area, so you can ensure your senior family members receive the best possible care.  Finally, "Diagnostic Centers" helps you locate facilities for lab tests and imaging services, allowing you to get the necessary tests done quickly and efficiently.
-
-Our comprehensive suite of healthcare services puts the power of managing your well-being right at your fingertips.  Don't wait until a health concern arises.  Take charge of your health journey today and explore the many features we offer.</p>
+        <section className="mb-12 relative">
+          <div className="container mx-auto bg-white p-6 rounded-lg shadow-md relative overflow-hidden">
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-300 to-purple-500 opacity-25 animate-pulse"></div>
+            <p className="text-lg text-gray-700 text-center z-10 relative">
+              In India, prioritizing your health is more important than ever. According to a recent study [source needed], over 60% of deaths in the country are attributed to preventable and treatable chronic diseases. This statistic underscores the importance of taking a proactive approach to your well-being. Our comprehensive healthcare services can empower you to do just that.
+              <br />
+              <br />
+              Imagine this: you're feeling under the weather and need to see a doctor. With our "Find Hospitals" feature, you can search for the best hospitals with highly-rated doctors near you, all conveniently located on a user-friendly map. Our service goes beyond hospitals; you can also book appointments with top-rated doctors in various specialties through "Consult Doctors," ensuring you get the right care from a qualified professional.
+              <br />
+              <br />
+              But healthcare isn't just about doctors' appointments. Maybe you need to refill a prescription late at night. Our "Find Pharmacies" feature locates pharmacies that are open 24/7 near you, providing peace of mind no matter the time. Perhaps you're looking to get active and improve your overall health. "Fitness Services" provides information on the nearest gyms, yoga studios, and physiotherapy centers, so you can find the perfect workout routine to suit your needs.
+              <br />
+              <br />
+              Thinking about your loved ones? We haven't forgotten about them. "Elder Care" offers contact details for elder care services and nurse services in your area, so you can ensure your senior family members receive the best possible care. Finally, "Diagnostic Centers" helps you locate facilities for lab tests and imaging services, allowing you to get the necessary tests done quickly and efficiently.
+              <br />
+              <br />
+              Our comprehensive suite of healthcare services puts the power of managing your well-being right at your fingertips. Don't wait until a health concern arises. Take charge of your health journey today and explore the many features we offer.
+            </p>
           </div>
         </section>
 
         {/* Testimonies Section */}
-        <section className="bg-white p-6 rounded-lg shadow-md mb-12">
+        <section className="bg-white p-24 rounded-lg shadow-md mb-12">
           <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">What Our Clients Say</h2>
           <div className="relative h-24 flex items-center justify-center">
             {testimonies.map((testimony, index) => (
               <div
                 key={index}
-                className={`absolute transition-opacity duration-5000 ease-in-out transform ${index === currentTestimonyIndex ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute transition-opacity duration-1000 ease-in-out transform ${index === currentTestimonyIndex ? 'opacity-100' : 'opacity-0'}`}
               >
                 <p className="text-xl text-gray-700 text-center italic mb-2">"{testimony.testimony}"</p>
                 <p className="text-lg text-blue-600 text-center">- {testimony.name}</p>
