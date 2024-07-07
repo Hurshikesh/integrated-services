@@ -56,19 +56,17 @@ const services = [
   }
 ];
 
-
-
-
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
   const [showLoginModal, setShowLoginModal] = useState(false); // State to manage login modal visibility
   const [showChoiceModal, setShowChoiceModal] = useState(true); // State to manage choice modal visibility
   const [feedbackMessage, setFeedbackMessage] = useState(''); // State to manage feedback message
-  const [feedbackEmail, setFeedbackEmail] = useState(''); // State to manage feedback Email
+  const [feedbackEmail, setFeedbackEmail] = useState(''); // State to manage feedback email
   const [feedbackResponse, setFeedbackResponse] = useState(null); // State to manage feedback response
   const [username, setUsername] = useState(''); // State to store username
   const [email, setEmail] = useState(''); // State to store email
+  const [errors, setErrors] = useState({}); // State to store form errors
   const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
 
   const { data: session, status } = useSession();
@@ -101,15 +99,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [status, session]);
 
-  // const handleServiceClick = (link) => {
-  //   if (!isLoggedIn) {
-  //     setShowLoginModal(true);
-  //   } else {
-  //     // Navigate to the service link
-  //     window.location.href = link;
-  //   }
-  // };
-
   const handleChoice = (choice) => {
     setShowChoiceModal(false);
     if (choice === 'customer') {
@@ -120,11 +109,28 @@ export default function Home() {
     }
   };
 
+  const validateFeedbackForm = () => {
+    const newErrors = {};
+    const emailRegex = /.+\@.+\..+/;
+    if (!feedbackEmail || !emailRegex.test(feedbackEmail)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!feedbackMessage || feedbackMessage.length < 10 || feedbackMessage.length > 1000) {
+      newErrors.message = 'Message must be between 10 and 1000 characters long.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateFeedbackForm()) {
+      return;
+    }
+
     try {
-      const response = await axios.post('/api/Feedback', { 
+      const response = await axios.post('/api/Feedback', {
         message: feedbackMessage,
         username: username,
         email: feedbackEmail
@@ -132,6 +138,7 @@ export default function Home() {
       setFeedbackResponse(response.data);
       setFeedbackMessage(''); // Clear the feedback message input
       setFeedbackEmail(''); // Clear the feedback email input
+      setErrors({}); // Clear errors
     } catch (error) {
       console.error('Error submitting feedback:', error);
       setFeedbackResponse({ status: 500, data: { error: 'Error submitting feedback', details: error.message } });
@@ -192,20 +199,19 @@ export default function Home() {
                 <SwiperSlide key={index}>
                   <div className='flex h-full w-full items-center justify-center'>
                     <div className="relative w-full h-full">
-                    <Link href={service.link}>
-                    <Image
-                        src={service.image}
-                        alt={service.title}
-                        layout="fill"
-                        objectFit="cover"
-                        className='rounded-lg shadow-lg cursor-pointer'
-                      />
-                      <div className="absolute bottom-0 left-0 w-full  hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">
-                        <h3 className="text-2xl font-bold text-blue-700">{service.title}</h3>
-                        <p className="text-lg text-black">{service.description}</p>
+                      <Link href={service.link}>
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          layout="fill"
+                          objectFit="cover"
+                          className='rounded-lg shadow-lg cursor-pointer'
+                        />
+                      </Link>
+                      <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 p-4 rounded-b-lg text-center">
+                        <h3 className="text-2xl font-bold mb-2 text-white">{service.title}</h3>
+                        <p className="text-lg text-white">{service.description}</p>
                       </div>
-                    </Link>
-                      
                     </div>
                   </div>
                 </SwiperSlide>
@@ -214,91 +220,72 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative h-[500px] flex mb-12">
-  {/* Left Side - Text */}
-  <div className="w-2/3 flex flex-col justify-center p-6">
-    <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Vision</h2>
-    <p className={`text-lg font-serif font-semibold leading-relaxed overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-700 to-transparent`}>
-      We aspire to a world where unimpeded access to essential resources empowers all individuals and communities to flourish.
-      <br />
-      We envision a future where navigating healthcare, finances, education, housing, and other critical services is streamlined
-      and transparent, fostering a sense of agency and self-sufficiency for everyone.
-      <br />
-      Through our comprehensive services and collaborative approach, we aim to dismantle barriers and unlock the inherent potential within each individual and the communities we serve.
-    </p>
-  </div>
-  {/* Right Side - Abstract Pattern */}
-  <div className="w-1/3 flex items-center justify-center p-6 relative overflow-hidden">
-    <div className="absolute right-0 h-1/3 w-1/3 flex items-center justify-center">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <defs>
-          <pattern id="abstractPattern" patternUnits="userSpaceOnUse" width="4" height="4">
-            <circle cx="5" cy="5" r="5" fill="#9333ea" />
-          </pattern>
-        </defs>
-        <rect width="100" height="100" fill="url(#abstractPattern)" />
-      </svg>
-    </div>
-    <div className="relative z-10 flex items-center justify-center h-full w-full">
-      {/* Any additional content can go here */}
-    </div>
-  </div>
-</section>
-
-
-        {/* Feedback Section */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Feedback</h2>
-          <form onSubmit={handleFeedbackSubmit} className="grid grid-cols-1 gap-4 max-w-md mx-auto">
-            <textarea
-              value={feedbackMessage}
-              onChange={(e) => setFeedbackMessage(e.target.value)}
-              placeholder="Your feedback..."
-              className="p-2 border border-gray-300 rounded-md"
-              required
-            />
-            <input
-              type="email"
-              value={feedbackEmail}
-              onChange={(e) => setFeedbackEmail(e.target.value)}
-              placeholder="Your email (optional)..."
-              className="p-2 border border-gray-300 rounded-md"
-            />
-            <button
-              type="submit"
-              className="p-2 bg-purple-600 text-white rounded-md"
-            >
-              Submit Feedback
-            </button>
-          </form>
-          {feedbackResponse && (
-            <div className={`mt-4 p-2 ${feedbackResponse.status === 200 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-md`}>
-              {feedbackResponse.data.message || feedbackResponse.data.error}
-            </div>
-          )}
+        {/* About Section */}
+        <section className="mb-12" ref={aboutRef}>
+          <h2 className="text-3xl font-bold mb-4">About Us</h2>
+          <div className="border p-4">
+            <About />
+          </div>
         </section>
 
-        {/* About Section */}
-        <section ref={aboutRef} className="mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900"></h2>
-          <About />
+        {/* Feedback Form Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-4">Your Feedback Matters</h2>
+          <div className="border p-4">
+            {isLoggedIn ? (
+              <form onSubmit={handleFeedbackSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={feedbackEmail}
+                    onChange={(e) => setFeedbackEmail(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                  {errors.email && <p className="text-red-500">{errors.email}</p>}
+                </div>
+                <div>
+                  <label htmlFor="message" className="block font-medium text-gray-700">Message</label>
+                  <textarea
+                    id="message"
+                    value={feedbackMessage}
+                    onChange={(e) => setFeedbackMessage(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    rows="4"
+                    required
+                  />
+                  {errors.message && <p className="text-red-500">{errors.message}</p>}
+                </div>
+                <button
+                  type="submit"
+                  className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-800"
+                >
+                  Submit Feedback
+                </button>
+                {feedbackResponse && feedbackResponse.status === 200 && (
+                  <p className="text-green-500">Feedback submitted successfully!</p>
+                )}
+                {feedbackResponse && feedbackResponse.status !== 200 && (
+                  <p className="text-red-500">Error submitting feedback: {feedbackResponse.data.error}</p>
+                )}
+              </form>
+            ) : (
+              <div className="text-center">
+                <p className="text-lg font-medium">Please sign in to provide feedback.</p>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  Sign In
+                </button>
+                {showLoginModal && <Login />}
+              </div>
+            )}
+          </div>
         </section>
       </main>
-
-      {/* Login Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-            <button
-              className="absolute top-2 right-2 text-gray-600"
-              onClick={() => setShowLoginModal(false)}
-            >
-              &times;
-            </button>
-            <Login />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
