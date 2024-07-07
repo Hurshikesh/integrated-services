@@ -11,7 +11,18 @@ const FitnessServicesPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [serviceType, setServiceType] = useState('physiotherapy'); // State to store selected service type
-
+  
+  const handleGPS = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+        setUserCoords(userCoordinates);
+        fetchServices(userCoordinates);
+      });
+    } else {
+      setErrorMessage('Geolocation is not supported by this browser.');
+    }
+  };
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -21,7 +32,7 @@ const FitnessServicesPage = () => {
       console.error('Geolocation is not supported by this browser.');
     }
   }, []);
-
+  
   const fetchUserCoords = async (address) => {
     try {
       const response = await fetch(
@@ -40,7 +51,7 @@ const FitnessServicesPage = () => {
     }
     return null;
   };
-
+  
   const fetchServices = async (userCoordinates) => {
     setLoading(true);
     try {
@@ -48,7 +59,7 @@ const FitnessServicesPage = () => {
         physiotherapy: 'physiotherapy%20center',
         gym: 'gym',
         yoga: 'yoga%20studio',
-       
+        
       };
       const query = queryMap[serviceType];
       const response = await fetch(
@@ -60,17 +71,17 @@ const FitnessServicesPage = () => {
         distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, service.position.lat, service.position.lng),
         travelTime: calculateTravelTime(userCoordinates, { lat: service.position.lat, lon: service.position.lng }),
       }));
-
+      
       // Sort services: those with websites first, then by distance
       const sortedServices = servicesWithDistances.sort((a, b) => {
         const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
         const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
-
+        
         if (aHasWebsite && !bHasWebsite) return -1;
         if (!aHasWebsite && bHasWebsite) return 1;
         return a.distance - b.distance;
       });
-
+      
       setServices(sortedServices);
       setShowResults(true); // Display results after fetching
     } catch (error) {
@@ -79,7 +90,7 @@ const FitnessServicesPage = () => {
     }
     setLoading(false);
   };
-
+  
   const handleSearch = async (e) => {
     e.preventDefault();
     const userCoordinates = await fetchUserCoords(location);
@@ -90,79 +101,91 @@ const FitnessServicesPage = () => {
       setServices([]); // Clear previous service data
     }
   };
-
+  
+  
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km  
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
-    return distance;
-  };
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c; // Distance in km
+      return distance;
+    };
 
-  const calculateTravelTime = (origin, destination) => {
+    const calculateTravelTime = (origin, destination) => {
     const carSpeed = 60; // km/h
     const bikeSpeed = 20; // km/h
     const walkSpeed = 5; // km/h
 
     const distance = calculateDistance(origin.lat, origin.lon, destination.lat, destination.lon);
-
+    
     const carTime = distance / carSpeed;
     const bikeTime = distance / bikeSpeed;
     const walkTime = distance / walkSpeed;
 
     return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 }; // Convert hours to minutes
   };
-
+  
   const toRad = (value) => (value * Math.PI) / 180;
-
+  
   return (
     <div className="min-h-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Fitness Services Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Service Type:</span>
-                <select
-                  id="serviceType"
-                  value={serviceType}
-                  onChange={(e) => setServiceType(e.target.value)}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="physiotherapy">Physiotherapy</option>
-                  <option value="gym">Gym</option>
-                  <option value="yoga">Yoga</option>
-                  
-                </select>
-              </label>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-                </span>
-                Enter your location (detailed address):
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
-                required
-              />
-            </div>
-            <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
-              Search
-            </button>
-          </form>
+  <div className="mb-4">
+    <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
+      <span className="mr-2">Service Type:</span>
+      <select
+        id="serviceType"
+        value={serviceType}
+        onChange={(e) => setServiceType(e.target.value)}
+        className="border border-gray-300 text-black p-3 rounded-lg w-full"
+      >
+        <option value="physiotherapy">Physiotherapy</option>
+        <option value="gym">Gym</option>
+        <option value="yoga">Yoga</option>
+      </select>
+    </label>
+  </div>
+  <div className="mb-4">
+    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+      <span className="mr-2">
+        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+      </span>
+      Enter your location (detailed address):
+    </label>
+    <div className="flex space-x-4">
+      <input
+        type="text"
+        id="location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+        placeholder="e.g., 123 Main St, Delhi, India"
+        required
+      />
+      <button
+        type="button"
+        onClick={handleGPS}
+        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-shrink-0"
+      >
+        Use GPS
+      </button>
+    </div>
+  </div>
+  <button
+    type="submit"
+    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+  >
+    Search {serviceType}
+  </button>
+</form>
         </section>
 
         {showResults && (
