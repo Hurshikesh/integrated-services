@@ -13,6 +13,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Link from 'next/link';
 
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
@@ -115,14 +116,14 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [status, session]);
 
-  const handleServiceClick = (link) => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-    } else {
-      // Navigate to the service link
-      window.location.href = link;
-    }
-  };
+  // const handleServiceClick = (link) => {
+  //   if (!isLoggedIn) {
+  //     setShowLoginModal(true);
+  //   } else {
+  //     // Navigate to the service link
+  //     window.location.href = link;
+  //   }
+  // };
 
   const handleChoice = (choice) => {
     setShowChoiceModal(false);
@@ -206,18 +207,20 @@ export default function Home() {
                 <SwiperSlide key={index}>
                   <div className='flex h-full w-full items-center justify-center'>
                     <div className="relative w-full h-full">
-                      <Image
+                    <Link href={service.link}>
+                    <Image
                         src={service.image}
                         alt={service.title}
                         layout="fill"
                         objectFit="cover"
                         className='rounded-lg shadow-lg cursor-pointer'
-                        onClick={() => handleServiceClick(service.link)}
                       />
                       <div className="absolute bottom-0 left-0 w-full  hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">
                         <h3 className="text-2xl font-bold text-blue-700">{service.title}</h3>
                         <p className="text-lg text-black">{service.description}</p>
                       </div>
+                    </Link>
+                      
                     </div>
                   </div>
                 </SwiperSlide>
