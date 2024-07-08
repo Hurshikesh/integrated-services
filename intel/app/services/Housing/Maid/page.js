@@ -2,20 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faBicycle, faWalking, faPhone, faClock, faMapMarkerAlt, faMap, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-const Maid = () => {
+const HomeRepair = () => {
   const [location, setLocation] = useState('');
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [serviceType, setServiceType] = useState('maid'); // State to store selected service type
-  const [sortOption, setSortOption] = useState('distance'); // State to store selected sort option
-  const [favorites, setFavorites] = useState(() => {
-    const savedFavorites = localStorage.getItem('favorites');
-    return savedFavorites ? JSON.parse(savedFavorites) : [];
-  });
+  const [sortOption, setSortOption] = useState('distance');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -27,9 +23,6 @@ const Maid = () => {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
 
   const fetchUserCoords = async (address) => {
     try {
@@ -53,28 +46,51 @@ const Maid = () => {
   const fetchServices = async (userCoordinates) => {
     setLoading(true);
     try {
-      const queryMap = {
-        maid: 'maid+service',
-        aaya: 'aaya+center',
-      };
-      const query = queryMap[serviceType];
-      const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=${query}&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+      const hereResponse = await fetch(
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=maid&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
-      const data = await response.json();
-      const servicesWithDistances = data.items.map(service => ({
-        ...service,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, service.position.lat, service.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: service.position.lat, lon: service.position.lng }),
-        rating: service.averageRating || Math.random() * 5, // Random rating for example purposes
-        favorite: favorites.includes(service.id),
-      }));
+      const hereData = await hereResponse.json();
+      console.log('HERE API Response:', hereData);
 
-      // Sort services
-      sortServices(servicesWithDistances, sortOption);
+      const backendResponse = await axios.get(`/api/housing/domestic?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Housing&serviceType=Domestic Help`);
+      console.log('Backend Response:', backendResponse.data);
 
-      setServices(servicesWithDistances);
-      setShowResults(true); // Display results after fetching
+      if (backendResponse.data.success) {
+        const backendProviders = backendResponse.data.data.map(provider => ({
+          id: provider._id,
+          title: provider.companyName,
+          address: provider.address,
+          position: { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] },
+          phone: provider.phone,
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.location.coordinates[1], provider.location.coordinates[0]),
+          travelTime: calculateTravelTime(userCoordinates, { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+        }));
+
+        const hereProviders = hereData.items.map(item => ({
+          id: item.id,
+          title: item.title,
+          address: item.address.label,
+          position: item.position,
+          phone: item.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+          distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, item.position.lat, item.position.lng),
+          travelTime: calculateTravelTime(userCoordinates, { lat: item.position.lat, lon: item.position.lng }),
+          rating: Math.floor(Math.random() * 5) + 1,
+          reviews: Math.floor(Math.random() * 1000) + 1,
+          formattedOpeningHours: '10:00 - 22:00',
+          isFavorite: Math.random() < 0.5,
+        }));
+
+        const allProviders = [...hereProviders, ...backendProviders];
+        setServices(sortServices(allProviders, sortOption));
+        setShowResults(true);
+      } else {
+        console.error('Backend response indicates failure:', backendResponse.data.error);
+        setErrorMessage('Error fetching providers from backend.');
+      }
     } catch (error) {
       console.error('Error fetching services:', error);
       setErrorMessage('Error fetching services.');
@@ -95,19 +111,9 @@ const Maid = () => {
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
-    sortServices(services, e.target.value);
+    setServices(sortServices(services, e.target.value));
   };
 
-  const handleFavoriteToggle = (serviceId) => {
-    const updatedFavorites = favorites.includes(serviceId)
-      ? favorites.filter(id => id !== serviceId)
-      : [...favorites, serviceId];
-    setFavorites(updatedFavorites);
-    setServices(services.map(service => ({
-      ...service,
-      favorite: updatedFavorites.includes(service.id),
-    })));
-  };
 
   const sortServices = (services, sortOption) => {
     const sortedServices = [...services].sort((a, b) => {
@@ -120,7 +126,7 @@ const Maid = () => {
       }
       return 0;
     });
-    setServices(sortedServices);
+    return sortedServices;
   };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -156,22 +162,9 @@ const Maid = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Maid and Aaya Centers Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Maid Services Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Service Type:</span>
-                <select
-                  id="serviceType"
-                  value={serviceType}
-                  onChange={(e) => setServiceType(e.target.value)}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="maid">Maid Service</option>
-                  <option value="aaya">Aaya Center</option>
-                </select>
-              </label>
-            </div>
+
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
                 <span className="mr-2">
@@ -190,19 +183,19 @@ const Maid = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Sort By:</span>
-                <select
-                  id="sortOption"
-                  value={sortOption}
-                  onChange={handleSortChange}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="distance">Distance</option>
-                  <option value="rating">Rating</option>
-                  <option value="favorite">Favorite</option>
-                </select>
+              <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2">
+                Sort by:
               </label>
+              <select
+                id="sortOption"
+                value={sortOption}
+                onChange={handleSortChange}
+                className="border border-gray-300 text-black p-3 rounded-lg w-full"
+              >
+                <option value="distance">Distance</option>
+                <option value="rating">Rating</option>
+                <option value="favorite">Favorite</option>
+              </select>
             </div>
             <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
               Search
@@ -219,21 +212,16 @@ const Maid = () => {
             ) : (
               <section className="mb-12">
                 <div className="space-y-8">
-                  {services.map((service) => (
+                  {sortServices(services, sortOption).map((service) => (
                     <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
                       <img
-                        src="https://i.postimg.cc/1zRYGjFv/grocery.jpg"
-                        alt="Maid Aaya Service"
+                        src="https://i.postimg.cc/RVjX2Wm4/repair.jpg"
+                        alt="Home Repair Service"
                         className="w-48 h-auto object-cover"
                       />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {service.title}
-                          <FontAwesomeIcon
-                            icon={faHeart}
-                            className={`ml-2 cursor-pointer ${service.favorite ? 'text-red-500' : 'text-gray-300'}`}
-                            onClick={() => handleFavoriteToggle(service.id)}
-                          />
                         </h3>
                         <p className="text-gray-600 mb-4">{service.address.label}</p>
                         {service.contacts && service.contacts[0].mobile && (
@@ -243,11 +231,6 @@ const Maid = () => {
                         )}
                         {service.distance && (
                           <p className="text-gray-800 mb-2 text-xl">{`Distance: ${service.distance.toFixed(2)} km`}</p>
-                        )}
-                        {service.rating && (
-                          <p className="text-gray-800 mb-2 text-xl">
-                            <FontAwesomeIcon icon={faStar} /> {service.rating.toFixed(1)}
-                          </p>
                         )}
                         {service.travelTime && (
                           <div className="flex justify-around text-gray-600 mb-2">
@@ -290,4 +273,4 @@ const Maid = () => {
   );
 };
 
-export default Maid;
+export default HomeRepair;
