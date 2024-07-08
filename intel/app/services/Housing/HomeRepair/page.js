@@ -114,6 +114,20 @@ const HomeRepairPage = () => {
       setServices([]); // Clear previous service data
     }
   };
+  
+
+const handleGPS = async () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+      setUserCoords(userCoordinates);
+      fetchServices(userCoordinates);
+    });
+  } else {
+setServices([]);
+    setErrorMessage('Geolocation is not supported by this browser.');
+  }
+};
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km  
@@ -167,57 +181,66 @@ const HomeRepairPage = () => {
         <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Home Repair Services Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Service Type:</span>
-                <select
-                  id="serviceType"
-                  value={serviceType}
-                  onChange={(e) => setServiceType(e.target.value)}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="carpenter">Carpenter</option>
-                  <option value="plumber">Plumber</option>
-                  <option value="electrician">Electrician</option>
-                </select>
-              </label>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-                </span>
-                Enter your location (detailed address):
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2">
-                Sort by:
-              </label>
-              <select
-                id="sortOption"
-                value={sortOption}
-                onChange={handleSortChange}
-                className="border border-gray-300 text-black p-3 rounded-lg w-full"
-              >
-                <option value="distance">Distance</option>
-                <option value="rating">Rating</option>
-                <option value="favorite">Favorite</option>
-              </select>
-            </div>
-            <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
-              Search
-            </button>
-          </form>
+  <div className="mb-4">
+    <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
+      <span className="mr-2">Service Type:</span>
+      <select
+        id="serviceType"
+        value={serviceType}
+        onChange={(e) => setServiceType(e.target.value)}
+        className="border border-gray-300 text-black p-3 rounded-lg w-full"
+      >
+        <option value="carpenter">Carpenter</option>
+        <option value="plumber">Plumber</option>
+        <option value="electrician">Electrician</option>
+      </select>
+    </label>
+  </div>
+  <div className="mb-4">
+    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+      <span className="mr-2">
+        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+      </span>
+      Enter your location (detailed address):
+    </label>
+    <div className="flex space-x-2">
+      <input
+        type="text"
+        id="location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+        placeholder="e.g., 123 Main St, San Francisco, CA, USA"
+        required
+      />
+      <button
+        type="button"
+        onClick={handleGPS}
+        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-shrink-0"
+      >
+        Use GPS
+      </button>
+    </div>
+  </div>
+  <div className="mb-4">
+    <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2">
+      Sort by:
+    </label>
+    <select
+      id="sortOption"
+      value={sortOption}
+      onChange={handleSortChange}
+      className="border border-gray-300 text-black p-3 rounded-lg w-full"
+    >
+      <option value="distance">Distance</option>
+      <option value="rating">Rating</option>
+      <option value="favorite">Favorite</option>
+    </select>
+  </div>
+  <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
+    Search for {serviceType.replace(/^\w/, c => c.toUpperCase())}
+  </button>
+</form>
         </section>
 
         {showResults && (

@@ -91,6 +91,18 @@ const PackersAndMovers = () => {
       setServices([]); // Clear previous service data
     }
   };
+  const handleGPS = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+        setUserCoords(userCoordinates);
+        fetchServices(userCoordinates);
+      });
+    } else {
+  setServices([]);
+      setErrorMessage('Geolocation is not supported by this browser.');
+    }
+  };
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -155,57 +167,41 @@ const PackersAndMovers = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Packers and Movers Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-black">Search for Packers and Movers Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Service Type:</span>
-                <select
-                  id="serviceType"
-                  value={serviceType}
-                  onChange={(e) => setServiceType(e.target.value)}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="packers">Packers and Movers</option>
-                </select>
-              </label>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-                </span>
-                Enter your location (detailed address):
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2 flex items-center">
-                <span className="mr-2">Sort By:</span>
-                <select
-                  id="sortOption"
-                  value={sortOption}
-                  onChange={handleSortChange}
-                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                >
-                  <option value="distance">Distance</option>
-                  <option value="rating">Rating</option>
-                  <option value="favorite">Favorite</option>
-                </select>
-              </label>
-            </div>
-            <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
-              Search
-            </button>
-          </form>
+  <div className="mb-4">
+    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+      <span className="mr-2">
+        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+      </span>
+      Enter your location (detailed address):
+    </label>
+    <div className="flex space-x-4">
+      <input
+        type="text"
+        id="location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+        placeholder="e.g., 123 Main St, Delhi, India"
+        required
+      />
+      <button
+        type="button"
+        onClick={handleGPS}
+        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
+      >
+        Use GPS
+      </button>
+    </div>
+  </div>
+  <button
+    type="submit"
+    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+  >
+    Search
+  </button>
+</form>
         </section>
 
         {showResults && (
