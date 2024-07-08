@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faBicycle, faWalking, faPhone, faClock, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const HomeRepairPage = () => {
   const [location, setLocation] = useState('');
@@ -11,6 +12,7 @@ const HomeRepairPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [serviceType, setServiceType] = useState('carpenter'); // State to store selected service type
+  const [sortOption, setSortOption] = useState('distance');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -50,33 +52,56 @@ const HomeRepairPage = () => {
         electrician: 'electrician + electricalshops + hardwareshops',
       };
       const query = queryMap[serviceType];
-      const response = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=${query}&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
-      );
-      const data = await response.json();
-      const servicesWithDistances = data.items.map(service => ({
-        ...service,
-        distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, service.position.lat, service.position.lng),
-        travelTime: calculateTravelTime(userCoordinates, { lat: service.position.lat, lon: service.position.lng }),
-      }));
-
-      // Sort services: those with websites first, then by distance
-      const sortedServices = servicesWithDistances.sort((a, b) => {
-        const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
-        const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
-
-        if (aHasWebsite && !bHasWebsite) return -1;
-        if (!aHasWebsite && bHasWebsite) return 1;
-        return a.distance - b.distance;
-      });
-
-      setServices(sortedServices);
-      setShowResults(true); // Display results after fetching
-    } catch (error) {
-      console.error('Error fetching services:', error);
-      setErrorMessage('Error fetching services.');
-    }
-    setLoading(false);
+        const hereResponse = await fetch(
+          `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=${query}&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        );
+        const hereData = await hereResponse.json();
+        console.log('HERE API Response:', hereData);
+  
+        const backendResponse = await axios.get(`/api/housing/repair?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Housing&serviceType=Home Repair`);
+        console.log('Backend Response:', backendResponse.data);
+  
+        if (backendResponse.data.success) {
+          const backendProviders = backendResponse.data.data.map(provider => ({
+            id: provider._id,
+            title: provider.companyName,
+            address: provider.address,
+            position: { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] },
+            phone: provider.phone,
+            distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, provider.location.coordinates[1], provider.location.coordinates[0]),
+            travelTime: calculateTravelTime(userCoordinates, { lat: provider.location.coordinates[1], lon: provider.location.coordinates[0] }),
+            rating: Math.floor(Math.random() * 5) + 1,
+            reviews: Math.floor(Math.random() * 1000) + 1,
+            formattedOpeningHours: '10:00 - 22:00',
+            isFavorite: Math.random() < 0.5,
+          }));
+  
+          const hereProviders = hereData.items.map(item => ({
+            id: item.id,
+            title: item.title,
+            address: item.address.label,
+            position: item.position,
+            phone: item.contacts?.[0]?.phone?.[0]?.value || 'N/A',
+            distance: calculateDistance(userCoordinates.lat, userCoordinates.lon, item.position.lat, item.position.lng),
+            travelTime: calculateTravelTime(userCoordinates, { lat: item.position.lat, lon: item.position.lng }),
+            rating: Math.floor(Math.random() * 5) + 1,
+            reviews: Math.floor(Math.random() * 1000) + 1,
+            formattedOpeningHours: '10:00 - 22:00',
+            isFavorite: Math.random() < 0.5,
+          }));
+  
+          const allProviders = [...hereProviders, ...backendProviders];
+          setServices(allProviders);
+          setShowResults(true);
+        } else {
+          console.error('Backend response indicates failure:', backendResponse.data.error);
+          setErrorMessage('Error fetching providers from backend.');
+        }
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        setErrorMessage('Error fetching services.');
+      }
+      setLoading(false);
   };
 
   const handleSearch = async (e) => {
@@ -101,6 +126,23 @@ const HomeRepairPage = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in km
     return distance;
+  };
+
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const sortServices = (services, sortOption) => {
+    return [...services].sort((a, b) => {
+      if (sortOption === 'distance') {
+        return a.distance - b.distance;
+      } else if (sortOption === 'rating') {
+        return b.rating - a.rating;
+      } else if (sortOption === 'favorite') {
+        return b.isFavorite - a.isFavorite;
+      }
+      return 0;
+    });
   };
 
   const calculateTravelTime = (origin, destination) => {
@@ -157,6 +199,21 @@ const HomeRepairPage = () => {
                 required
               />
             </div>
+            <div className="mb-4">
+              <label htmlFor="sortOption" className="text-gray-700 font-bold mb-2">
+                Sort by:
+              </label>
+              <select
+                id="sortOption"
+                value={sortOption}
+                onChange={handleSortChange}
+                className="border border-gray-300 text-black p-3 rounded-lg w-full"
+              >
+                <option value="distance">Distance</option>
+                <option value="rating">Rating</option>
+                <option value="favorite">Favorite</option>
+              </select>
+            </div>
             <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
               Search
             </button>
@@ -172,7 +229,7 @@ const HomeRepairPage = () => {
             ) : (
               <section className="mb-12">
                 <div className="space-y-8">
-                  {services.map((service) => (
+                  {sortServices(services, sortOption).map((service) => (
                     <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
                       <img
                         src="https://i.postimg.cc/RVjX2Wm4/repair.jpg"
