@@ -181,10 +181,10 @@ export default function Home() {
                 }
                 }
               } >
-              <h1 className="text-6xl font-bold mb-4 font-helvetica">Integrated Services</h1>
+              <h1 className="text-6xl font-bold mb-4 font-helvetica">CAREcONNECT</h1>
               </motion.div>
               <div className="space-y-4">
-                <p className="text-xl font-lato font-extrabold">Navigating life's challenges. Together.</p>
+                <p className="text-xl font-lato font-extrabold">Caring for you, every step of the way.</p>
                 <div className="space-y-6">
                   <p className="text-xl font-lato text-balance">
                     Facing challenges in healthcare, finances, education, or housing? We're here to help. Our website connects you with expert guidance, streamlined resources, and actionable steps across healthcare, finance, education, transportation,government services, and housing. We empower you to navigate life's complexities and build a brighter future.

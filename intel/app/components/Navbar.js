@@ -26,18 +26,18 @@ const Navbar = () => {
   return (
     <nav className="bg-purple-500 shadow-2xl w-full mx-auto font-helvetica">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-        <div className="text-xl font-bold font text-white font-helvetica">Integrated Services</div>
+        <div className="text-xl font-bold font text-white font-helvetica">CAREcONNECT</div>
         <div className="flex space-x-8">
           <a href="/" className="text-black font-bold font-helvetica hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded font-helvetica">Home</a>
           <div className="relative group">
             <button
-              className="text-black font-bold hover:text-black font-serif hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded flex items-center font-helvetica"
+              className="text-black font-bold hover:text-black font-helvetica hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded flex items-center "
               onClick={() => router.push('/services')}
             >
               Services
             </button>
           </div>
-          <a href="/ServiceProvider" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Add Service</a>
+          <a href="/ServiceProvider" className="text-black font-bold font-helvetica hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Add Service</a>
           <a href="/about" className="text-black font-bold font-serif hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">About Us</a>
           {session ? (
             <>
