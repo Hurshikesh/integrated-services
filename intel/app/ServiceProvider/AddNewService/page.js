@@ -1,31 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaUserMd, FaClipboardList, FaHospitalAlt, FaHandsHelping } from 'react-icons/fa';
+import { FaUserMd, FaUsers, FaClipboardList, FaHospitalAlt, FaHandsHelping } from 'react-icons/fa';
 
 const AddNewService = () => {
   const [selectedDomain, setSelectedDomain] = useState('');
   const [selectedService, setSelectedService] = useState('');
-<<<<<<< Updated upstream
   const [companyName, setCompanyName] = useState('');
   const [GST, setGST] = useState('');
   const [address, setAddress] = useState('');
   const [bio, setBio] = useState('');
   const [phone, setPhone] = useState('');
 
-  const [errors, setErrors] = useState({});
-
   const domains = ['Healthcare', 'Finance', 'Transportation', 'Government', 'Housing', 'Education'];
   const healthcareServices = ['Hospital', 'Clinic', 'Pharmacy', 'Elder Care', 'Diagnostic Centre', 'Fitness Centre'];
   const financeServices = ['ATM', 'CA', 'Insurance Provider'];
-=======
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [mobileNumberError, setMobileNumberError] = useState('');
-
-  const domains = ['Healthcare', 'Finance', 'Transportation', 'Government', 'Housing', 'Education'];
-  const healthcareServices = ['Hospital', 'Clinic', 'Pharmacy', 'Elder Care', 'Diagnostic Centre', 'Fitness Centre'];
-  const financeServices = ['ATM', 'Chartered Accountant', 'Insurance Provider'];
->>>>>>> Stashed changes
   const transportation = ['Car Rentals', 'Buy And Sell Cars', 'Auto Mechanic'];
   const education = ['School', 'University/College', 'Coaching Centre', 'Arts And Sports'];
   const housing = ['Home Repair', 'Grocery', 'Domestic Help', 'Packers And Movers'];
@@ -35,11 +24,6 @@ const AddNewService = () => {
     Transportation: transportation,
     Housing: housing,
     Education: education,
-<<<<<<< Updated upstream
-=======
-
-    // Add other domain services here if needed
->>>>>>> Stashed changes
   };
 
   const handleDomainChange = (event) => {
@@ -51,47 +35,8 @@ const AddNewService = () => {
     setSelectedService(event.target.value);
   };
 
-<<<<<<< Updated upstream
-  const validateGST = (gst) => {
-    return gst.length === 15;
-  };
-
-  const validatePhone = (phone) => {
-    return /^\d{10}$/.test(phone);
-  };
-
-  const validateAddress = (address) => {
-    return address.length >= 10;
-  };
-
-  const validateBio = (bio) => {
-    return bio.length <= 500;
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let validationErrors = {};
-
-    if (!validateGST(GST)) {
-      validationErrors.GST = 'GST must be exactly 15 characters.';
-    }
-
-    if (!validatePhone(phone)) {
-      validationErrors.phone = 'Phone number must be exactly 10 digits.';
-    }
-
-    if (!validateAddress(address)) {
-      validationErrors.address = 'Address must be at least 10 characters long.';
-    }
-
-    if (!validateBio(bio)) {
-      validationErrors.bio = 'Bio cannot be more than 500 characters.';
-    }
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
 
     const payload = {
       domain: selectedDomain,
@@ -127,24 +72,12 @@ const AddNewService = () => {
         setAddress('');
         setBio('');
         setPhone('');
-        setErrors({});
       } else {
         alert(result.message || 'Failed to add service.');
       }
     } catch (error) {
       console.error('Error adding service:', error);
       alert('Error adding service.');
-=======
-  const handleMobileNumberChange = (e) => {
-    const value = e.target.value;
-    if (/^\d{0,10}$/.test(value)) {
-      setMobileNumber(value);
-      if (value.length === 10) {
-        setMobileNumberError('');
-      } else {
-        setMobileNumberError('Mobile number must be 10 digits.');
-      }
->>>>>>> Stashed changes
     }
   };
 
@@ -171,7 +104,6 @@ const AddNewService = () => {
                       value={selectedDomain}
                       onChange={handleDomainChange}
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                      required
                     >
                       <option value="">Select Domain</option>
                       {domains.map((domain, index) => (
@@ -189,7 +121,6 @@ const AddNewService = () => {
                         value={selectedService}
                         onChange={handleServiceChange}
                         className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        required
                       >
                         <option value="">Select Service Type</option>
                         {serviceOptions[selectedDomain].map((service, index) => (
@@ -212,7 +143,6 @@ const AddNewService = () => {
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                       placeholder="Company Name"
                     />
-                    {errors.companyName && <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>}
                   </div>
                   <div>
                     <label htmlFor="GST" className="sr-only">GST Number</label>
@@ -226,7 +156,6 @@ const AddNewService = () => {
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                       placeholder="GST Number"
                     />
-                    {errors.GST && <p className="text-red-500 text-xs mt-1">{errors.GST}</p>}
                   </div>
                   <div>
                     <label htmlFor="address" className="sr-only">Address</label>
@@ -239,7 +168,6 @@ const AddNewService = () => {
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                       placeholder="Your Location"
                     />
-                    {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
                   </div>
                   <div>
                     <label htmlFor="bio" className="sr-only">Bio</label>
@@ -251,9 +179,7 @@ const AddNewService = () => {
                       required
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                       placeholder="Provide a detailed description about your service"
-                      maxLength="500"
                     />
-                    {errors.bio && <p className="text-red-500 text-xs mt-1">{errors.bio}</p>}
                   </div>
                   <div>
                     <label htmlFor="phone" className="sr-only">Phone Number</label>
@@ -267,8 +193,9 @@ const AddNewService = () => {
                       className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                       placeholder="Phone Number"
                     />
-                    {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                   </div>
+                </div>
+                <div>
                   <button
                     type="submit"
                     className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -316,107 +243,6 @@ const AddNewService = () => {
           </div>
         </div>
       </div>
-<<<<<<< Updated upstream
-=======
-
-      {selectedDomain && serviceOptions[selectedDomain] && (
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="service">
-            Select Service Type
-          </label>
-          <select
-            id="service"
-            value={selectedService}
-            onChange={handleServiceChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="">Select Service Type</option>
-            {serviceOptions[selectedDomain].map((service, index) => (
-              <option key={index} value={service}>
-                {service}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {selectedDomain && selectedService && (
-        <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            Add {selectedService} in {selectedDomain}
-          </h2>
-          <form>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="serviceName">
-                Company Name
-              </label>
-              <input
-                id="serviceName"
-                type="text"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mobileNumber">
-                Mobile Number
-              </label>
-              <input
-                id="mobileNumber"
-                type="text"
-                value={mobileNumber}
-                onChange={handleMobileNumberChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {mobileNumberError && <p className="text-red-500 text-xs italic">{mobileNumberError}</p>}
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="servicegst">
-                GST Number
-              </label>
-              <input
-                id="servicegst"
-                type="text"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="servicelocation">
-                Your Location
-              </label>
-              <textarea
-                id="servicelocation"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="servicedescription">
-                Provide a detailed description about your service
-              </label>
-              <textarea
-                id="servicedescription"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Add Service
-            </button>
-          </form>
-          <button
-            onClick={() => {
-              setSelectedService('');
-              setSelectedDomain('');
-            }}
-            className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Back to Domain Selection
-          </button>
-        </div>
-      )}
->>>>>>> Stashed changes
     </div>
   );
 };
