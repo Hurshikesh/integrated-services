@@ -45,14 +45,14 @@ const SchoolDetailsPage = () => {
   const fetchSchools = async (userCoordinates) => {
     setLoading(true);
     try {
-     
+
       const hereResponse = await fetch(
         `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=school&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const hereData = await hereResponse.json();
       console.log('HERE API Response:', hereData);
 
-     
+
       const backendResponse = await axios.get(`/api/Education/School?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Education&serviceType=School`);
       console.log('Backend Response:', backendResponse.data);
 
@@ -116,6 +116,21 @@ const SchoolDetailsPage = () => {
       setSchools([]);
     }
   };
+  
+
+ const handleGPS = async () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+      setUserCoords(userCoordinates);
+      fetchSchools(userCoordinates);
+    });
+  } else {
+setSchools([]);
+    setErrorMessage('Geolocation is not supported by this browser.');
+  }
+};
+
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
@@ -165,20 +180,34 @@ const SchoolDetailsPage = () => {
                 </span>
                 Enter your location (detailed address):
               </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="border border-gray-300 text-black p-3 rounded-lg w-full"
-                placeholder="e.g., 123 Main St, San Francisco, CA, USA"
-                required
-              />
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+                  placeholder="e.g., 123 Main St, Delhi, India"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleGPS}
+                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
+                >
+                  Use GPS
+                </button>
+              </div>
             </div>
-            <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+            >
               Search
             </button>
           </form>
+
+
         </section>
 
         {showResults && (
