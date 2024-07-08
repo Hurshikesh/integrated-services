@@ -181,7 +181,7 @@ export default function Home() {
                 }
                 }
               } >
-              <h1 className="text-6xl font-bold mb-4 font-helvetica">Integrated Services</h1>
+              <h1 className="text-6xl font-bold mb-4 font-helvetica">ZENITH</h1>
               </motion.div>
               <div className="space-y-4">
                 <p className="text-xl font-lato font-extrabold">Navigating life's challenges. Together.</p>

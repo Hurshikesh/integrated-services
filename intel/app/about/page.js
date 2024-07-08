@@ -2,21 +2,21 @@ import React from 'react';
 
 const developers = [
   {
-    name: 'Kumar Ankit',
+    name: 'Ankit',
     photo: '/ankit.jpeg',
     email: 'ankitkumar.12a.13@gmail.com',
     linkedin: 'https://www.linkedin.com/in/kumar-ankit-61a419293/',
     phone: '+91 62022 45004'
   },
   {
-    name: 'Jayesh Nahar',
+    name: 'Jayesh',
     photo: '/Jayesh.jpeg',
     email: 'jayeshnahar09@gmail.com',
     linkedin: 'https://www.linkedin.com/in/jayesh-nahar-058aa4260/',
     phone: '+91 70031 00812'
   },
   {
-    name: 'Hurshikesh Sahu',
+    name: 'Hurshikesh',
     photo: '/hurshikesh.jpeg',
     email: 'sonuhurshikesh@gmail.com',
     linkedin: 'https://www.linkedin.com/in/hurshikesh-sahu-894bb0247/',
@@ -28,25 +28,25 @@ const About = () => {
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold mb-6 text-black">About Us</h1>
-      <p className="text-center mb-8 text-black">
+      <p className=" mb-8 text-black text-center">
         We are a group of three developers who developed this page to provide integrated services to common people in the fields of education, health, finance, and government services.
       </p>
       <div className="flex justify-center space-x-6">
         {developers.map((developer, index) => (
-          <div key={index} href="#" className="block max-w-sm p-6 border border-gray-200 rounded-lg shadow hover:bg-purple-600 bg-purple-300">
+          <div key={index} className="max-w-xs w-full p-6 border border-gray-200 rounded-lg shadow bg-purple-300 hover:bg-purple-600">
             <div className="flex flex-col items-center">
               <img src={developer.photo} alt={`${developer.name}'s photo`} className="rounded-full w-36 h-36 object-cover mb-4" />
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{developer.name}</h5>
-              <div className="text-left w-full px-4">
-                <p className="font-normal text-white mb-2">
-                  Email: <a href={`mailto:${developer.email}`} className="text-blue-500 hover:underline">{developer.email}</a>
-                </p>
-                <p className="font-normal text-white mb-2">
-                  LinkedIn: <a href={developer.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{developer.linkedin}</a>
-                </p>
-                <p className="font-normal text-white">
-                  Phone: <a href={`tel:${developer.phone}`} className="text-blue-500 hover:underline">{developer.phone}</a>
-                </p>
+              <div className="flex justify-around w-full px-4 mt-4">
+                <a href={`mailto:${developer.email}`} className="flex items-center text-blue-500 hover:underline">
+                  <img src="/icons/email.jpg" alt="Email" className="w-6 h-6" />
+                </a>
+                <a href={developer.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-500 hover:underline">
+                  <img src="/icons/linkedin.jpg" alt="LinkedIn" className="w-6 h-6" />
+                </a>
+                <a href={`tel:${developer.phone}`} className="flex items-center text-blue-500 hover:underline">
+                  <img src="/icons/phone.jpg" alt="Phone" className="w-6 h-6" />
+                </a>
               </div>
             </div>
           </div>
