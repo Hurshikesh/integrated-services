@@ -1,28 +1,44 @@
-'use client'
+'use client';
+
 import React from 'react';
-import { signIn } from "next-auth/react";
+import { signIn } from 'next-auth/react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Login = () => {
+  const handleSignIn = (provider) => {
+    toast.promise(
+      signIn(provider),
+      {
+        loading: 'Signing in...',
+        success: 'Signed in successfully!',
+        error: 'Error signing in',
+      }
+    );
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-purple-300">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex bg-white shadow-lg rounded-lg max-w-4xl w-full overflow-hidden">
         <div className="w-1/2 p-8 bg-purple-600 text-white">
           <div className="flex flex-col items-center justify-center h-full">
             <div className="text-center">
-              
               <h1 className="text-4xl font-bold mb-4">CAREcONNECT</h1>
-              <p className="text-xl font-semibold mb-2"><br></br>Caring for you, every step of the way.</p>
-              
+              <p className="text-xl font-semibold mb-2">
+                <br />
+                Caring for you, every step of the way.
+              </p>
             </div>
           </div>
         </div>
         <div className="w-1/2 p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Sign In
-            <br></br>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Sign In
+            <br />
           </h2>
           <div className="flex flex-col space-y-4">
             <button
-              onClick={() => signIn("google")}
+              onClick={() => handleSignIn('google')}
               className="w-full flex items-center justify-center bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
             >
               <svg className="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -31,7 +47,7 @@ const Login = () => {
               Sign in with Google
             </button>
             <button
-              onClick={() => signIn("github")}
+              onClick={() => handleSignIn('github')}
               className="w-full flex items-center justify-center bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-950 transition duration-300"
             >
               <svg className="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor">

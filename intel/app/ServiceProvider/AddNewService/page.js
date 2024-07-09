@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaUserMd, FaUsers, FaClipboardList, FaHospitalAlt, FaHandsHelping } from 'react-icons/fa';
+import { FaUserMd, FaClipboardList, FaHospitalAlt, FaHandsHelping } from 'react-icons/fa';
+import { Toaster, toast } from 'react-hot-toast';
 
 const AddNewService = () => {
   const [selectedDomain, setSelectedDomain] = useState('');
@@ -64,7 +65,7 @@ const AddNewService = () => {
       console.log('Response from server:', result);
 
       if (result.success) {
-        alert('Service added successfully!');
+        toast.success('Service added successfully!');
         setSelectedDomain('');
         setSelectedService('');
         setCompanyName('');
@@ -73,11 +74,11 @@ const AddNewService = () => {
         setBio('');
         setPhone('');
       } else {
-        alert(result.message || 'Failed to add service.');
+        toast.error(result.message || 'Failed to add service.');
       }
     } catch (error) {
       console.error('Error adding service:', error);
-      alert('Error adding service.');
+      toast.error('Error adding service.');
     }
   };
 
@@ -243,8 +244,10 @@ const AddNewService = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };
 
 export default AddNewService;
+
