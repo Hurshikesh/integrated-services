@@ -4,10 +4,22 @@ import { signIn } from "next-auth/react";
 
 const Login = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="flex bg-white shadow-lg rounded-lg max-w-4xl w-full">
-        <div className="w-full p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Sign In to Explore Our <span className='underline text-blue-600'>Services</span></h2>
+    <div className="flex justify-center items-center min-h-screen bg-purple-300">
+      <div className="flex bg-white shadow-lg rounded-lg max-w-4xl w-full overflow-hidden">
+        <div className="w-1/2 p-8 bg-purple-600 text-white">
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="text-center">
+              
+              <h1 className="text-4xl font-bold mb-4">CAREcONNECT</h1>
+              <p className="text-xl font-semibold mb-2"><br></br>Caring for you, every step of the way.</p>
+              
+            </div>
+          </div>
+        </div>
+        <div className="w-1/2 p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Sign In
+            <br></br>
+          </h2>
           <div className="flex flex-col space-y-4">
             <button
               onClick={() => signIn("google")}

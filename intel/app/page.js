@@ -290,7 +290,7 @@ export default function Home() {
               </form>
             ) : (
               <div className="text-center">
-                <p className="text-lg font-medium">Please sign in to provide feedback.</p>
+                <p className="text-lg font-medium text-black">Please sign in to provide feedback.</p>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
                   onClick={() => setShowLoginModal(true)}

@@ -46,10 +46,10 @@ const services = [
     description: 'In one place, explore all your educational needs! Find detailed information on schools, including admission periods and fee structures.',
     image: "https://i.postimg.cc/q78rHb7Y/education-1.jpg",
     subservices: [
-      { name: 'SCHOOLS NEARBY', path: '/services/Education/school-details' },
-      { name: 'COLLEGES NEARBY', path: '/services/Education/colleges' },
-      { name: 'TUITION CENTRES', path: '/services/Education/tuition-centres' },
-      { name: 'ART & SPORTS', path: '/services/Education/arts-and-sports' }
+      { name: 'SCHOOLS NEARBY', path: '/services/education/school-details' },
+      { name: 'COLLEGES NEARBY', path: '/services/education/colleges' },
+      { name: 'TUITION CENTRES', path: '/services/education/tuition-centres' },
+      { name: 'ART & SPORTS', path: '/services/education/arts-and-sports' }
     ]
   },
   {
@@ -68,11 +68,11 @@ const services = [
     description: 'We are here to simplify your financial well-being. Our platform connects you with a variety of loan options, including details and interest rates from different banks.',
     image: "https://i.postimg.cc/FsfnWnQq/finance2.jpg",
     subservices: [
-      { name: 'ATM NEARBY', path: '/services/Finance/AtmLocator' },
-      { name: 'INSURANCE SERVICES', path: '/services/Finance/Insurance' },
-      { name: 'LOAN SERVICES', path: '/services/Finance/Loan' },
-      { name: 'TAXATION', path: '/services/Finance/Tax' },
-      { name: 'INSURANCE PROVIDER', path: '/services/Finance/InsuranceProvider' }
+      { name: 'ATM NEARBY', path: '/services/FinancePage/AtmLocator' },
+      { name: 'INSURANCE SERVICES', path: '/services/FinancePage/Insurance' },
+      { name: 'LOAN SERVICES', path: '/services/FinancePage/Loan' },
+      { name: 'TAXATION', path: '/services/FinancePage/Tax' },
+      { name: 'INSURANCE PROVIDER', path: '/services/FinancePage/InsuranceProvider' }
     ]
   }
   
