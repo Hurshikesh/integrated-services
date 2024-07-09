@@ -65,7 +65,7 @@ setDoctors([]);
       );
       const hereData = await hereResponse.json();
       console.log('HERE API Response:', hereData);
-  
+      
       const backendResponse = await axios.get(`/api/health/clinics?lon=${userCoordinates.lon}&lat=${userCoordinates.lat}&domain=Healthcare&serviceType=Clinic`);
      
       console.log('Backend Response:', backendResponse.data);
@@ -268,7 +268,7 @@ setDoctors([]);
                 <div className="space-y-8">
                   {doctors.map((doctor) => (
                     <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="doctor.webp" alt="Doctor" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/63dXknxV/fotor-ai-20240709111535.jpg" alt="Doctor" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {doctor.title}

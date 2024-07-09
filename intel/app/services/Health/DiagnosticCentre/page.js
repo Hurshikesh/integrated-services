@@ -150,7 +150,7 @@ const FindDoctorPage = () => {
  const handleGPS = async () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
-      const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+      const userCoordinates = { lat: position.coords.latitude,  lon: position.coords.longitude };
       setUserCoords(userCoordinates);
       fetchDoctors(userCoordinates);
     });
@@ -197,7 +197,7 @@ setDoctors([]);
   const toRad = (value) => (value * Math.PI) / 180;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for diagnostic centres Near You</h2>
@@ -269,7 +269,7 @@ setDoctors([]);
                 <div className="space-y-8">
                   {doctors.map((doctor) => (
                     <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="doctor.webp" alt="Doctor" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/mrQ4qJ9p/Gemini-Generated-Image-buwcb4buwcb4buwc-1.jpg" alt="Doctor" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {doctor.title}
