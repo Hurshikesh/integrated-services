@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Profile = () => {
   const { data: session, status } = useSession();
@@ -16,6 +17,7 @@ const Profile = () => {
     bio: ''
   });
   const [errors, setErrors] = useState({});
+  const [profileCompletion, setProfileCompletion] = useState(0);
 
   const validate = () => {
     const errors = {};
@@ -33,6 +35,21 @@ const Profile = () => {
     }
     return errors;
   };
+
+  const calculateProfileCompletion = () => {
+    let fieldsFilled = 0;
+    if (userData.username) fieldsFilled++;
+    if (userData.email) fieldsFilled++;
+    if (userData.phone) fieldsFilled++;
+    if (userData.address) fieldsFilled++;
+    if (userData.bio) fieldsFilled++;
+    const completion = (fieldsFilled / 5) * 100;
+    setProfileCompletion(completion);
+  };
+
+  useEffect(() => {
+    calculateProfileCompletion();
+  }, [userData]);
 
   const fetchUserData = async () => {
     if (status === 'authenticated' && session.user.email) {
@@ -56,6 +73,7 @@ const Profile = () => {
             bio: ''
           });
         }
+        calculateProfileCompletion();
       } catch (error) {
         console.error('Error fetching profile data:', error);
         setUserData({
@@ -65,6 +83,7 @@ const Profile = () => {
           address: '',
           bio: ''
         });
+        calculateProfileCompletion();
       }
     } else if (status === 'unauthenticated') {
       router.push('/login');
@@ -84,47 +103,59 @@ const Profile = () => {
     }
     try {
       const response = await axios.post("/api/profile", userData);
-      console.log("Profile updated successfully", response.data);
+      toast.success("Profile updated successfully");
       fetchUserData();
     } catch (error) {
+      toast.error("Profile failed to update");
       console.error("Profile failed to update", error);
-    } 
+    }
   };
 
   if (status === 'loading') return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Profile</h1>
-        {session?.user?.image && (
-          <div className="flex justify-center mb-6">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
+      <Toaster />
+      <div className="bg-white p-6 rounded-lg shadow-md animate-slide-up w-full max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-4xl font-bold text-blue-600">Your Profile</h1>
+          <div className="relative w-24 h-24 rounded-full overflow-hidden">
+            {session?.user?.image && (
               <Image
                 src={session.user.image}
                 alt="User Profile Picture"
                 layout="fill"
                 objectFit="cover"
               />
+            )}
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <div className="w-full bg-gray-200 rounded-full">
+            <div
+              className="bg-purple-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+              style={{ width: `${profileCompletion}%` }}
+            >
+              {profileCompletion}%
             </div>
           </div>
-        )}
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 font-semibold mb-1">Username</label>
               <input
                 type="text"
                 name="username"
                 value={userData.username}
-                onChange={(e) => setUserData({...userData, username: e.target.value})}
+                onChange={(e) => setUserData({ ...userData, username: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
             </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-gray-700 font-semibold mb-1">Email</label>
               <input
@@ -136,52 +167,46 @@ const Profile = () => {
                 readOnly
               />
             </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-gray-700 font-semibold mb-1">Phone</label>
               <input
                 type="text"
                 name="phone"
                 value={userData.phone}
-                onChange={(e) => setUserData({...userData, phone: e.target.value})}
+                onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-gray-700 font-semibold mb-1">Address</label>
               <input
                 type="text"
                 name="address"
                 value={userData.address}
-                onChange={(e) => setUserData({...userData, address: e.target.value})}
+                onChange={(e) => setUserData({ ...userData, address: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label className="block text-gray-700 font-semibold mb-1">Bio</label>
-              <textarea
-                name="bio"
-                value={userData.bio}
-                onChange={(e) => setUserData({...userData, bio: e.target.value})}
-                className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows="4"
-              />
-              {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
-            </div>
+          <div>
+            <label className="block text-gray-700 font-semibold mb-1">Bio</label>
+            <textarea
+              name="bio"
+              value={userData.bio}
+              onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows="4"
+            />
+            {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
           </div>
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full max-w-xs py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 font-semibold"
+              className="w-full max-w-xs py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-800 transition duration-200 font-semibold"
             >
               Save
             </button>
