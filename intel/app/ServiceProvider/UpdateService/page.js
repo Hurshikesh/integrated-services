@@ -11,7 +11,7 @@ const UpdateService = () => {
   const handleSearch = async () => {
     setError('');
     try {
-      const response = await fetch(`/api/serviceProviderData?gst=${GST}`);
+      const response = await fetch(`/api/providerdata?gst=${GST}`);
       const result = await response.json();
 
       if (response.ok) {
