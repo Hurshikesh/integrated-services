@@ -25,7 +25,7 @@ const Navbar = () => {
   if (!mounted) return null; // Render nothing initially
 
   return (
-    <nav className="bg-purple-500 shadow-2xl w-full font-helvetica">
+    <nav className="bg-purple-600 shadow-2xl w-full font-helvetica">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <div className="text-xl font-bold text-white">CAREcONNECT</div>
         <div className="hidden md:flex space-x-8">

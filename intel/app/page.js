@@ -14,8 +14,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
-import {motion} from 'framer-motion';
-
+import { motion } from 'framer-motion';
+import 'aos/dist/aos.css';
 const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
 const services = [
@@ -23,37 +23,37 @@ const services = [
     title: "Health Services",
     description: "Consult doctors, find labs, hospitals, and pharmacies.",
     image: "https://i.postimg.cc/zvrh872b/healthcare.jpg",
-    link: "/services/Health"
+    link: "/services"
   },
   {
     title: "Education Services",
     description: "Access learning materials, find mentors, and tutoring centers.",
     image: "https://i.postimg.cc/fLd0nYTh/education.jpg",
-    link: "/services/education"
+    link: "/services"
   },
   {
     title: "Transportation Services",
     description: "Get details on auto, car, bus, and air services.",
     image: "https://i.postimg.cc/2yFb3mZc/transportation.jpg",
-    link: "/services/Transportation"
+    link: "/services"
   },
   {
     title: "Finance Services",
     description: "Find information on banking, tax, and insurance services.",
     image: "https://i.postimg.cc/3rgDtjcX/finance.jpg",
-    link: "/services/FinancePage"
+    link: "/services"
   },
   {
     title: "Government Services",
     description: "Access details on Aadhar, ration card, passport, and more.",
     image: "https://i.postimg.cc/x8QpbRK9/goverenment.jpg",
-    link: "/services/Government"
+    link: "/services"
   },
   {
     title: "Housing Services",
     description: "Find electricians, plumbers, carpenters, and other services.",
     image: "https://i.postimg.cc/MHqyHxCY/housing.jpg",
-    link: "/services/Housing"
+    link: "/services"
   }
 ];
 
@@ -149,9 +149,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 font-lato">
       {/* Hero Section */}
-      <header className={`relative h-[500px] mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-500 to-transparent`}>
+      <header className={`relative h-[500px] mb-12 overflow-hidden transition-opacity duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} bg-gradient-to-b from-purple-600 to-transparent`}>
         <div className="relative w-full h-full flex">
-          <div className="w-1/2 flex items-center justify-center relative">
+          <div className="w-full md:w-1/2 flex items-center justify-center relative">
             <div className="relative w-[75%] h-[75%] z-10 overflow-hidden">
               <video
                 autoPlay
@@ -165,7 +165,7 @@ export default function Home() {
             </div>
           </div>
           <script async data-id="1452517225" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
-          <div className="w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-f from-purple-500 to-purple-100">
+          <div className="w-full md:w-1/2 flex flex-col items-center justify-center relative z-10 bg-gradient-to-f from-purple-600 to-purple-100">
             <div className="text-center text-white mb-40">
               <motion.div initial="hidden" animate="visible" variants={{
                 hidden: {
@@ -196,50 +196,50 @@ export default function Home() {
         </div>
       </header>
 
-     {/* Main Content */}
-<main className="container mx-auto px-4 py-8">
-  {/* Explore Our Services Section */}
-  <section className="mb-12">
-    <h2 className="text-3xl font-bold mb-4 text-purple-600 font-helvetica">Explore Our Services</h2>
-    <div className="mx-auto max-w-screen-lg p-8 bg-purple-300 rounded-lg">
-      <Swiper
-        navigation
-        pagination={{ type: 'fraction' }}
-        modules={[Navigation, Pagination]}
-        onSwiper={(swiper) => console.log(swiper)}
-        className="h-96 w-full text-white"
-        style={{ padding: '20px' }}
-      >
-        {services.map((service, index) => (
-          <SwiperSlide key={index}>
-            <div className="flex h-full w-full items-center justify-center">
-              <div className="relative w-full h-full">
-                <Link href={'/services/'}>
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
-                  />
-                </Link>
-                <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 p-4 rounded-b-lg text-center">
-                  <h3 className="text-2xl font-bold mb-2 text-white font-helvetica">{service.title}</h3>
-                  <p className="text-lg text-white font-lato">Know More</p>
-                </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
-  </section>
-      
-
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Explore Our Services Section */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-purple-600 font-helvetica">Explore Our Services</h2>
+          <div className="mx-auto max-w-screen-lg p-8 bg-purple-300 rounded-lg">
+            <Swiper
+              navigation
+              pagination={{ type: 'fraction' }}
+              modules={[Navigation, Pagination]}
+              className="h-96 w-full text-white"
+              style={{ padding: '20px' }}
+            >
+              {services.map((service, index) => (
+                <SwiperSlide key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex h-full w-full items-center justify-center"
+                    onClick={() => window.location.href = service.link}
+                  >
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={service.image}
+                        alt={service.title}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gray-900 bg-opacity-50 p-4 rounded-b-lg text-center">
+                        <h3 className="text-2xl font-bold mb-2 text-white font-helvetica">{service.title}</h3>
+                        <p className="text-lg text-white font-lato">Know More</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </section>
 
         {/* About Section */}
         <section className="mb-12" ref={aboutRef}>
-        
           <div className="border p-4">
             <About />
           </div>

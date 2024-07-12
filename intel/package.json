@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@stripe/react-stripe-js": "^2.7.1",
     "@stripe/stripe-js": "^3.5.0",
+    "aos": "^2.3.4",
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.2.13",

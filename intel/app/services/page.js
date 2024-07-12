@@ -3,6 +3,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const services = [
   {
@@ -75,8 +77,6 @@ const services = [
       { name: 'INSURANCE PROVIDER', path: '/services/FinancePage/InsuranceProvider' }
     ]
   }
-  
-
 ];
 
 const ServicesPage = () => {
@@ -84,6 +84,8 @@ const ServicesPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    AOS.init({ duration: 1000 });
+
     if (status === 'loading') return; // Do nothing while loading
     if (!session) {
       router.push('/login'); // Redirect to login page if not authenticated
@@ -100,13 +102,17 @@ const ServicesPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
-      <h1 className="text-4xl font-bold mb-8 text-center text-purple-600">Our Services</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-purple-600 font-helvetica">Our Services</h1>
       <div className="flex flex-col gap-8">
         {services.map((service, index) => (
-          <section key={index} className="h-[500px] flex items-center bg-white p-6 rounded-lg shadow-md border border-purple-200">
+          <section
+            key={index}
+            className="h-[500px] flex items-center bg-white p-6 rounded-lg shadow-md border border-purple-200"
+            
+          >
             {index % 2 === 0 ? (
               <>
-                <div className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
+                <div data-aos="zoom-in" className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
                   <img src={service.image} alt={service.category} className="h-3/4 object-cover rounded-lg" />
                 </div>
                 <div className="w-1/2 p-8 flex flex-col justify-center">
@@ -138,7 +144,7 @@ const ServicesPage = () => {
                     ))}
                   </ul>
                 </div>
-                <div className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
+                <div data-aos="zoom-in" className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
                   <img src={service.image} alt={service.category} className="h-3/4 object-cover rounded-lg" />
                 </div>
               </>

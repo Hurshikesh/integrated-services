@@ -16,19 +16,31 @@ const ServiceProvider = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-fade-in">
-      <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">Service Provider Options</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {options.map((option, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md animate-slide-up">
-            <Link href={option.link} legacyBehavior>
+    <div className="min-h-screen bg-white flex flex-col justify-center items-center">
+      <h1 className="text-4xl font-bold mb-8 text-center text-purple-800" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+        Service Provider Options
+      </h1>
+      <div className="w-full flex flex-col md:flex-row">
+        <div className="flex-1 flex justify-center items-center p-4">
+          <div className="bg-purple-400 p-8 rounded-lg shadow-md hover:bg-purple-800 transition-colors duration-300 text-white" style={{ fontFamily: 'Leto, Arial, sans-serif', minHeight: '200px', maxWidth: '90%', margin: 'auto' }}>
+            <Link href={options[0].link} legacyBehavior>
               <a className="block">
-                <h2 className="text-2xl font-bold text-blue-600 mb-4">{option.category}</h2>
-                <p className="text-gray-700">{option.description}</p>
+                <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>{options[0].category}</h2>
+                <p>{options[0].description}</p>
               </a>
             </Link>
           </div>
-        ))}
+        </div>
+        <div className="flex-1 flex justify-center items-center p-4">
+          <div className="bg-purple-400 p-8 rounded-lg shadow-md hover:bg-purple-800 transition-colors duration-300 text-white" style={{ fontFamily: 'Leto, Arial, sans-serif', minHeight: '200px', maxWidth: '90%', margin: 'auto' }}>
+            <Link href={options[1].link} legacyBehavior>
+              <a className="block">
+                <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>{options[1].category}</h2>
+                <p>{options[1].description}</p>
+              </a>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
