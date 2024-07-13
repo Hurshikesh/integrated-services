@@ -137,50 +137,50 @@ setBusStops([]);
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Bus Stops Near You</h2>
-          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, Delhi, India"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button
-    type="submit"
-    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
-  >
-    Search
-  </button>
-</form>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">Search for Bus Stops Near You</h2>
+          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md">
+            <div className="mb-4">
+              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+                <span className="mr-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                </span>
+                Enter your location:
+              </label>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
+                  placeholder="e.g., 123 Main St, Delhi, India"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleGPS}
+                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg w-full sm:w-auto"
+                >
+                  Use GPS
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+            >
+              Search
+            </button>
+          </form>
         </section>
-
+  
         {showResults && (
           <div>
-            <section className="mb-12 absolute top-80">
-              <div className="max-w-lg mx-auto flex justify-between items-center">
-                <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
-                <div className="relative">
-                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none">
+            <section className="mb-12 mt-8 md:mt-0 md:absolute md:top-80">
+              <div className="max-w-lg mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+                <label htmlFor="sortOption" className="block text-gray-700 font-bold mb-2 sm:mb-0">Sort by:</label>
+                <div className="relative w-full sm:w-auto">
+                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none w-full">
                     <option value="distance">Distance</option>
                     <option value="rating">Rating</option>
                     <option value="open">Open Now</option>
@@ -194,7 +194,7 @@ setBusStops([]);
                 </div>
               </div>
             </section>
-
+  
             {loading ? (
               <div className="text-center">Loading...</div>
             ) : errorMessage ? (
@@ -203,23 +203,23 @@ setBusStops([]);
               <section className="mb-12">
                 <div className="space-y-8">
                   {busStops.map((busStop) => (
-                    <div key={busStop.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://i.postimg.cc/kXrmKLYS/busStop.jpg" alt="Bus Stop" className="w-48 h-auto object-cover" />
-                      <div className="p-6 flex-grow">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+                    <div key={busStop.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
+                      <img src="https://i.postimg.cc/kXrmKLYS/busStop.jpg" alt="Bus Stop" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+                      <div className="p-4 sm:p-6 flex-grow">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center flex-wrap">
                           {busStop.title}
                           {busStop.isFavorite && (
-                            <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded">Favorite</span>
+                            <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded mt-1 sm:mt-0">Favorite</span>
                           )}
                         </h3>
                         <p className="text-gray-600 mb-4">{busStop.address.label}</p>
                         {busStop.contacts && busStop.contacts[0].mobile && (
-                          <p className="text-gray-800 mb-2 text-xl">
+                          <p className="text-gray-800 mb-2 text-lg sm:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{busStop.contacts[0].mobile[0].value}</strong>
                           </p>
                         )}
                         {busStop.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${busStop.distance.toFixed(2)} km`}</p>
+                          <p className="text-gray-800 mb-2 text-lg sm:text-xl">{`Distance: ${busStop.distance.toFixed(2)} km`}</p>
                         )}
                         <div className="flex items-center text-yellow-500 mb-2">
                           {[...Array(busStop.rating)].map((_, i) => (
@@ -237,11 +237,12 @@ setBusStops([]);
                           {busStop.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                         </p>
                         <button
-                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${busStop.position.lat},${busStop.position.lng}`, '_blank')}
-                            className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"> {/* Enhanced button style */}
-                            <FontAwesomeIcon icon={faMap} className="mr-2" />
-                            View in Map
-                          </button>
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${busStop.position.lat},${busStop.position.lng}`, '_blank')}
+                          className="mt-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 w-full sm:w-auto"
+                        >
+                          <FontAwesomeIcon icon={faMap} className="mr-2" />
+                          View in Map
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -254,5 +255,4 @@ setBusStops([]);
     </div>
   );
 };
-
 export default FindBusStopPage;
