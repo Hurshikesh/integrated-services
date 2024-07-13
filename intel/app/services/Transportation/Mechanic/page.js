@@ -46,7 +46,7 @@ const FindMechanicPage = () => {
     setLoading(true);
     try {
       const hereResponse = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=mechanic%20Shopl&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=mechanicshopl&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const hereData = await hereResponse.json();
       console.log('HERE API Response:', hereData);
@@ -254,7 +254,7 @@ setMechanics([]);
                 <div className="space-y-8">
                   {mechanics.map((mechanic) => (
                     <div key={mechanic.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="mechanic_shop.webp" alt="Mechanic Shop" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/wBfDtXVW/mechanic.jpg" alt="Mechanic Shop" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {mechanic.title}

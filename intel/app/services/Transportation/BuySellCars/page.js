@@ -255,7 +255,7 @@ setCarProviders([]);
                 <div className="space-y-8">
                   {carProviders.map((provider) => (
                     <div key={provider.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="car_dealership.webp" alt="Car Dealership" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/L8JfZYJv/usedcar.jpg" alt="Car Dealership" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {provider.title}
