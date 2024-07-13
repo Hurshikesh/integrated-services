@@ -136,58 +136,58 @@ const FitnessServicesPage = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Fitness Services Near You</h2>
-          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">Service Type:</span>
-      <select
-        id="serviceType"
-        value={serviceType}
-        onChange={(e) => setServiceType(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg w-full"
-      >
-        <option value="physiotherapy">Physiotherapy</option>
-        <option value="gym">Gym</option>
-        <option value="yoga">Yoga</option>
-      </select>
-    </label>
-  </div>
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, Delhi, India"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-shrink-0"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button
-    type="submit"
-    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
-  >
-    Search {serviceType}
-  </button>
-</form>
+          <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 text-center text-white">Search for Fitness Services Near You</h2>
+          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md">
+            <div className="mb-4">
+              <label htmlFor="serviceType" className="text-gray-700 font-bold mb-2 flex flex-col md:flex-row md:items-center">
+                <span className="mb-2 md:mb-0 md:mr-2">Service Type:</span>
+                <select
+                  id="serviceType"
+                  value={serviceType}
+                  onChange={(e) => setServiceType(e.target.value)}
+                  className="border border-gray-300 text-black p-2 rounded-lg w-full"
+                >
+                  <option value="physiotherapy">Physiotherapy</option>
+                  <option value="gym">Gym</option>
+                  <option value="yoga">Yoga</option>
+                </select>
+              </label>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex flex-col md:flex-row md:items-center">
+                <span className="mb-2 md:mb-0 md:mr-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                  Enter your location:
+                </span>
+              </label>
+              <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border border-gray-300 text-black p-2 rounded-lg w-full"
+                  placeholder="e.g., 123 Main St, Delhi, India"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleGPS}
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg w-full md:w-auto"
+                >
+                  Use GPS
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+            >
+              Search {serviceType}
+            </button>
+          </form>
         </section>
-
+  
         {showResults && (
           <div>
             {loading ? (
@@ -198,49 +198,49 @@ const FitnessServicesPage = () => {
               <section className="mb-12">
                 <div className="space-y-8">
                   {services.map((service) => (
-                    <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                    <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col md:flex-row">
                       <img
                         src="https://i.postimg.cc/DzQJ5Lw7/gym.jpg"
                         alt="Fitness Service"
-                        className="w-48 h-auto object-cover"
+                        className="w-full md:w-48 h-48 md:h-auto object-cover"
                       />
-                      <div className="p-6 flex-grow">
+                      <div className="p-4 md:p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {service.title}
                         </h3>
                         <p className="text-gray-600 mb-4">{service.address.label}</p>
                         {service.contacts && service.contacts[0].mobile && (
-                          <p className="text-gray-800 mb-2 text-xl">
+                          <p className="text-gray-800 mb-2 text-lg md:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{service.contacts[0].mobile[0].value}</strong>
                           </p>
                         )}
                         {service.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${service.distance.toFixed(2)} km`}</p>
+                          <p className="text-gray-800 mb-2 text-lg md:text-xl">{`Distance: ${service.distance.toFixed(2)} km`}</p>
                         )}
                         {service.travelTime && (
-                          <div className="flex justify-around text-gray-600 mb-2">
+                          <div className="flex justify-around text-gray-600 mb-2 text-sm md:text-base">
                             <span><FontAwesomeIcon icon={faCar} /> {` ${service.travelTime.car.toFixed(0)} min`}</span>
                             <span><FontAwesomeIcon icon={faBicycle} /> {` ${service.travelTime.bike.toFixed(0)} min`}</span>
                             <span><FontAwesomeIcon icon={faWalking} /> {` ${service.travelTime.walk.toFixed(0)} min`}</span>
                           </div>
                         )}
                         {service.openingHours && service.openingHours[0] && (
-                          <div className="text-gray-600 mb-2">
+                          <div className="text-gray-600 mb-2 text-sm md:text-base">
                             <FontAwesomeIcon icon={faClock} /> {service.openingHours[0].text.join(', ')}
                           </div>
                         )}
                         {service.contacts && service.contacts[0].www && service.contacts[0].www[0].value ? (
-                          <p className="text-gray-800 mb-2 text-xl">
+                          <p className="text-gray-800 mb-2 text-lg md:text-xl break-words">
                             <a href={service.contacts[0].www[0].value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                               {service.contacts[0].www[0].value}
                             </a>
                           </p>
                         ) : (
-                          <p className="text-gray-800 mb-2 text-xl">Website not provided</p>
+                          <p className="text-gray-800 mb-2 text-lg md:text-xl">Website not provided</p>
                         )}
                         <button
                           onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${service.position.lat},${service.position.lng}`, '_blank')}
-                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
+                          className="bg-blue-600 text-white p-2 md:p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center justify-center w-full"
                         >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps

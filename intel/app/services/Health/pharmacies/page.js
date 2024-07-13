@@ -201,58 +201,58 @@ const FindDoctorPage = () => {
     <div className="min-h-screen bg-gray-100">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for pharmacy Near You</h2>
-          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, Delhi, India"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button
-    type="submit"
-    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
-  >
-    Search
-  </button>
-</form>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-blue-600">Search for pharmacy Near You</h2>
+          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
+            <div className="mb-4">
+              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center text-sm sm:text-base">
+                <span className="mr-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                </span>
+                Enter your location (detailed address):
+              </label>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border border-gray-300 text-black p-2 sm:p-3 rounded-lg flex-grow text-sm sm:text-base"
+                  placeholder="e.g., 123 Main St, Delhi, India"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleGPS}
+                  className="bg-green-500 hover:bg-green-600 text-white p-2 sm:p-3 rounded-lg text-sm sm:text-base"
+                >
+                  Use GPS
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white p-2 sm:p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300 text-sm sm:text-base"
+            >
+              Search
+            </button>
+          </form>
         </section>
 
         {showResults && (
           <div>
-            <section className="mb-12 absolute top-80">
-              <div className="max-w-lg mx-auto flex justify-between items-center">
-                <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
-                <div className="relative">
-                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none">
+            <section className="mb-12 mt-4 sm:mt-0 sm:absolute sm:top-80">
+              <div className="max-w-lg mx-auto flex flex-col sm:flex-row justify-between items-center">
+                <label htmlFor="sortOption" className="block text-gray-700 font-bold mb-2 sm:mb-0 text-sm sm:text-base">Sort by:</label>
+                <div className="relative w-full sm:w-auto">
+                  <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-2 sm:p-3 rounded-lg pl-8 pr-4 appearance-none w-full text-sm sm:text-base">
                     <option value="distance">Distance</option>
                     <option value="rating">Rating</option>
                     <option value="open">Open Now</option>
                     <option value="patientFavorite">Patient Favorite</option>
                   </select>
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-                    <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                    <svg className="h-4 w-4 sm:h-6 sm:w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
                     </svg>
                   </div>
                 </div>
@@ -267,60 +267,61 @@ const FindDoctorPage = () => {
               <section className="mb-12">
                 <div className="space-y-8">
                   {doctors.map((doctor) => (
-                    <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://i.postimg.cc/zXkCkG3V/stock-vector-pharmacy-with-pharmacist-and-client-in-counter-drugstore-cartoon-character-design-vecto.jpg" alt="Doctor" className="w-48 h-auto object-cover" />
-                      <div className="p-6 flex-grow">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+                    <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
+                      <img src="https://i.postimg.cc/zXkCkG3V/stock-vector-pharmacy-with-pharmacist-and-client-in-counter-drugstore-cartoon-character-design-vecto.jpg" alt="Doctor" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+                      <div className="p-4 sm:p-6 flex-grow">
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 flex items-center flex-wrap">
                           {doctor.title}
                           {doctor.isFavorite && (
-                            <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded">Patient Favorite</span>
+                            <span className="ml-2 px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-bold rounded mt-1 sm:mt-0">Patient Favorite</span>
                           )}
                         </h3>
-                        <p className="text-gray-600 mb-4">{doctor.address.label}</p>
+                        <p className="text-gray-600 mb-4 text-sm sm:text-base">{doctor.address.label}</p>
                         {doctor.contacts && doctor.contacts[0].mobile && (
-                          <p className="text-gray-800 mb-2 text-xl">
+                          <p className="text-gray-800 mb-2 text-base sm:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{doctor.contacts[0].mobile[0].value}</strong>
                           </p>
                         )}
                         {doctor.distance && (
-                          <p className="text-gray-800 mb-2 text-xl">{`Distance: ${doctor.distance.toFixed(2)} km`}</p>
+                          <p className="text-gray-800 mb-2 text-base sm:text-xl">{`Distance: ${doctor.distance.toFixed(2)} km`}</p>
                         )}
                         {doctor.travelTime && (
-                          <div className="flex justify-around text-gray-600 mb-2">
-                            <span><FontAwesomeIcon icon={faCar} /> {` ${doctor.travelTime.car.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${doctor.travelTime.bike.toFixed(0)} min`}</span>
+                          <div className="flex flex-wrap justify-start sm:justify-around text-gray-600 mb-2 text-sm sm:text-base">
+                            <span className="mr-4 sm:mr-0"><FontAwesomeIcon icon={faCar} /> {` ${doctor.travelTime.car.toFixed(0)} min`}</span>
+                            <span className="mr-4 sm:mr-0"><FontAwesomeIcon icon={faBicycle} /> {` ${doctor.travelTime.bike.toFixed(0)} min`}</span>
                             <span><FontAwesomeIcon icon={faWalking} /> {` ${doctor.travelTime.walk.toFixed(0)} min`}</span>
                           </div>
                         )}
                         <div className="flex items-center text-yellow-500 mb-2">
                           {[...Array(doctor.rating)].map((_, i) => (
-                            <FontAwesomeIcon key={i} icon={faStar} className="mr-1" />
+                            <FontAwesomeIcon key={i} icon={faStar} className="mr-1 text-sm sm:text-base" />
                           ))}
                           {[...Array(5 - doctor.rating)].map((_, i) => (
-                            <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1" />
+                            <FontAwesomeIcon key={i} icon={faStar} className="text-gray-300 mr-1 text-sm sm:text-base" />
                           ))}
-                          <span className="ml-2 text-gray-700">({doctor.reviews} reviews)</span>
+                          <span className="ml-2 text-gray-700 text-sm sm:text-base">({doctor.reviews} reviews)</span>
                         </div>
-                        <div className="text-gray-600 mb-2">
+                        <div className="text-gray-600 mb-2 text-sm sm:text-base">
                           <FontAwesomeIcon icon={faClock} /> {doctor.formattedOpeningHours}
                         </div>
-                        <p className={`text-lg font-bold ${doctor.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
+                        <p className={`text-base sm:text-lg font-bold ${doctor.isOpenNow ? 'text-green-600' : 'text-red-600'}`}>
                           {doctor.isOpenNow ? 'OPEN NOW' : 'CLOSED'}
                         </p>
                         <div className="mt-4">
-                          <h4 className="text-lg font-semibold text-gray-800 mb-2">Patients Tell Us:</h4>
-                          <ul className="list-disc list-inside">
+                          <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">Patients Tell Us:</h4>
+                          <ul className="list-disc list-inside text-sm sm:text-base">
                             {doctor.patientsTellUs.map((statement, index) => (
                               <li key={index} className="text-gray-600">{statement}</li>
                             ))}
                           </ul>
                         </div>
                         <button
-                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${doctor.position.lat},${doctor.position.lng}`, '_blank')}
-                            className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105"> {/* Enhanced button style */}
-                            <FontAwesomeIcon icon={faMap} className="mr-2" />
-                            View in Map
-                          </button>
+                          onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${doctor.position.lat},${doctor.position.lng}`, '_blank')}
+                          className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 mt-4 w-full sm:w-auto text-sm sm:text-base"
+                        >
+                          <FontAwesomeIcon icon={faMap} className="mr-2" />
+                          View in Map
+                        </button>
                       </div>
                     </div>
                   ))}
