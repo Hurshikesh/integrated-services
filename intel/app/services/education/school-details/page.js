@@ -172,28 +172,28 @@ setSchools([]);
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-black">Search for Schools Near You</h2>
-          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+          <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
                 <span className="mr-2">
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
                 </span>
-                Enter your location (detailed address):
+                Enter your location:
               </label>
-              <div className="flex space-x-4">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                 <input
                   type="text"
                   id="location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
                   placeholder="e.g., 123 Main St, Delhi, India"
                   required
                 />
                 <button
                   type="button"
                   onClick={handleGPS}
-                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
+                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg w-full sm:w-auto"
                 >
                   Use GPS
                 </button>
@@ -206,20 +206,18 @@ setSchools([]);
               Search
             </button>
           </form>
-
-
         </section>
-
+  
         {showResults && (
           <div>
             {loading ? (
-              <div className="text-center text-white">Loading...</div>
+              <div className="text-center text-black">Loading...</div>
             ) : errorMessage ? (
               <div className="text-center text-red-600">{errorMessage}</div>
             ) : (
               <section className="mb-12">
                 <div className="mb-4 flex justify-end">
-                  <label htmlFor="sort" className="text-white mr-2">Sort by:</label>
+                  <label htmlFor="sort" className="text-black mr-2">Sort by:</label>
                   <select
                     id="sort"
                     value={sortOption}
@@ -232,9 +230,9 @@ setSchools([]);
                 </div>
                 <div className="space-y-8">
                   {schools.map((school) => (
-                    <div key={school.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="School" className="w-48 h-auto object-cover" />
-                      <div className="p-6 flex-grow">
+                    <div key={school.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
+                      <img src="https://i.postimg.cc/HkwzPq2D/pixlr-image-generator-36d1c94d-b97a-4d6c-ae6e-d96a2b164b3a.png" alt="School" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+                      <div className="p-4 sm:p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {school.title}
                         </h3>
@@ -246,20 +244,20 @@ setSchools([]);
                           <FontAwesomeIcon icon={faPhone} /> <strong>{school.phone}</strong>
                         </p>
                         <p className="text-gray-800 mb-2 text-xl">{`Distance: ${school.distance.toFixed(2)} km`}</p>
-                        <div className="flex justify-around text-gray-600 mb-2">
-                          <span><FontAwesomeIcon icon={faCar} /> {`Car: ${school.travelTime.car.toFixed(0)} min`}</span>
-                          <span><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${school.travelTime.bike.toFixed(0)} min`}</span>
-                          <span><FontAwesomeIcon icon={faWalking} /> {`Walk: ${school.travelTime.walk.toFixed(0)} min`}</span>
+                        <div className="flex flex-wrap justify-between text-gray-600 mb-2">
+                          <span className="mr-2 mb-2"><FontAwesomeIcon icon={faCar} /> {`Car: ${school.travelTime.car.toFixed(0)} min`}</span>
+                          <span className="mr-2 mb-2"><FontAwesomeIcon icon={faBicycle} /> {`Bike: ${school.travelTime.bike.toFixed(0)} min`}</span>
+                          <span className="mb-2"><FontAwesomeIcon icon={faWalking} /> {`Walk: ${school.travelTime.walk.toFixed(0)} min`}</span>
                         </div>
                         <button
                           onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${school.position.lat},${school.position.lon}`, '_blank')}
-                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
+                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center justify-center w-full"
                         >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps
                         </button>
                         {school.website && (
-                          <p className="text-gray-800 mb-2 text-xl">
+                          <p className="text-gray-800 mt-4 text-center">
                             <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                               Learn More About the School
                             </a>

@@ -50,7 +50,7 @@ const services = [
     subservices: [
       { name: 'SCHOOLS NEARBY', path: '/services/education/school-details' },
       { name: 'COLLEGES NEARBY', path: '/services/education/colleges' },
-      { name: 'TUITION CENTRES', path: '/services/education/tuition-centres' },
+      { name: 'TUITION CENTRES', path: '/services/education/tuition-centers' },
       { name: 'ART & SPORTS', path: '/services/education/arts-and-sports' }
     ]
   },

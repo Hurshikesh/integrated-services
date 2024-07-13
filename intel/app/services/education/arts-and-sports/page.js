@@ -10,7 +10,7 @@ const ClassesPage = () => {
   const [userCoords, setUserCoords] = useState({ lat: null, lon: null });
   const [errorMessage, setErrorMessage] = useState('');
   const [showResults, setShowResults] = useState(false);
-  const [classType, setClassType] = useState('art'); // State to store selected class type
+  const [classType, setClassType] = useState('art');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -29,7 +29,7 @@ const ClassesPage = () => {
       );
       const data = await response.json();
       if (data.items.length > 0) {
-        setErrorMessage(''); // Clear previous error message
+        setErrorMessage('');
         return { lat: data.items[0].position.lat, lon: data.items[0].position.lng };
       } else {
         setErrorMessage('Address not found. Please try again with another address.');
@@ -55,7 +55,6 @@ const ClassesPage = () => {
         travelTime: calculateTravelTime(userCoordinates, { lat: cls.position.lat, lon: cls.position.lng }),
       }));
 
-      // Sort classes: those with websites first, then by distance
       const sortedClasses = classesWithDistances.sort((a, b) => {
         const aHasWebsite = a.contacts && a.contacts[0] && a.contacts[0].www && a.contacts[0].www[0].value;
         const bHasWebsite = b.contacts && b.contacts[0] && b.contacts[0].www && b.contacts[0].www[0].value;
@@ -66,7 +65,7 @@ const ClassesPage = () => {
       });
 
       setClasses(sortedClasses);
-      setShowResults(true); // Display results after fetching
+      setShowResults(true);
     } catch (error) {
       console.error('Error fetching classes:', error);
       setErrorMessage('Error fetching classes.');
@@ -81,27 +80,25 @@ const ClassesPage = () => {
       setUserCoords(userCoordinates);
       fetchClasses(userCoordinates);
     } else {
-      setClasses([]); // Clear previous class data
+      setClasses([]);
     }
   };
-  
 
- const handleGPS = async () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
-      setUserCoords(userCoordinates);
-      fetchClasses(userCoordinates);
-    });
-  } else {
-setClasses([]);
-    setErrorMessage('Geolocation is not supported by this browser.');
-  }
-};
-
+  const handleGPS = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+        setUserCoords(userCoordinates);
+        fetchClasses(userCoordinates);
+      });
+    } else {
+      setClasses([]);
+      setErrorMessage('Geolocation is not supported by this browser.');
+    }
+  };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km  
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -109,14 +106,14 @@ setClasses([]);
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
+    const distance = R * c;
     return distance;
   };
 
   const calculateTravelTime = (origin, destination) => {
-    const carSpeed = 60; // km/h
-    const bikeSpeed = 20; // km/h
-    const walkSpeed = 5; // km/h
+    const carSpeed = 60;
+    const bikeSpeed = 20;
+    const walkSpeed = 5;
 
     const distance = calculateDistance(origin.lat, origin.lon, destination.lat, destination.lon);
 
@@ -124,7 +121,7 @@ setClasses([]);
     const bikeTime = distance / bikeSpeed;
     const walkTime = distance / walkSpeed;
 
-    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 }; // Convert hours to minutes
+    return { car: carTime * 60, bike: bikeTime * 60, walk: walkTime * 60 };
   };
 
   const toRad = (value) => (value * Math.PI) / 180;
@@ -135,50 +132,50 @@ setClasses([]);
         <section className="mb-12">
           <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Classes Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="classType" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">Class Type:</span>
-      <select
-        id="classType"
-        value={classType}
-        onChange={(e) => setClassType(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg w-full"
-      >
-        <option value="art">Art Classes</option>
-        <option value="sports">Sports Classes</option>
-      </select>
-    </label>
-  </div>
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, San Francisco, CA, USA"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-shrink-0"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
-    Search {classType === 'art' ? 'Art Classes' : 'Sports Classes'}
-  </button>
-</form>
+            <div className="mb-4">
+              <label htmlFor="classType" className="text-gray-700 font-bold mb-2 flex items-center">
+                <span className="mr-2">Class Type:</span>
+                <select
+                  id="classType"
+                  value={classType}
+                  onChange={(e) => setClassType(e.target.value)}
+                  className="border border-gray-300 text-black p-3 rounded-lg w-full"
+                >
+                  <option value="art">Art Classes</option>
+                  <option value="sports">Sports Classes</option>
+                </select>
+              </label>
+            </div>
+            <div className="mb-4">
+              <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+                <span className="mr-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                </span>
+                Enter your location (detailed address):
+              </label>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <input
+                  type="text"
+                  id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+                  placeholder="e.g., 123 Main St, San Francisco, CA, USA"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={handleGPS}
+                  className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg w-full sm:w-auto"
+                >
+                  Use GPS
+                </button>
+              </div>
+            </div>
+            <button type="submit" className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300">
+              Search {classType === 'art' ? 'Art Classes' : 'Sports Classes'}
+            </button>
+          </form>
         </section>
 
         {showResults && (
@@ -191,13 +188,13 @@ setClasses([]);
               <section className="mb-12">
                 <div className="space-y-8">
                   {classes.map((cls) => (
-                    <div key={cls.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
+                    <div key={cls.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
                       <img
                         src={classType === 'art' ?
                           "https://i.postimg.cc/tTvgHQZC/pixlr-image-generator-31e18239-e192-46da-bb83-159c2c99eb2f.png" :
                           "https://i.postimg.cc/bJdjjGf4/fotor-ai-20240615105655.jpg"}
                         alt={classType === 'art' ? "Art Class" : "Sports Class"}
-                        className="w-48 h-auto object-cover"
+                        className="w-full sm:w-48 h-48 sm:h-auto object-cover"
                       />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
@@ -213,10 +210,10 @@ setClasses([]);
                           <p className="text-gray-800 mb-2 text-xl">{`Distance: ${cls.distance.toFixed(2)} km`}</p>
                         )}
                         {cls.travelTime && (
-                          <div className="flex justify-around text-gray-600 mb-2">
-                            <span><FontAwesomeIcon icon={faCar} /> {` ${cls.travelTime.car.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faBicycle} /> {` ${cls.travelTime.bike.toFixed(0)} min`}</span>
-                            <span><FontAwesomeIcon icon={faWalking} /> {` ${cls.travelTime.walk.toFixed(0)} min`}</span>
+                          <div className="flex flex-wrap justify-start sm:justify-around text-gray-600 mb-2">
+                            <span className="mr-4 mb-2"><FontAwesomeIcon icon={faCar} /> {` ${cls.travelTime.car.toFixed(0)} min`}</span>
+                            <span className="mr-4 mb-2"><FontAwesomeIcon icon={faBicycle} /> {` ${cls.travelTime.bike.toFixed(0)} min`}</span>
+                            <span className="mb-2"><FontAwesomeIcon icon={faWalking} /> {` ${cls.travelTime.walk.toFixed(0)} min`}</span>
                           </div>
                         )}
                         {cls.openingHours && cls.openingHours[0] && (
@@ -235,7 +232,7 @@ setClasses([]);
                         )}
                         <button
                           onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${cls.position.lat},${cls.position.lng}`, '_blank')}
-                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center"
+                          className="bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300 flex items-center justify-center w-full sm:w-auto"
                         >
                           <FontAwesomeIcon icon={faMap} className="mr-2" />
                           View on Google Maps
