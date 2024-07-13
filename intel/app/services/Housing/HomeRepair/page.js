@@ -253,7 +253,7 @@ setServices([]);
                   {sortServices(services, sortOption).map((service) => (
                     <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
                       <img
-                        src="https://i.postimg.cc/RVjX2Wm4/repair.jpg"
+                        src="https://i.postimg.cc/1z188c4S/repair.avif"
                         alt="Home Repair Service"
                         className="w-full sm:w-48 h-48 sm:h-auto object-cover"
                       />

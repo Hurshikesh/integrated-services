@@ -168,7 +168,7 @@ const PackersAndMovers = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 text-center text-black">Search for Packers and Movers Near You</h2>
+          <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 text-center text-purple-700">Search for Packers and Movers Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 block">
@@ -215,7 +215,7 @@ const PackersAndMovers = () => {
                   {services.map((service) => (
                     <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
                       <img
-                        src="https://i.postimg.cc/kGvx5ptP/packers.jpg"
+                        src="https://i.postimg.cc/hPY3kMtK/movers.jpg"
                         alt="Packers and Movers"
                         className="w-full sm:w-48 h-48 sm:h-auto object-cover"
                       />

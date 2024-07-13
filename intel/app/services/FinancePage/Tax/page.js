@@ -252,7 +252,7 @@ setAtms([]);
                 <div className="space-y-8">
                   {atms.map((atm) => (
                     <div key={atm.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                      <img src="atm.webp" alt="ATM" className="w-48 h-auto object-cover" />
+                      <img src="https://i.postimg.cc/vZ1y63mK/Tax.avif" alt="ATM" className="w-48 h-auto object-cover" />
                       <div className="p-6 flex-grow">
                         <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                           {atm.title}

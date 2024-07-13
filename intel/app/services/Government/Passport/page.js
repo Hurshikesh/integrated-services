@@ -250,7 +250,7 @@ const FindDoctorPage = () => {
                                 <div className="space-y-8">
                                     {doctors.map((doctor) => (
                                         <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
-                                            <img src="doctor.webp" alt="Doctor" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+                                            <img src="https://i.postimg.cc/gjTqmDLb/passport.jpg" alt="Doctor" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
                                             <div className="p-4 sm:p-6 flex-grow">
                                                 <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                                                     {doctor.title}

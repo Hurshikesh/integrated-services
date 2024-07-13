@@ -47,7 +47,7 @@ const HomeRepair = () => {
     setLoading(true);
     try {
       const hereResponse = await fetch(
-        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=maid&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
+        `https://discover.search.hereapi.com/v1/discover?at=${userCoordinates.lat},${userCoordinates.lon}&q=aaya&apiKey=smQYaHs6kqHnMongUhEHKnBIXpmilQacnaE9xDCSFYY`
       );
       const hereData = await hereResponse.json();
       console.log('HERE API Response:', hereData);
@@ -220,7 +220,7 @@ const HomeRepair = () => {
                   {sortServices(services, sortOption).map((service) => (
                     <div key={service.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
                       <img
-                        src="https://i.postimg.cc/RVjX2Wm4/repair.jpg"
+                        src="https://i.postimg.cc/SRtvdfv1/domestichelp.png"
                         alt="Maid Service"
                         className="w-full sm:w-48 h-48 sm:h-auto object-cover"
                       />
