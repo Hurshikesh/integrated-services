@@ -170,49 +170,49 @@ const FindDoctorPage = () => {
         <div className="min-h-screen bg-gray-100">
             <main className="container mx-auto px-4 py-8">
                 <section className="mb-12">
-                    <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Passport Offices Near You</h2>
-                    <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, Delhi, India"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button
-    type="submit"
-    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
-  >
-    Search
-  </button>
-</form>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">Search for Passport Offices Near You</h2>
+                    <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md">
+                        <div className="mb-4">
+                            <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+                                <span className="mr-2">
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                                </span>
+                                Enter your location:
+                            </label>
+                            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                                <input
+                                    type="text"
+                                    id="location"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    className="border border-gray-300 text-black p-3 rounded-lg w-full"
+                                    placeholder="e.g., 123 Main St, Delhi, India"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleGPS}
+                                    className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg w-full sm:w-auto"
+                                >
+                                    Use GPS
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+                        >
+                            Search
+                        </button>
+                    </form>
                 </section>
-
+    
                 {showResults && (
                     <div>
-                        <section className="mb-4 flex justify-start items-center space-x-4">
-                            <div className="relative">
-                                <label htmlFor="sortOption" className="block text-gray-700 font-bold">Sort by:</label>
-                                <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none">
+                        <section className="mb-4 flex flex-col sm:flex-row justify-start items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div className="relative w-full sm:w-auto">
+                                <label htmlFor="sortOption" className="block text-gray-700 font-bold mb-1">Sort by:</label>
+                                <select id="sortOption" value={sortOption} onChange={handleSortChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none w-full">
                                     <option value="distance">Distance</option>
                                     <option value="rating">Rating</option>
                                     <option value="open">Open Now</option>
@@ -223,9 +223,9 @@ const FindDoctorPage = () => {
                                     </svg>
                                 </div>
                             </div>
-                            <div className="relative">
-                                <label htmlFor="serviceType" className="block text-gray-700 font-bold">Service Type:</label>
-                                <select id="serviceType" value={serviceType} onChange={handleServiceTypeChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none">
+                            <div className="relative w-full sm:w-auto">
+                                <label htmlFor="serviceType" className="block text-gray-700 font-bold mb-1">Service Type:</label>
+                                <select id="serviceType" value={serviceType} onChange={handleServiceTypeChange} className="border border-gray-300 text-black p-3 rounded-lg pl-8 pr-4 appearance-none w-full">
                                     <option value="Passport seva kendra">Passport Office</option>
                                     <option value="Passport Consultant">Passport Consultant</option>
                                 </select>
@@ -236,11 +236,11 @@ const FindDoctorPage = () => {
                                 </div>
                             </div>
                         </section>
-                        <div className='flex gap-2 text-gray-700 mb-4 text-xl'>
-                            To explore other services and to know application process
+                        <div className='flex flex-col sm:flex-row gap-2 text-gray-700 mb-4 text-lg sm:text-xl'>
+                            <span>To explore other services and to know application process</span>
                             <a href="https://www.passportindia.gov.in/AppOnlineProject/welcomeLink#" className='text-blue-600 hover:cursor-pointer'>Click Here</a>
                         </div>
-
+    
                         {loading ? (
                             <div className="text-center">Loading...</div>
                         ) : errorMessage ? (
@@ -249,23 +249,23 @@ const FindDoctorPage = () => {
                             <section className="mb-12">
                                 <div className="space-y-8">
                                     {doctors.map((doctor) => (
-                                        <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                                            <img src="doctor.webp" alt="Doctor" className="w-48 h-auto object-cover" />
-                                            <div className="p-6 flex-grow">
+                                        <div key={doctor.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
+                                            <img src="doctor.webp" alt="Doctor" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+                                            <div className="p-4 sm:p-6 flex-grow">
                                                 <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                                                     {doctor.title}
                                                 </h3>
                                                 <p className="text-gray-600 mb-4">{doctor.address.label}</p>
                                                 {doctor.contacts && doctor.contacts[0].mobile && (
-                                                    <p className="text-gray-800 mb-2 text-xl">
+                                                    <p className="text-gray-800 mb-2 text-lg sm:text-xl">
                                                         <FontAwesomeIcon icon={faPhone} /> <strong>{doctor.contacts[0].mobile[0].value}</strong>
                                                     </p>
                                                 )}
                                                 {doctor.distance && (
-                                                    <p className="text-gray-800 mb-2 text-xl">{`Distance: ${doctor.distance.toFixed(2)} km`}</p>
+                                                    <p className="text-gray-800 mb-2 text-lg sm:text-xl">{`Distance: ${doctor.distance.toFixed(2)} km`}</p>
                                                 )}
                                                 {doctor.travelTime && (
-                                                    <div className="flex justify-around text-gray-600 mb-2">
+                                                    <div className="flex justify-around text-gray-600 mb-2 text-sm sm:text-base">
                                                         <span><FontAwesomeIcon icon={faCar} /> {` ${doctor.travelTime.car.toFixed(0)} min`}</span>
                                                         <span><FontAwesomeIcon icon={faBicycle} /> {` ${doctor.travelTime.bike.toFixed(0)} min`}</span>
                                                         <span><FontAwesomeIcon icon={faWalking} /> {` ${doctor.travelTime.walk.toFixed(0)} min`}</span>
@@ -296,7 +296,8 @@ const FindDoctorPage = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${doctor.position.lat},${doctor.position.lng}`, '_blank')}
-                                                    className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                                                    className="mt-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 w-full sm:w-auto"
+                                                >
                                                     <FontAwesomeIcon icon={faMap} className="mr-2" />
                                                     View in Map
                                                 </button>
