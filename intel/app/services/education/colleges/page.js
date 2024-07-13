@@ -127,22 +127,20 @@ const FindCollegePage = () => {
             setColleges([]);
         }
     };
-    
 
- const handleGPS = async () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
-        console.log(userCoordinates)
-        setUserCoords(userCoordinates);
-        fetchColleges(userCoordinates);
-      });
-    } else {
-setColleges([]);
-      setErrorMessage('Geolocation is not supported by this browser.');
-    }
-  };
-
+    const handleGPS = async () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const userCoordinates = { lat: position.coords.latitude, lon: position.coords.longitude };
+                console.log(userCoordinates)
+                setUserCoords(userCoordinates);
+                fetchColleges(userCoordinates);
+            });
+        } else {
+            setColleges([]);
+            setErrorMessage('Geolocation is not supported by this browser.');
+        }
+    };
 
     const handleSortChange = (e) => {
         const newSortOption = e.target.value;
@@ -185,41 +183,39 @@ setColleges([]);
                 <section className="mb-12">
                     <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Search for Colleges Near You</h2>
                     <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-  <div className="mb-4">
-    <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
-      <span className="mr-2">
-        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
-      </span>
-      Enter your location (detailed address):
-    </label>
-    <div className="flex space-x-4">
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
-        placeholder="e.g., 123 Main St, Delhi, India"
-        required
-      />
-      <button
-        type="button"
-        onClick={handleGPS}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg flex-grow"
-      >
-        Use GPS
-      </button>
-    </div>
-  </div>
-  <button
-    type="submit"
-    className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
-  >
-    Search
-  </button>
-</form>
-
-
+                        <div className="mb-4">
+                            <label htmlFor="location" className="text-gray-700 font-bold mb-2 flex items-center">
+                                <span className="mr-2">
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-500" />
+                                </span>
+                                Enter your location (detailed address):
+                            </label>
+                            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                                <input
+                                    type="text"
+                                    id="location"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    className="border border-gray-300 text-black p-3 rounded-lg flex-grow"
+                                    placeholder="e.g., 123 Main St, Delhi, India"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleGPS}
+                                    className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg w-full sm:w-auto"
+                                >
+                                    Use GPS
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white p-3 rounded-lg w-full hover:bg-blue-700 transition duration-300"
+                        >
+                            Search
+                        </button>
+                    </form>
                 </section>
 
                 {showResults && (
@@ -248,8 +244,8 @@ setColleges([]);
                             <section className="mb-12">
                                 <div className="space-y-8">
                                     {colleges.map((college) => (
-                                        <div key={college.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex">
-                                            <img src="https://media.istockphoto.com/id/1165677324/photo/group-of-students-walking-in-college-campus-after-classes.jpg?s=612x612&w=0&k=20&c=NKRysk7OgI3sgD6lY8Y3uQMbqXGAX_PbBIfQbGxaJoY=" alt="College" className="w-48 h-auto object-cover" />
+                                        <div key={college.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col sm:flex-row">
+                                            <img src="https://media.istockphoto.com/id/1165677324/photo/group-of-students-walking-in-college-campus-after-classes.jpg?s=612x612&w=0&k=20&c=NKRysk7OgI3sgD6lY8Y3uQMbqXGAX_PbBIfQbGxaJoY=" alt="College" className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
                                             <div className="p-6 flex-grow">
                                                 <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
                                                     {college.title}
@@ -264,10 +260,10 @@ setColleges([]);
                                                     <p className="text-gray-800 mb-2 text-xl">{`Distance: ${college.distance.toFixed(2)} km`}</p>
                                                 )}
                                                 {college.travelTime && (
-                                                    <div className="flex justify-around text-gray-600 mb-2">
-                                                        <span><FontAwesomeIcon icon={faCar} /> {` ${college.travelTime.car.toFixed(0)} min`}</span>
-                                                        <span><FontAwesomeIcon icon={faBicycle} /> {` ${college.travelTime.bike.toFixed(0)} min`}</span>
-                                                        <span><FontAwesomeIcon icon={faWalking} /> {` ${college.travelTime.walk.toFixed(0)} min`}</span>
+                                                    <div className="flex flex-wrap justify-start sm:justify-around text-gray-600 mb-2">
+                                                        <span className="mr-4 mb-2"><FontAwesomeIcon icon={faCar} /> {` ${college.travelTime.car.toFixed(0)} min`}</span>
+                                                        <span className="mr-4 mb-2"><FontAwesomeIcon icon={faBicycle} /> {` ${college.travelTime.bike.toFixed(0)} min`}</span>
+                                                        <span className="mb-2"><FontAwesomeIcon icon={faWalking} /> {` ${college.travelTime.walk.toFixed(0)} min`}</span>
                                                     </div>
                                                 )}
                                                 <div className="flex items-center text-yellow-500 mb-2">
@@ -287,7 +283,8 @@ setColleges([]);
                                                 </p>
                                                 <button
                                                     onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${college.position.lat},${college.position.lon}`, '_blank')}
-                                                    className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                                                    className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 mt-4"
+                                                >
                                                     <FontAwesomeIcon icon={faMap} className="mr-2" />
                                                     View in Map
                                                 </button>
