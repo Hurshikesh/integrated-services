@@ -173,7 +173,7 @@ const HomeRepair = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 text-center text-white">Search for Maid Services Near You</h2>
+          <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 text-center text-blue-600">Search for Maid Services Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-4 md:p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="location" className="text-gray-700 font-bold mb-2 block">

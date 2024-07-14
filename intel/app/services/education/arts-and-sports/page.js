@@ -130,7 +130,7 @@ const ClassesPage = () => {
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-white">Search for Classes Near You</h2>
+          <h2 className="text-3xl font-bold font-serif mb-6 text-center text-blue-600">Search for Art And Sports Classes Near You</h2>
           <form onSubmit={handleSearch} className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="mb-4">
               <label htmlFor="classType" className="text-gray-700 font-bold mb-2 flex items-center">
