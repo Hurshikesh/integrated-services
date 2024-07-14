@@ -229,6 +229,7 @@ const PackersAndMovers = () => {
                           />
                         </h3>
                         <p className="text-gray-600 mb-4 text-sm md:text-base">{service.address.label}</p>
+                        
                         {service.contacts && service.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-lg md:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{service.contacts[0].mobile[0].value}</strong>

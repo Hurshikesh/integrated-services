@@ -251,6 +251,7 @@ const FindCollegePage = () => {
                                                     {college.title}
                                                 </h3>
                                                 <p className="text-gray-600 mb-4">{college.address.label}</p>
+                                                <p className="text-gray-600 mb-4">{college.address}</p>
                                                 {college.phone && (
                                                     <p className="text-gray-800 mb-2 text-xl">
                                                         <FontAwesomeIcon icon={faPhone} /> <strong>{college.phone}</strong>

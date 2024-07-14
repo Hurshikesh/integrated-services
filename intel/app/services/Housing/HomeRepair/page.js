@@ -262,6 +262,7 @@ setServices([]);
                           {service.title}
                         </h3>
                         <p className="text-gray-600 mb-4">{service.address.label}</p>
+                        <p className="text-gray-600 mb-4">{service.address}</p>
                         {service.contacts && service.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-lg md:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{service.contacts[0].mobile[0].value}</strong>

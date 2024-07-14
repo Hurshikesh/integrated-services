@@ -262,6 +262,7 @@ setMechanics([]);
                           )}
                         </h3>
                         <p className="text-gray-600 mb-4">{mechanic.address.label}</p>
+                        <p className="text-gray-600 mb-4">{mechanic.address}</p>
                         {mechanic.contacts && mechanic.contacts[0] && mechanic.contacts[0].phone && (
                           <p className="text-gray-800 mb-2 text-lg sm:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{mechanic.contacts[0].phone[0].value}</strong>

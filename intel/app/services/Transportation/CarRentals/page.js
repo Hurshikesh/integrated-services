@@ -265,6 +265,7 @@ setCarRentals([]);
                           )}
                         </h3>
                         <p className="text-gray-600 mb-4">{rental.address.label}</p>
+                        <p className="text-gray-600 mb-4">{rental.address}</p>
                         {rental.contacts && rental.contacts[0].mobile && (
                           <p className="text-gray-800 mb-2 text-lg sm:text-xl">
                             <FontAwesomeIcon icon={faPhone} /> <strong>{rental.contacts[0].mobile[0].value}</strong>
