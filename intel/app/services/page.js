@@ -86,18 +86,18 @@ const ServicesPage = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
 
-    if (status === 'loading') return; // Do nothing while loading
+    if (status === 'loading') return;
     if (!session) {
-      router.push('/login'); // Redirect to login page if not authenticated
+      router.push('/login');
     }
   }, [session, status, router]);
 
   if (status === 'loading') {
-    return <div>Loading...</div>; // Show loading state while checking session
+    return <div>Loading...</div>;
   }
 
   if (!session) {
-    return null; // Return null to prevent flash of content before redirect
+    return null;
   }
 
   return (
@@ -107,20 +107,19 @@ const ServicesPage = () => {
         {services.map((service, index) => (
           <section
             key={index}
-            className="h-[500px] flex items-center bg-white p-6 rounded-lg shadow-md border border-purple-200"
-            
+            className="min-h-[500px] flex flex-col lg:flex-row items-center bg-white p-6 rounded-lg shadow-md border border-purple-200"
           >
             {index % 2 === 0 ? (
               <>
-                <div data-aos="zoom-in" className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
-                  <img src={service.image} alt={service.category} className="h-3/4 object-cover rounded-lg" />
+                <div data-aos="zoom-in" className="w-full lg:w-1/2 h-[300px] lg:h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4 mb-6 lg:mb-0">
+                  <img src={service.image} alt={service.category} className="h-full w-full object-cover rounded-lg" />
                 </div>
-                <div className="w-1/2 p-8 flex flex-col justify-center">
+                <div className="w-full lg:w-1/2 p-4 lg:p-8 flex flex-col justify-center">
                   <h2 className="text-2xl font-extrabold text-purple-600 mb-4 font-helvetica">{service.category}</h2>
-                  <p className="text-black font-leto font-semibold">{service.description}</p>
-                  <ul className="text-purple-400 font-leto font-semibold list-disc">
+                  <p className="text-black font-leto font-semibold mb-4">{service.description}</p>
+                  <ul className="text-purple-400 font-leto font-semibold list-disc pl-5">
                     {service.subservices.map((subservice, subIndex) => (
-                      <li key={subIndex}>
+                      <li key={subIndex} className="mb-2">
                         <button onClick={() => router.push(subservice.path)} className="text-black hover:text-white hover:bg-purple-400 transition duration-300 ease-in-out px-3 py-2 rounded font-leto">
                           {subservice.name}
                         </button>
@@ -131,12 +130,12 @@ const ServicesPage = () => {
               </>
             ) : (
               <>
-                <div className="w-1/2 p-8 flex flex-col justify-center">
+                <div className="w-full lg:w-1/2 p-4 lg:p-8 flex flex-col justify-center mb-6 lg:mb-0">
                   <h2 className="text-2xl font-extrabold text-purple-600 mb-4 font-helvetica">{service.category}</h2>
-                  <p className="text-black font-leto font-semibold">{service.description}</p>
-                  <ul className="text-purple-400 font-leto font-semibold list-disc">
+                  <p className="text-black font-leto font-semibold mb-4">{service.description}</p>
+                  <ul className="text-purple-400 font-leto font-semibold list-disc pl-5">
                     {service.subservices.map((subservice, subIndex) => (
-                      <li key={subIndex}>
+                      <li key={subIndex} className="mb-2">
                         <button onClick={() => router.push(subservice.path)} className="text-black hover:text-white hover:bg-purple-400 transition duration-300 ease-in-out px-3 py-2 rounded font-leto">
                           {subservice.name}
                         </button>
@@ -144,8 +143,8 @@ const ServicesPage = () => {
                     ))}
                   </ul>
                 </div>
-                <div data-aos="zoom-in" className="w-1/2 h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
-                  <img src={service.image} alt={service.category} className="h-3/4 object-cover rounded-lg" />
+                <div data-aos="zoom-in" className="w-full lg:w-1/2 h-[300px] lg:h-full flex justify-center items-center bg-purple-100 border border-purple-200 rounded-lg p-4">
+                  <img src={service.image} alt={service.category} className="h-full w-full object-cover rounded-lg" />
                 </div>
               </>
             )}
