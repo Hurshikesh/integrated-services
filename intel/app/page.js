@@ -258,7 +258,7 @@ export default function Home() {
                     id="email"
                     value={feedbackEmail}
                     onChange={(e) => setFeedbackEmail(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border text-black border-gray-300 rounded"
                     required
                   />
                   {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -269,7 +269,7 @@ export default function Home() {
                     id="message"
                     value={feedbackMessage}
                     onChange={(e) => setFeedbackMessage(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border text-black border-gray-300 rounded"
                     rows="4"
                     required
                   />

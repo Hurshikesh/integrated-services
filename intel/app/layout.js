@@ -8,8 +8,8 @@
   const inter = Inter({ subsets: ["latin"] });
 
   export const metadata = {
-    title: "CAREcCONNECT",
-    description: "Funding Platform",
+    title: "CAREcCONNECT-Caring for you, every step of the way",
+    description: "Caring for you, every step of the way.",
   };
 
   export default function RootLayout({ children }) {
