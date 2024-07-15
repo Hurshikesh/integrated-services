@@ -8,7 +8,7 @@
   const inter = Inter({ subsets: ["latin"] });
 
   export const metadata = {
-    title: "Get Me a Chai-Fund your Projects",
+    title: "CAREcCONNECT",
     description: "Funding Platform",
   };
 
