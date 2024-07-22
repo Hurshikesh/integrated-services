@@ -79,7 +79,7 @@ CAREcONNECT addresses the challenges common people face in accessing various ser
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/hurshikesh/integrated-services
+   git clone https://github.com/Hurshikesh/integrated-services.git
    ```
 
 2. Navigate to the project directory:
