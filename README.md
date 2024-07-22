@@ -79,12 +79,12 @@ CAREcONNECT addresses the challenges common people face in accessing various ser
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/careconnect.git
+   git clone https://github.com/hurshikesh/integrated-services
    ```
 
 2. Navigate to the project directory:
 ```
-cd careconnect
+code -r integrated-services/intel
 ```
 
 3. Install dependencies:
