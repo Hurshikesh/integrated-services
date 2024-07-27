@@ -1,11 +1,12 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { useSession, signIn, signOut } from "next-auth/react";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,26 +25,94 @@ const Navbar = () => {
   if (!mounted) return null; // Render nothing initially
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-700 shadow-sm">
+    <nav className="bg-purple-600 shadow-2xl w-full font-helvetica">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-        <div className="text-xl font-bold text-white">Integrated Services</div>
-        <div className="flex space-x-8">
-          <a href="/" className="text-white text-l hover:text-gray-400">Home</a>
-          <a href="/services" className="text-white text-l hover:text-gray-400">Services</a>
-          <a href="/about" className="text-white text-l hover:text-gray-400">About Us</a>
+        <div className="text-xl font-bold text-white">CAREcONNECT</div>
+        <div className="hidden md:flex space-x-8">
+          <a href="/" className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Home</a>
+          <button
+            className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+            onClick={() => router.push('/services')}
+          >
+            Services
+          </button>
+          <a href="/ServiceProvider" className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Add Service</a>
+          <a href="/about" className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">About Us</a>
           {session ? (
             <>
-              <span className="text-white text-l">Welcome, {session.user.name}</span>
-              <button onClick={() => {
-                localStorage.removeItem('hasRedirected');
-                signOut();
-              }} className="text-white text-l hover:text-gray-400">Sign out</button>
+              <button
+                onClick={() => router.push('/Profile')}
+                className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+              >
+                Welcome {session.user.name}
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('hasRedirected');
+                  signOut();
+                }}
+                className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+              >
+                Sign out
+              </button>
             </>
           ) : (
-            <a href="/login" className="text-white text-l hover:text-gray-400">Login</a>
+            <a href="/login" className="text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Login</a>
           )}
         </div>
+        <div className="md:hidden">
+          <button
+            className="text-white focus:outline-none"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
       </div>
+      {isMenuOpen && (
+        <div className="md:hidden bg-purple-500">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            <a href="/" className="block text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Home</a>
+            <button
+              className="block w-full text-left text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+              onClick={() => {
+                setIsMenuOpen(false);
+                router.push('/services');
+              }}
+            >
+              Services
+            </button>
+            <a href="/ServiceProvider" className="block text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Add Service</a>
+            <a href="/about" className="block text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">About Us</a>
+            {session ? (
+              <>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    router.push('/Profile');
+                  }}
+                  className="block w-full text-left text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+                >
+                  Welcome {session.user.name}
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('hasRedirected');
+                    signOut();
+                  }}
+                  className="block w-full text-left text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <a href="/login" className="block text-black font-bold hover:text-black hover:bg-white transition duration-300 ease-in-out px-3 py-2 rounded">Login</a>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
